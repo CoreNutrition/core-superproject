@@ -1,6 +1,6 @@
 <header class="banner">
   <div class="container">    
-    <div class="row">
+    <div class="row header-row">
     	<div class="col-md-2">
     		<?php
     			$custom_logo_id = get_theme_mod( 'custom_logo' );

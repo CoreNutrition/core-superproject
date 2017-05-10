@@ -28,7 +28,8 @@ function setup() {
   // http://codex.wordpress.org/Function_Reference/register_nav_menus
   register_nav_menus([
     'primary_navigation' => __('Primary Navigation', 'sage'),
-    'footer_navigation' => __('Footer Navigation', 'sage')
+    'footer_navigation' => __('Footer Navigation', 'sage'),
+    'legal_navigation' => __('Legal Footer Navigation', 'sage')
   ]);
 
   // Enable post thumbnails
@@ -89,7 +90,8 @@ function display_sidebar() {
     is_page_template('template-custom.php'),
   ]);
 
-  return apply_filters('sage/display_sidebar', $display);
+  //return apply_filters('sage/display_sidebar', $display);
+  return false;
 }
 
 /**

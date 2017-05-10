@@ -19,6 +19,33 @@
     'common': {
       init: function() {
         // JavaScript to be fired on all pages
+        
+         //init carousel
+        var navArrow = "<img src='/wp-content/themes/CORE/dist/images/Arrow.svg' alt='Arrow next' class='arrow'>";
+        $('.owl-carousel').owlCarousel({
+        	navigation : true, // Show next and prev buttons
+        	navigationText: [navArrow,navArrow],
+        	rewindNav: false,
+      		slideSpeed : 300,
+      		paginationSpeed : 400,
+      		singleItem:true
+    	});
+		
+      	// Handle body padding dynamically based on visible submenus
+    	var bodyPadding = function() {
+      		var bodyTopPadding = $('header.banner').outerHeight();
+      		$('.sub-menu').each(function(){
+        		if ($(this).is(':visible')) {
+          			bodyTopPadding += $(this).outerHeight();
+          			$(this).headroom();
+        		}
+      		});
+      		$('body').css({'padding-top': bodyTopPadding + 'px'});
+    	};
+    	
+    	// Add some body padding dynamically based on open submenus
+      	bodyPadding();
+        
       },
       finalize: function() {
         // JavaScript to be fired on all pages, after page specific JS is fired
@@ -28,6 +55,8 @@
     'home': {
       init: function() {
         // JavaScript to be fired on the home page
+       
+   
       },
       finalize: function() {
         // JavaScript to be fired on the home page, after the init JS

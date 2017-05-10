@@ -2,6 +2,8 @@
   "dependencies": {
     "main.js": {
       "files": [
+        "scripts/jQuery.headroom.js",
+        "scripts/Headroom.js",
         "scripts/main.js"
       ],
       "main": true

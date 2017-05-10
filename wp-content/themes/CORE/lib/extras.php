@@ -199,7 +199,7 @@ function hook_meta() {
 		$output.='<meta property="og:url" content="'.get_post_permalink($post->ID).'">';
 		//Twitter
 		$output.='<meta name="twitter:title" content="'.get_the_title($post->ID).'">';
-		$output.='<meta name="twitter:description" content="'.$desc.'">';
+		$output.='<meta name="twitter:description" content="'.get_the_excerpt($post->ID).'">';
 		
 	} else {
 		//otherwise show general blog description and image

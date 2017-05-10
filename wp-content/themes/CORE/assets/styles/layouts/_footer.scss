@@ -1,0 +1,21 @@
+footer {
+	&.content-info {
+		 background: $light-grey;
+		 padding-top:1.666rem;
+		 .brand {
+		 	img {
+		 		width:50%;
+		 	}
+		 }
+		 .secondary {
+		 	margin-top:1.666rem;
+		 	border-top:1px solid $medium-grey;
+		 	padding-bottom:1.666rem;
+		 }
+		 
+		 .legal, .copyright {
+		 	font-size:0.777rem;
+		 	@extend strong;
+		 }
+	}
+}
