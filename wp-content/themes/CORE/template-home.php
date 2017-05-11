@@ -12,7 +12,19 @@
 		</div>
 	</section>
 	
-	<section class="posts">
+	<section class="featured-posts">
+		<?php
+		// check if the repeater field has rows of data
+		if( have_rows('content_posts') ):
+			// loop through the rows of data
+			while ( have_rows('content_posts') ) : the_row();
+				$content_item_id = get_sub_field('content_item');
+				$content_item_size = get_sub_field('content_item_size');
+				$header_position = get_sub_field('header_position');
+				include( locate_template( 'templates/content-item.php' ) );
+            endwhile;
+		endif; 
+		?>
 		
 	</section>
 	

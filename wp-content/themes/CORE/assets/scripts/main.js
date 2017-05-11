@@ -30,7 +30,7 @@
       		paginationSpeed : 400,
       		singleItem:true
     	});
-		alert($('header.banner').outerHeight());
+		//alert($('header.banner').outerHeight());
       	// Handle body padding dynamically based on visible submenus
     	var bodyPadding = function() {
       		var bodyTopPadding = $('header.banner').outerHeight();
