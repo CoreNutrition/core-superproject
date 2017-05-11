@@ -66,18 +66,12 @@ section {
     	}
     }
     
-    .owl-controls {
+    .owl-nav {
     	position: absolute;
     	z-index: 100;
     	width: 170px;
     	bottom: 70px;
     	right: 0;
-    	.owl-pagination {
-    	}
-    }
-    
-    .owl-buttons {
-    	
     	.owl-prev, .owl-next {
     		width:55px;
     		margin-right:30px;
