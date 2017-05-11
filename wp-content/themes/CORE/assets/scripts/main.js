@@ -42,7 +42,6 @@
       		smartSpeed : 300,
       		navSpeed : 400
     	});
-
       	// Handle body padding dynamically based on visible submenus
     	var bodyPadding = function() {
       		var bodyTopPadding = $('header.banner').outerHeight();

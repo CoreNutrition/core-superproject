@@ -222,3 +222,11 @@ add_action('wp_head', __NAMESPACE__ . '\\hook_meta');
 /* END meta tags ****************************/
 
 
+/**** You can also make your custom sizes selectable from your WordPress admin. **/
+
+add_filter( 'square', 'my_custom_sizes' );
+function my_custom_sizes( $sizes ) {
+    return array_merge( $sizes, array(
+        'square' => __( 'Large Square' ),
+    ) );
+}
