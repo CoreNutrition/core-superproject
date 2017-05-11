@@ -35,12 +35,12 @@
         });
         var navArrow = "<img src='/wp-content/themes/CORE/dist/images/Arrow.svg' alt='Arrow next' class='arrow'>";
         $('.owl-carousel').owlCarousel({
-        	navigation : true, // Show next and prev buttons
-        	navigationText: [navArrow,navArrow],
-        	rewindNav: false,
-      		slideSpeed : 300,
-      		paginationSpeed : 400,
-      		singleItem:true
+        	items:1,
+        	nav : true, // Show next and prev buttons
+        	navText: [navArrow,navArrow],
+        	rewind: false,
+      		smartSpeed : 300,
+      		navSpeed : 400
     	});
       	// Handle body padding dynamically based on visible submenus
     	var bodyPadding = function() {
