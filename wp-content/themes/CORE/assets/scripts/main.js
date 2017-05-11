@@ -19,8 +19,20 @@
     'common': {
       init: function() {
         // JavaScript to be fired on all pages
-        
-         //init carousel
+
+         //init carousels
+        $('.mini-carousel').owlCarousel({
+          center: true,
+          items:3,
+          loop:true,
+          margin:10,
+          dots: false,
+          responsive:{
+            600:{
+              items:3
+            }
+          }
+        });
         var navArrow = "<img src='/wp-content/themes/CORE/dist/images/Arrow.svg' alt='Arrow next' class='arrow'>";
         $('.owl-carousel').owlCarousel({
         	navigation : true, // Show next and prev buttons
@@ -30,11 +42,11 @@
       		paginationSpeed : 400,
       		singleItem:true
     	});
-		alert($('header.banner').outerHeight());
+
       	// Handle body padding dynamically based on visible submenus
     	var bodyPadding = function() {
       		var bodyTopPadding = $('header.banner').outerHeight();
-      		
+
       		$('.sub-menu').each(function(){
         		if ($(this).is(':visible')) {
           			bodyTopPadding += $(this).outerHeight();
@@ -43,10 +55,9 @@
       		});
       		$('body').css({'padding-top': bodyTopPadding + 'px'});
     	};
-    	
+
     	// Add some body padding dynamically based on open submenus
       	bodyPadding();
-        
       },
       finalize: function() {
         // JavaScript to be fired on all pages, after page specific JS is fired
@@ -56,8 +67,8 @@
     'home': {
       init: function() {
         // JavaScript to be fired on the home page
-       
-   
+
+
       },
       finalize: function() {
         // JavaScript to be fired on the home page, after the init JS
