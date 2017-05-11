@@ -215,12 +215,14 @@ nav {
 			}
 			&.sub-menu {
 				list-style-type: none;
+				border-top:1px solid $light-grey;
 				
 				position: absolute;
 				left: 0;
 				width: 100%;
-				margin:0;
-				padding:0;
+				margin: 0.2rem 0 0 0;
+				padding: 0.2rem 0 0 0;
+				font-size:0.888rem;
 				li {
 					display: inline-block;
 					vertical-align: middle;
