@@ -8,6 +8,15 @@
   "private": true,
   "dependencies": {
     "bootstrap": "git://github.com/twbs/bootstrap.git#v4.0.0-alpha.6",
-    "owl.carousel": "^2.2.1"
+    "owl.carousel": "^2.2.1",
+    "masonry": "^4.2.0"
+  },
+  "overrides": {
+  	"masonry": {
+      "main": [
+        "./dist/masonry.pkgd.js"
+      ],
+      "dependencies": {}
+    }
   }
 }

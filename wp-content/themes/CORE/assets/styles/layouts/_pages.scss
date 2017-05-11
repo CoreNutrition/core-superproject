@@ -3,6 +3,9 @@ section {
 }
 
 .featured-posts {
+	.grid-sizer {
+		width:50%;
+	}
 	.content-item {
 		&.full {
 			width:100%;

@@ -12,7 +12,8 @@
 		</div>
 	</section>
 	
-	<section class="featured-posts">
+	<section class="featured-posts grid">
+		
 		<?php
 		// check if the repeater field has rows of data
 		if( have_rows('content_posts') ):
@@ -25,7 +26,7 @@
             endwhile;
 		endif; 
 		?>
-		
+		<div class="grid-sizer"></div>
 	</section>
 	
 	<section class="lifestyle">
