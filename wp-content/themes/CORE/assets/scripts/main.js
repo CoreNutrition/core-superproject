@@ -19,6 +19,8 @@
     'common': {
       init: function() {
         // JavaScript to be fired on all pages
+        
+        var admin_bar_h = 30;
 
          //init carousels
         $('.mini-carousel').owlCarousel({
@@ -49,10 +51,17 @@
       		$('.sub-menu').each(function(){
         		if ($(this).is(':visible')) {
           			bodyTopPadding += $(this).outerHeight();
+          			if ($("body").hasClass("admin-bar")) {
+          				//add padding for that too
+          				bodyTopPadding +=admin_bar_h;
+          			}
           			$(this).headroom();
         		}
       		});
       		$('body').css({'padding-top': bodyTopPadding + 'px'});
+      		if ($('body').hasClass("admin-bar")) {
+      			$("header.banner").css("top",admin_bar_h+"px");
+      		}
     	};
 
     	// Add some body padding dynamically based on open submenus

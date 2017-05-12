@@ -34,7 +34,7 @@
      * @private
      */
     update : function() {
-      this.callback && this.callback();
+      (this.callback) && this.callback();
       this.ticking = false;
     },
 
@@ -232,11 +232,7 @@
      * @return {Number} pixels the page has scrolled along the Y-axis
      */
     getScrollY : function() {
-      return (this.scroller.pageYOffset !== undefined)
-        ? this.scroller.pageYOffset
-        : (this.scroller.scrollTop !== undefined)
-          ? this.scroller.scrollTop
-          : (document.documentElement || document.body.parentNode || document.body).scrollTop;
+      return (this.scroller.pageYOffset !== undefined)? this.scroller.pageYOffset: (this.scroller.scrollTop !== undefined)? this.scroller.scrollTop: (document.documentElement || document.body.parentNode || document.body).scrollTop;
     },
 
     /**
@@ -245,9 +241,7 @@
      * @return {int} the height of the viewport in pixels
      */
     getViewportHeight : function () {
-      return window.innerHeight
-        || document.documentElement.clientHeight
-        || document.body.clientHeight;
+      return window.innerHeight || document.documentElement.clientHeight || document.body.clientHeight;
     },
 
     /**
@@ -284,9 +278,7 @@
      * @return {int} the height of the scroller element in pixels
      */
     getScrollerHeight : function () {
-      return (this.scroller === window || this.scroller === document.body)
-        ? this.getDocumentHeight()
-        : this.getElementHeight(this.scroller);
+      return (this.scroller === window || this.scroller === document.body) ? this.getDocumentHeight() : this.getElementHeight(this.scroller);
     },
 
     /**

@@ -101,6 +101,21 @@
 
 
 /**************************************************/
+/************ LISTING PAGEs **************************/
+.listing {
+	.listing-feature {
+		background-size:cover;
+		background-position:center;
+		background-repeat:no-repeat;
+		height:340px;
+		
+		@include media-breakpoint-up(md) {
+			height:540px;
+		}
+	}
+}
+
+/**************************************************/
 /************ PAGEs COMMON **************************/
 
 section {
