@@ -1,7 +1,7 @@
 <header class="banner">
-  <div class="container">    
+  <div class="container main-header">
     <div class="row header-row">
-    	<div class="col-md-2">
+      <div class="col-md-2 brand-logo-wrapper">
     		<?php
     			$custom_logo_id = get_theme_mod( 'custom_logo' );
 				$image = wp_get_attachment_image_src( $custom_logo_id , 'full' );
@@ -16,7 +16,7 @@
       			endif;
       		?>
     		</nav>
-    	
+
     	</div>
     	<div class="col-md-2">
     		Social

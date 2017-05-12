@@ -214,7 +214,7 @@ nav {
 						color:$brand-primary;
 					}
 				}
-		    &.menu-item-has-children {
+		    &.current_page_item, &.current_page_parent {
 		      ul.sub-menu {
             display:block;
           }
