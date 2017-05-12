@@ -57,7 +57,7 @@
 
     	// Add some body padding dynamically based on open submenus
       	bodyPadding();
-      	
+
       	var $grid = $('.grid').imagesLoaded().always( function( instance ) {
       		// init Masonry after all images have loaded
       		$grid.masonry({
@@ -72,8 +72,6 @@
             	initLayout: true
       		});
       	});
-
-
       },
       finalize: function() {
         // JavaScript to be fired on all pages, after page specific JS is fired
