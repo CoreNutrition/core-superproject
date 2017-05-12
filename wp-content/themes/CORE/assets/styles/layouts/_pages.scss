@@ -1,20 +1,116 @@
+/**************************************************/
+/************ HOMEPAGE **************************/
+
+.featured-posts {
+	.grid-sizer,
+	.grid-item.half { width: 48.5%; }
+	
+	.gutter-sizer { width: 3%; }
+	.grid-item.full { width: 100%; }
+	
+	.grid-item {
+		margin-bottom:1.666rem;
+		.justify {
+			align-items: center;
+		}
+		.content-headline {
+			@extend .content-box-offset;
+			h2 {
+				margin-bottom:10px;
+			}
+			a {
+				
+				color:$text-color;
+				&:hover > img {
+					margin-left:15px;
+				}
+			}
+			&.overtop {
+				position:absolute;
+				top:0;
+				left:0;
+			}
+			&.overbottom {
+				position:absolute;
+				bottom:0;
+				left:0;
+			}
+		}
+	}
+}
+
+.lifestyle {
+	position:relative;
+	.row {
+		.image {
+			margin-bottom:30px;
+		}
+	}
+	.lifestyle-caption {
+		@extend h1;
+		font-size:1.888rem;
+		line-height:1.588rem;
+		position:absolute;
+		top:15px;
+		left:15px;
+		@include media-breakpoint-up(md) {
+			top:0;
+			left:0;
+			width:50%;
+			font-size:2.888rem;
+			line-height:2.388rem;
+		}
+	}
+}
+
+/********* //END HOMEPAGE **************************/
+
+
+/**************************************************/
+/************ PRDUCTS PAGEs **************************/
+
+.slideshow-overlay {
+	margin-top:1.666rem;
+	
+	.img-overlay {
+		position:relative;
+		img {
+			@include media-breakpoint-up(md) {
+				position:absolute;
+				z-index:300;
+				margin-top:-5.5rem
+			}
+		}
+	}
+}
+
+.facts {
+	padding-top:3.333rem;
+	padding-bottom:3.333rem;
+	.content-horizontal {
+		@include media-breakpoint-up(md) {
+			width:47.3686%;
+			margin:0 auto;
+		}
+	}
+}
+
+
+
+/********* //END PRDUCTS PAGEs **************************/
+
+
+/**************************************************/
+/************ PAGEs COMMON **************************/
+
 section {
 	margin-bottom:3.333rem;
 }
 
-.featured-posts {
-	.grid-sizer {
-		width:50%;
-	}
-	.content-item {
-		&.full {
-			width:100%;
-		}
-		&.half {
-			width:50%;
-		}
-	}
+.content-box-offset {
+	padding:1.666rem;
 }
+
 
 .owl-carousel {
 	.item {
@@ -101,26 +197,3 @@ section {
   	}
 }
 
-.lifestyle {
-	position:relative;
-	.row {
-		.image {
-			margin-bottom:30px;
-		}
-	}
-	.lifestyle-caption {
-		@extend h1;
-		font-size:1.888rem;
-		line-height:1.588rem;
-		position:absolute;
-		top:15px;
-		left:15px;
-		@include media-breakpoint-up(md) {
-			top:0;
-			left:0;
-			width:50%;
-			font-size:2.888rem;
-			line-height:2.388rem;
-		}
-	}
-}

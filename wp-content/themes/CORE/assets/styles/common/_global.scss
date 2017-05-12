@@ -104,6 +104,7 @@ body {
 	color: $text-color;
     @extend .Proximanova_Regular;
     font-size: 18px;
+    line-height:22px;
 }
 
 h1, h2, h3, .nav-primary {
@@ -134,6 +135,7 @@ h1 {
 }
 h2 {
 	font-size:2rem;
+	line-height:1.6rem;
 }
 h3 {
 	font-size:1rem;
@@ -225,7 +227,7 @@ nav {
 				position: absolute;
 				left: 0;
 				width: 100%;
-				margin: 0.2rem 0 0 0;
+				margin: 0.2rem 0 0 1px;
 				padding: 0.2rem 0 0 0;
 				font-size:0.888rem;
 				li {
@@ -233,18 +235,6 @@ nav {
 					vertical-align: middle;
 					position: static;
 				}
-				&.headroom {
-          @include transition;
-          background-color:#fff;
-        }
-
-        &.headroom--unpinned {
-        opacity:0;
-        }
-
-        &.headroom--pinned {
-        opacity:1;
-        }
 			}
 		}
 	}

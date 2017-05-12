@@ -57,6 +57,23 @@
 
     	// Add some body padding dynamically based on open submenus
       	bodyPadding();
+      	
+      	var $grid = $('.grid').imagesLoaded().always( function( instance ) {
+      		// init Masonry after all images have loaded
+      		$grid.masonry({
+      			// options...
+      			// set itemSelector so .grid-sizer is not used in layout
+      			itemSelector: '.grid-item',
+      			// use element for option
+      			columnWidth: '.grid-sizer',
+      			percentPosition: true,
+      			gutter: '.gutter-sizer',
+            	transitionDuration:0,
+            	initLayout: true
+      		});
+      	});
+
+
       },
       finalize: function() {
         // JavaScript to be fired on all pages, after page specific JS is fired

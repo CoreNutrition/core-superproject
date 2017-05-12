@@ -16,9 +16,11 @@
 		
 		<?php
 		// check if the repeater field has rows of data
+		$item_counter = 0;
 		if( have_rows('content_posts') ):
 			// loop through the rows of data
 			while ( have_rows('content_posts') ) : the_row();
+				$item_counter++;
 				$content_item_id = get_sub_field('content_item');
 				$content_item_size = get_sub_field('content_item_size');
 				$header_position = get_sub_field('header_position');
@@ -27,6 +29,7 @@
 		endif; 
 		?>
 		<div class="grid-sizer"></div>
+		<div class="gutter-sizer"></div>
 	</section>
 	
 	<section class="lifestyle">
