@@ -235,18 +235,6 @@ nav {
 					vertical-align: middle;
 					position: static;
 				}
-				&.headroom {
-          @include transition;
-          background-color:#fff;
-        }
-
-        &.headroom--unpinned {
-        opacity:0;
-        }
-
-        &.headroom--pinned {
-        opacity:1;
-        }
 			}
 		}
 	}
@@ -263,7 +251,71 @@ nav {
 }
 
 /************ //END NAVIGATION **************************/
+/************ HOMEPAGE MODAL **************************/
+.modal-core {
+  display: none;
+  /* Hidden by default */
+  position: absolute;
+  /* Stay in place */
+  z-index: 1041;
+  /* Sit on top */
+  left: 0;
+  top: 0;
+  width: 100%;
+  /* Full width */
+  height: 100%;
+  overflow: hidden;
+  /* Enable scroll if needed */
+  background-color: black;
+  /* Fallback color */
+  background-color: rgba(0, 0, 0, 0.8);
+  /* Black w/ opacity */
+}
+.modal-embed-content{
+  display: none;
+}
+.modal-core-content {
+  position: relative;
+  padding-bottom: 56.25%;
+  height: 0;
+  overflow: hidden;
+}
+.modal-core-content iframe, .modal-core-content object, .modal-core-content embed {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+}
 
+.close-modal-core {
+  color: #fff;
+  text-align: right;
+  font-size: 28px;
+  /*font-weight: bold;*/
+  width: 100%;
+  margin: 10px auto;
+  max-width: 1100px;
+  display: block;
+  position: absolute;
+  z-index: 1000;
+  right: 10%;
+  top: 10%;
+  background-color: rgba(0, 0, 0, 0.5);
+  width: 50px;
+  height: 50px;
+  border-radius: 50%;
+  text-align: center;
+  padding-top: 12px;
+}
+
+.close-modal-core:hover,
+.close-modal-core:focus {
+  opacity: 0.8;
+  text-decoration: none;
+  cursor: pointer;
+}
+/************ END HOMEPAGE MODAL **************************/
 
 /**************************************************/
 /************ OVERWRITES **************************/

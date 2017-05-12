@@ -47,8 +47,7 @@
       	// Handle body padding dynamically based on visible submenus
     	var bodyPadding = function() {
       		var bodyTopPadding = $('header.banner').outerHeight();
-
-      		$('.sub-menu').each(function(){
+          $('header.banner').each(function(){
         		if ($(this).is(':visible')) {
           			bodyTopPadding += $(this).outerHeight();
           			if ($("body").hasClass("admin-bar")) {
@@ -81,51 +80,6 @@
             	initLayout: true
       		});
       	});
-        //Adjust banner to shrink main logo
-        var sticky = new Waypoint.Sticky({
-          element: $('body .wrap .container')[0],
-          handler: function(direction) {
-            if ($( window ).width() > 768) {
-              var animateSpeed = 100;
-              if (direction==='down') {
-                $('.main-header').addClass('sticky-brand');
-              } else {
-                $('.main-header').removeClass('sticky-brand');
-              }
-              if (direction==="down") {
-                //shrink header
-                $('.main-header a.sub-blog-name').css('font-size','18px');
-                $('.main-header a.brand').animate({
-                  height:24+'px',
-                  width:200+'px'
-                },animateSpeed);
-                $('.main-header').animate({
-                  paddingBottom: 18+'px'
-                },animateSpeed);
-                $('.brand-logo-wrapper img').animate({
-                  height: 18+'px'
-                },animateSpeed);
-                $(":animated").promise().done(function() {
-                  //adjust height of the sticky wrapper since we changed element heights
-                  $('.sticky-wrapper').css('height', $('.sticky-brand').height() + 40);
-                });
-              } else {
-                //unshrink header
-                $('.main-header a.sub-blog-name').css('font-size','24px');
-                  $('.main-header a.brand').animate({
-                  height:42+'px',
-                  width:341+'px'
-                  },animateSpeed);
-                  $('.main-header').animate({
-                  paddingBottom: 26+'px'
-                  },animateSpeed);
-                  $('.brand-logo-wrapper img').animate({
-                  height:42+'px',
-                  },animateSpeed);
-              }
-            }
-          }
-        });
       },
       finalize: function() {
         // JavaScript to be fired on all pages, after page specific JS is fired
@@ -135,8 +89,33 @@
     'home': {
       init: function() {
         // JavaScript to be fired on the home page
-
-
+        // Get the modal
+        var video_core_modal = $('#video_core_modal');
+        // Get the button that opens the modal
+        var btn = $("#play_core_btn");
+        // Get the <span> element that closes the modal
+        var closebtn = $(".close-modal-core");
+        var closeModal = function() {
+          video_core_modal.modal("hide");
+          $('#modal-core-content').html('');
+        };
+        video_core_modal.on('show.bs.modal', function () {
+          var vEmbed = $('.slider .owl-stage .active .modal-embed-content').html();
+          if(vEmbed){
+            $('#modal-core-content').html(vEmbed);
+          }
+        });
+        // When the user clicks on <span> (x), close the modal
+        closebtn.click(function() {
+            closeModal();
+        });
+        // When the user clicks anywhere outside of the modal, close it
+        $(window).click(function(event) {
+            var target = $( event.target );
+            if ( target.is(video_core_modal) ) {
+               closeModal();
+            }
+        });
       },
       finalize: function() {
         // JavaScript to be fired on the home page, after the init JS

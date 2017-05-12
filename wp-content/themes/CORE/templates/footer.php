@@ -12,7 +12,7 @@
   			Footer nav
   		</div>
   	</div>
-  	
+
   	<div class="row secondary">
     	<div class="col-md-12">
            <!--<form role="form" class="bot-form">
@@ -35,7 +35,14 @@
     		</nav>
         </div>
     </div>
-      
+
     <?php //dynamic_sidebar('sidebar-footer'); ?>
   </div>
 </footer>
+<!-- The Modal -->
+<div id="video_core_modal" class="modal-core">
+    <span class="close-modal-core">&times;</span>
+    <!-- Modal content -->
+    <div id="modal-core-content" class="modal-core-content"></div>
+</div>
+<!-- END Modal -->
