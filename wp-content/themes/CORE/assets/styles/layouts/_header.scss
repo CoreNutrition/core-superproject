@@ -20,4 +20,14 @@ header {
 			}
 		}
 	}
+	&.headroom {
+    @include transition;
+    background-color:#fff;
+  }
+  &.headroom--unpinned {
+    opacity:0;
+  }
+ &.headroom--pinned {
+    opacity:1;
+  }
 }
