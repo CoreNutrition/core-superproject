@@ -74,7 +74,7 @@
       	});
         //Adjust banner to shrink main logo
         var sticky = new Waypoint.Sticky({
-          element: $('.wrap .container')[0],
+          element: $('body .wrap .container')[0],
           handler: function(direction) {
             if ($( window ).width() > 768) {
               var animateSpeed = 100;
