@@ -212,11 +212,16 @@ nav {
 						color:$brand-primary;
 					}
 				}
+		    &.menu-item-has-children {
+		      ul.sub-menu {
+            display:block;
+          }
+        }
 			}
 			&.sub-menu {
 				list-style-type: none;
 				border-top:1px solid $light-grey;
-
+        display:none;
 				position: absolute;
 				left: 0;
 				width: 100%;
