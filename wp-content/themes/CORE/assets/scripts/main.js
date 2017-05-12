@@ -126,8 +126,33 @@
     'home': {
       init: function() {
         // JavaScript to be fired on the home page
-
-
+        // Get the modal
+        var video_core_modal = $('#video_core_modal');
+        // Get the button that opens the modal
+        var btn = $("#play_core_btn");
+        // Get the <span> element that closes the modal
+        var closebtn = $(".close-modal-core");
+        var closeModal = function() {
+          video_core_modal.modal("hide");
+          $('#modal-core-content').html('');
+        };
+        video_core_modal.on('show.bs.modal', function () {
+          var vEmbed = $('.slider .owl-stage .active .modal-embed-content').html();
+          if(vEmbed){
+            $('#modal-core-content').html(vEmbed);
+          }
+        });
+        // When the user clicks on <span> (x), close the modal
+        closebtn.click(function() {
+            closeModal();
+        });
+        // When the user clicks anywhere outside of the modal, close it
+        $(window).click(function(event) {
+            var target = $( event.target );
+            if ( target.is(video_core_modal) ) {
+               closeModal();
+            }
+        });
       },
       finalize: function() {
         // JavaScript to be fired on the home page, after the init JS
