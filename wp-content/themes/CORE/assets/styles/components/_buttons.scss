@@ -1,4 +1,5 @@
-.white-btn {
+.white-btn, .black-btn {
+	display:inline-block;
 	@include transition;
 	padding:0.5rem 1rem;
 	@include media-breakpoint-up(md) {
@@ -12,5 +13,16 @@
 	&:hover, &:active, &:focus {
 		border:2px solid $text-color;
 		background-color:$text-color;
+	}
+}
+.black-btn {
+	&:link, &:visited {
+		border:2px solid $text-color;
+		color:$text-color;
+	}
+	&:hover, &:active, &:focus {
+		border:2px solid $text-color;
+		background-color:$text-color;
+		color:#FFF;
 	}
 }

@@ -34,7 +34,7 @@
      * @private
      */
     update : function() {
-      (this.callback) && this.callback();
+      this.callback && this.callback();
       this.ticking = false;
     },
 

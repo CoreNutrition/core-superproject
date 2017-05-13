@@ -5,6 +5,10 @@
 ?>
 
 <?php while (have_posts()) : the_post(); ?>
+
+	<div class="page-header">
+		<h1><?php the_title(); ?></h1>
+	</div>
 	
 	<section class="hero">
 		<div class="slider">
@@ -41,6 +45,98 @@
 
 	
 	</section>
+	
+	
+	<section class="icon-slideshow" >
+		<div class="row">
+			<div class="col-md-4 offset-md-1">
+				<?php get_template_part('templates/entry-minicarousel'); ?>
+			</div>
+			<div class="col-md-5 offset-md-1">
+				<?php echo get_field('carousel_description'); ?>
+			</div>
+		</div>
+		
+	</section>
+	
+	
+	
+	
+	<!-- Bottle Design Row -->
+	<?php 
+		$bottle_facts_background = get_field('row_background_image');
+		$bottle_facts_description = get_field('intro'); 
+	?>
+	<?php if ($bottle_facts_description) { ?>
+	<section class="bottle-facts" style="background-image:url('<?php echo $bottle_facts_background['sizes']['large']; ?>');">
+		<div class="row">
+			<div class="col-md-6 offset-md-6">
+				<?php echo $bottle_facts_description; ?>
+			</div>
+		</div>
+	</section>
+	<?php } ?>
+	<!-- END -->
+	
+	
+	<!-- Product Availability -->
+	<section class="product_availability">
+		<div class="row">
+			<div class="col-md-5">
+				<div class="product_availability_headline">
+					<?php echo get_field('availability_headline'); ?>
+				</div>
+				<div class="product_availability_link">
+					<a href="<?php echo get_field('shop_now_url'); ?>" class="black-btn"><?php _e("Shop Now","sage"); ?></a>
+				</div> 
+			</div>
+			<div class="col-md-6 offset-md-1">
+				<?php 
+					$product_image = get_field('product_image'); 
+					echo "<img src='".$product_image['sizes']['large']."' alt='".$product_image['alt']."' />";
+				?>
+			</div>
+		</div>
+	</section>
+	<!-- END -->
+	
+	
+	<!-- Nutritional Info -->
+	<?php if( have_rows('product_nutritional_information') ){ ?>
+	
+	<section class="nutritional_info">
+		<?php 	
+		//there's only product, set this up 
+		$total_rows = count(get_field('product_nutritional_information'));
+		while( have_rows('product_nutritional_information') ): the_row(); 
+			
+			// vars
+			$product_name = get_sub_field('product_name');
+			$nutritional_info = get_sub_field('nutritional_info');
+			$nutrition_facts_label = get_sub_field('nutrition_facts_label');
+		
+			if ($total_rows > 1) {
+				//setup multiple
+			} else {
+				//single product
+				echo "<div class='row'>";
+					echo "<div class='col-md-6'>";
+						echo "<h2>".$product_name."</h2>";
+						echo $nutritional_info;
+					echo "</div>";
+					echo "<div class='col-md-6'>";
+						echo "<img src='".$nutrition_facts_label['sizes']['medium']."' alt='".$nutrition_facts_label['alt']."' />";
+					echo "</div>";
+				echo "</div>";	
+			}
+		endwhile;
+		
+		?>
+	</section>
+	
+	<?php } ?>
+	<!-- END -->
+	
 	
 	<section class="lifestyle">
 	<?php

@@ -95,7 +95,38 @@
 	}
 }
 
+.icon-slideshow {
+	.caption {
+		@extend h3;
+		text-align:center;
+		padding-top:1rem;
+	}
+}
 
+.bottle-facts {
+	background-size:cover;
+	background-position:center;
+	background-repeat:no-repeat;
+	padding-top:3.333rem;
+	padding-bottom:3.333rem;
+}
+
+.product_availability {
+	.row {
+		align-items: center;
+		.product_availability_headline {
+			@extend h1;
+			margin-bottom:1.666rem;
+		}
+		.product_availability_link {
+			
+		}
+	}
+}
+
+.nutritional_info {
+	background:$row-bg
+}
 
 /********* //END PRDUCTS PAGEs **************************/
 
@@ -103,14 +134,35 @@
 /**************************************************/
 /************ LISTING PAGEs **************************/
 .listing {
-	.listing-feature {
-		background-size:cover;
-		background-position:center;
-		background-repeat:no-repeat;
+	a {
+		display:block;
+		margin-bottom:1.666rem;
+	}
+	.listing-feature,
+	.listing-feature .description {
 		height:340px;
 		
 		@include media-breakpoint-up(md) {
 			height:540px;
+		}
+	}
+	.listing-feature {
+		background-size:cover;
+		background-position:center;
+		background-repeat:no-repeat;
+		
+		.description {			
+			display: flex;
+			color:#FFF;
+    		flex-direction: column;
+    		justify-content: center;
+			
+			.listing_header {
+				@extend h1;
+			}
+			.listing_description {
+				font-size:1.333rem;
+			}
 		}
 	}
 }
@@ -120,6 +172,10 @@
 
 section {
 	margin-bottom:3.333rem;
+}
+
+.inverse {
+
 }
 
 .content-box-offset {
@@ -168,12 +224,12 @@ section {
     	
     }
     .item, .item .container {
-    	height:300px;
-    	@include media-breakpoint-up(sm) {
+    	height:340px;
+    	/*@include media-breakpoint-up(sm) {
     		height:500px;
-    	}
+    	}*/
     	@include media-breakpoint-up(md) {
-    		height:700px;
+    		height:540px;
     	}
     }
     
@@ -205,7 +261,10 @@ section {
     		
     	}
     }
-    .arrow {
+}
+
+.arrow {
+    &.inverse {
     	-webkit-filter: invert(100%);
   		filter: invert(100%);
   		filter:progid:DXImageTransform.Microsoft.BasicImage(invert='1');

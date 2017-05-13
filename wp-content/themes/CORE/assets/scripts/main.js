@@ -26,8 +26,9 @@
         $('.mini-carousel').owlCarousel({
           center: true,
           items:3,
-          loop:true,
-          margin:10,
+          rewind: false,
+          loop: false,
+          margin:30,
           dots: false,
           responsive:{
             600:{
@@ -47,16 +48,16 @@
       	// Handle body padding dynamically based on visible submenus
     	var bodyPadding = function() {
       		var bodyTopPadding = $('header.banner').outerHeight();
-          $('header.banner').each(function(){
+          	$('header.banner').each(function(){
         		if ($(this).is(':visible')) {
-          			bodyTopPadding += $(this).outerHeight();
-          			if ($("body").hasClass("admin-bar")) {
+        			if ($("body").hasClass("admin-bar")) {
           				//add padding for that too
           				bodyTopPadding +=admin_bar_h;
           			}
           			$(this).headroom();
         		}
       		});
+      		//alert(bodyTopPadding);
       		$('body').css({'padding-top': bodyTopPadding + 'px'});
       		if ($('body').hasClass("admin-bar")) {
       			$("header.banner").css("top",admin_bar_h+"px");

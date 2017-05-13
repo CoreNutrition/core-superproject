@@ -23,6 +23,7 @@
     </div>
     <div class="row">
        	<div class="col-md-6 copyright">
+           	<?php //dynamic_sidebar('sidebar-footer'); ?>
            	<p>&copy; <?php echo date("Y"); ?> &#8212; <?php echo get_bloginfo("name"); ?></p>
            </div>
         <div class="col-md-6 legal">
@@ -36,7 +37,7 @@
         </div>
     </div>
 
-    <?php //dynamic_sidebar('sidebar-footer'); ?>
+    
   </div>
 </footer>
 <!-- The Modal -->
