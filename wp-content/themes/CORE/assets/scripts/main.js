@@ -86,6 +86,18 @@
             	initLayout: true
       		});
       	});
+
+        //on Product pages, we need to adjust the gradient row for the absolutely position lifestyle image
+        var set_hero_overlay_height = function() {
+          $lifestyle_image_height = $('.slideshow-overlay .img-overlay img').height()-100;
+          $('.slideshow-overlay').css('min-height', $lifestyle_image_height);
+        };
+        set_hero_overlay_height();
+
+        $( window ).resize(function() {
+          set_hero_overlay_height();
+        });
+
       },
       finalize: function() {
         // JavaScript to be fired on all pages, after page specific JS is fired

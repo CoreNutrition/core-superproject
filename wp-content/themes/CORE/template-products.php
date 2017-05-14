@@ -28,19 +28,30 @@
 		</div>
 	</section>
 	
-	<section class="facts" style="<?php echo get_field('facts_gradient_css'); ?>">
-		<?php if (get_field('graphic_display_mode') == "above") {
-					$fact_graphic = get_field('fact_graphic');
-					$fact = get_field('fact');
-					if ($fact_graphic) {
-						echo "<img src='".$fact_graphic['sizes']['large']."' alt='".$fact_graphic['alt']."' />";
-					}
-					if ($fact) {
-						echo "<div class='content-horizontal'>";
-							echo $fact;
-						echo "</div>";
-					}
+	<section class="facts padded" style="<?php echo get_field('facts_gradient_css'); ?>">
+		<?php 
+			$fact_graphic = get_field('fact_graphic');
+			$fact = get_field('fact');
+			if (get_field('graphic_display_mode') == "above") {
+					
+				if ($fact_graphic) {
+					echo "<img src='".$fact_graphic['sizes']['large']."' alt='".$fact_graphic['alt']."' />";
 				}
+				if ($fact) {
+					echo "<div class='content-horizontal'>";
+						echo $fact;
+					echo "</div>";
+				}
+			} else{
+				echo "<div class='row side-by-side'>";
+					echo "<div class='col-md-6'>";
+						echo "<img src='".$fact_graphic['sizes']['large']."' alt='".$fact_graphic['alt']."' />";
+					echo "</div>";
+					echo "<div class='col-md-6'>";
+						echo $fact;
+					echo "</div>";
+				echo "</div>";
+			}
 		?>
 
 	
@@ -68,7 +79,7 @@
 		$bottle_facts_description = get_field('intro'); 
 	?>
 	<?php if ($bottle_facts_description) { ?>
-	<section class="bottle-facts" style="background-image:url('<?php echo $bottle_facts_background['sizes']['large']; ?>');">
+	<section class="bottle-facts padded" style="background-image:url('<?php echo $bottle_facts_background['sizes']['large']; ?>');">
 		<div class="row">
 			<div class="col-md-6 offset-md-6">
 				<?php echo $bottle_facts_description; ?>
@@ -86,9 +97,11 @@
 				<div class="product_availability_headline">
 					<?php echo get_field('availability_headline'); ?>
 				</div>
+				<?php if (get_field('shop_now_url')) { ?>
 				<div class="product_availability_link">
 					<a href="<?php echo get_field('shop_now_url'); ?>" class="black-btn"><?php _e("Shop Now","sage"); ?></a>
 				</div> 
+				<?php } ?>
 			</div>
 			<div class="col-md-6 offset-md-1">
 				<?php 
@@ -104,19 +117,38 @@
 	<!-- Nutritional Info -->
 	<?php if( have_rows('product_nutritional_information') ){ ?>
 	
-	<section class="nutritional_info">
+	<section class="nutritional_info padded">
 		<?php 	
 		//there's only product, set this up 
 		$total_rows = count(get_field('product_nutritional_information'));
+		$row_col_counter = 0;
+		$row_opened = false;
 		while( have_rows('product_nutritional_information') ): the_row(); 
 			
 			// vars
 			$product_name = get_sub_field('product_name');
 			$nutritional_info = get_sub_field('nutritional_info');
 			$nutrition_facts_label = get_sub_field('nutrition_facts_label');
+			$product_image = get_sub_field('product_image');
+			$product_color = get_sub_field('product_color');
 		
 			if ($total_rows > 1) {
 				//setup multiple
+				if ($row_col_counter<3 && !$row_opened) {
+					echo "<div class='row nutrition-gridded'>";
+					$row_opened = true;
+				}
+				
+				include( locate_template( 'templates/content-item-nutrition.php' ) );
+				
+				if ($row_col_counter<3) {
+					$row_col_counter++;
+				}else {
+					//close the row adn reset counter
+					echo "</div>";
+					$row_col_counter=0;
+					$row_opened = false;
+				}
 			} else {
 				//single product
 				echo "<div class='row'>";
@@ -138,7 +170,7 @@
 	<!-- END -->
 	
 	
-	<section class="lifestyle">
+	<section class="lifestyle padded">
 	<?php
 		$lifestyle_photos = get_field('lifestyle_photos');
 		$lifestyle_callout_text = get_field('lifestyle_callout_text');

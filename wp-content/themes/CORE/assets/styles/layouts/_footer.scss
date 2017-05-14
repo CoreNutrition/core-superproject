@@ -11,7 +11,7 @@ footer {
 		 .footer-main-nav ul.nav {
 		 	@extend .row;
 		 	li {
-		 		@extend .col-md-2;
+		 		@extend .col-md-3;
 		 		a, .footer-link {
 		 			font-size:0.777rem;
 		 			color: $text-color;

@@ -9,6 +9,12 @@ if( have_rows('featured_slideshow') ):
 		$title = get_sub_field('slide_title');
 		$image = get_sub_field('slide_image');
 		$color_scheme = get_sub_field('color_scheme');
+    if ($color_scheme=="light") {
+      $btn_style = "white-btn";
+    } else {
+      $btn_style = "black-btn";
+    }
+
 
 		$button_text = get_sub_field('button_text');
 		$button_link = get_sub_field('button_link');
@@ -21,7 +27,7 @@ if( have_rows('featured_slideshow') ):
               <div class="row-content">
                   <h1 class="feature <?php echo $color_scheme; ?>"> <?php echo $title; ?></h1>
                   <?php if ($button_text && $button_link) { ?>
-                  <a href="<?php echo $button_link; ?>" class="white-btn"><?php echo $button_text; ?></a>
+                  <a href="<?php echo $button_link; ?>" class="<?php echo $btn_style; ?>"><?php echo $button_text; ?></a>
                   <?php } ?>
               </div>
               <?php if ($video_embed) { ?>

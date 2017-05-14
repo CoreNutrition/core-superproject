@@ -51,12 +51,19 @@
 }
 
 .facts {
-	padding-top:3.333rem;
-	padding-bottom:3.333rem;
 	.content-horizontal {
 		@include media-breakpoint-up(md) {
 			width:47.3686%;
 			margin:0 auto;
+		}
+	}
+	.side-by-side {
+		align-items: center;
+		& > div {
+			margin-bottom:1.333rem;
+			@include media-breakpoint-up(md) {
+				margin-bottom:0;
+			}
 		}
 	}
 }
@@ -73,8 +80,6 @@
 	background-size:cover;
 	background-position:center;
 	background-repeat:no-repeat;
-	padding-top:3.333rem;
-	padding-bottom:3.333rem;
 }
 
 .product_availability {
@@ -91,7 +96,15 @@
 }
 
 .nutritional_info {
-	background:$row-bg
+	background:$row-bg;
+	.nutrition-gridded {
+		.nutrition-item {
+			margin-bottom: 1.333rem;
+			.product-name {
+				padding-top:1.333rem;
+			}
+		}	
+	}
 }
 
 /********* //END PRDUCTS PAGEs **************************/
@@ -138,6 +151,11 @@
 
 section {
 	margin-bottom:3.333rem;
+}
+
+.padded {
+	padding-top:3.333rem;
+	padding-bottom:3.333rem;
 }
 
 .inverse {
