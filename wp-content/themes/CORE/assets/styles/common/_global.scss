@@ -111,6 +111,11 @@ h1, h2, h3, .nav-primary {
 	@extend .Flama_Condensed_Bold;
 	text-transform:uppercase;
 }
+.row_inner_padding {
+  padding-top:3rem;
+  padding-bottom:3rem;
+}
+
 h1 {
 	font-size:2.333rem;
 	line-height:2rem;
@@ -138,6 +143,10 @@ h2 {
 	line-height:1.6rem;
 }
 h3 {
+  font-size:1.333rem;
+  line-height:1.2rem;
+}
+h4 {
 	font-size:1rem;
 	line-height:0.9rem;
 }
@@ -156,6 +165,103 @@ em strong, strong em {
 	 @extend .Proximanova_Bold_Italics;
 }
 
+.content-box-offset {
+  padding:1.666rem;
+}
+
+
+.featured-posts {
+  .grid-sizer,
+  .grid-item.half,
+  .grid-item { 
+    width: 100%; 
+    @include media-breakpoint-up(sm) {
+      width: 48.5%; 
+    }
+  }
+
+  &.blog-listing {
+    .grid-sizer {
+      @include media-breakpoint-up(sm) {
+        width : 48.5%;
+      }
+      @include media-breakpoint-up(md) {
+        width : 30.333%;
+      }
+    }
+  }
+
+  .grid-item.big { 
+    width:100%;
+    margin-right: 0;
+     @include media-breakpoint-up(sm) {
+      width : 48.5%;
+    }
+    @include media-breakpoint-up(md) {
+      width: 55.327%;
+      margin-right: 8.3333%
+    }
+    .content-copy,
+    .content-image {
+      @include media-breakpoint-up(md) {
+        //padding-right: 8.3333333333%;
+      }
+    }
+  }
+  .grid-item.one-third { 
+    width:100%;
+    @include media-breakpoint-up(sm) {
+      width : 48.5%;
+    }
+    @include media-breakpoint-up(md) {
+      width : 30.333%;
+    }
+  }
+  
+  .gutter-sizer { width: 3%; }
+  .grid-item.full { width: 100%; }
+  
+  .grid-item {
+    margin-bottom:1.666rem;
+    @include transition;
+    &:hover {
+      background-color:$blog-rollover
+    }
+    .justify {
+      align-items: center;
+    }
+    .content-copy {
+      @extend .content-box-offset;
+      h2 {
+        margin-bottom:10px;
+      }
+      .excerpt {
+        a { display: none; } //hide "continued" link
+      }
+      a {
+        
+        color:$text-color;
+        &:hover > img {
+          margin-left:15px;
+        }
+      }
+      &.overtop {
+         @include media-breakpoint-up(md) {
+            position:absolute;
+            top:0;
+            left:0;
+          }
+      }
+      &.overbottom {
+        @include media-breakpoint-up(md) {
+          position:absolute;
+          bottom:0;
+          left:0;
+        }
+      }
+    }
+  }
+}
 
 
 /**************************************************/
@@ -207,6 +313,7 @@ nav {
 		ul {
 			li {
 				padding-right:1.111rem;
+        position: relative;
 				a {
 					@include transition;
 					&:link, &:visited {
@@ -220,6 +327,9 @@ nav {
 		      ul.sub-menu {
             display:block;
           }
+        }
+        &.current-menu-item {
+          a {color:$brand-primary;}
         }
 			}
 			&.sub-menu {

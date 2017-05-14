@@ -3,7 +3,9 @@ $main-sm-columns:       12;
 $sidebar-sm-columns:    4;
 
 // Colors
-$brand-primary:         #00aeef;
+$brand-primary:         #00aeef; 
+$brand-secondary:		#00aeef;
+$brand-tertiary:		#91cddc;
 $text-color:			#231f20;
 $light-grey:			#f4f4f4;
 $medium-grey:			#dfdede;
@@ -12,4 +14,5 @@ $row-bg:				#ecf3ff;
 //Links
 $link-default:			$brand-primary;
 $link-hover:			#19468d;
+$blog-rollover:			$brand-tertiary;
 

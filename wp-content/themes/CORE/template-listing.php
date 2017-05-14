@@ -14,9 +14,19 @@
 		
 		$select_page_array = get_field("select_page");
 		foreach ($select_page_array as $page_id) {
-    		if ( get_the_post_thumbnail( $page_id ) ) {
+
+            $listing_page_image = get_field("listing_page_image",$page_id);
+            //choose what image to use
+            if ($listing_page_image) {
+                $this_page_image = $listing_page_image['sizes']['large'];
+            } else if(get_the_post_thumbnail( $page_id)) {
+                $this_page_image = get_the_post_thumbnail_url( $page_id, 'large' );
+            } else {
+                $this_page_image = "";
+            }
+    		if ( $this_page_image ) {
     			echo "<a href='".get_the_permalink($page_id)."'>";
-    			echo "<div class='listing-feature' style='background-image:url(".get_the_post_thumbnail_url( $page_id, 'large' ).");'>";
+    			echo "<div class='listing-feature' style='background-image:url(".$this_page_image.");'>";
     				echo "<div class='description content-box-offset'>";
     					echo "<div class='listing_header'>";
     						echo get_field("listing_page_headline",$page_id);

@@ -18,7 +18,7 @@ if( have_rows('featured_slideshow') ):
             <!--<img src="<?php echo $image['url']; ?>" alt="<?php echo $image['alt'] ?>" />-->
             <?php if ($title) { ?>
             <div class="container overlay-content">
-              <div class="row">
+              <div class="row-content">
                   <h1 class="feature <?php echo $color_scheme; ?>"> <?php echo $title; ?></h1>
                   <?php if ($button_text && $button_link) { ?>
                   <a href="<?php echo $button_link; ?>" class="white-btn"><?php echo $button_text; ?></a>

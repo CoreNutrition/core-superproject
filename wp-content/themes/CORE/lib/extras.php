@@ -3,6 +3,7 @@
 namespace Roots\Sage\Extras;
 
 use Roots\Sage\Setup;
+use Roots\Sage\Extras;
 
 /**
  * Add <body> classes
@@ -222,6 +223,14 @@ add_action('wp_head', __NAMESPACE__ . '\\hook_meta');
 /* END meta tags ****************************/
 
 
+//Shorten automatic excerpt
+function custom_excerpt_length( $length ) {
+	return 10;
+}
+add_filter( 'excerpt_length', __NAMESPACE__ . '\\custom_excerpt_length', 999 );
+
+
+
 /**** You can also make your custom sizes selectable from your WordPress admin. **/
 
 add_filter( 'square', 'my_custom_sizes' );
@@ -230,3 +239,70 @@ function my_custom_sizes( $sizes ) {
         'square' => __( 'Large Square' ),
     ) );
 }
+
+
+/**** Get posts with matchig tags **/
+function get_related_posts($post) {
+	$orig_post = $post;
+	global $post;
+	$tags = wp_get_post_tags($post->ID);
+	if ($tags) {
+		$tag_ids = array();
+		foreach($tags as $individual_tag) $tag_ids[] = $individual_tag->term_id;
+  		$args=array(
+  			'tag__in' => $tag_ids,
+  			'post__not_in' => array($post->ID),
+  			//'posts_per_page'=>3, // Number of related posts to display.
+  			'ignore_sticky_posts'=>1,
+  			'orderby' => 'rand'
+  		);
+  		$my_query = new \wp_query( $args );
+  		if( $my_query->have_posts() ) {
+  			//shuffle($my_query);
+  			return $my_query;
+  		} else {
+  			return false;
+  		}
+	}
+	wp_reset_query();
+}
+
+//get latest posts
+/**
+ * Custom query to get section posts
+ *
+ * @param int  $num_to_load  Posts per page
+ * @param string  $paged  Current page number
+ * @return array  $the_query  Posts result set
+ */
+function get_posts($paged) {
+	$args = array(
+    'orderby'		   => 'date',
+    'order'            => 'DESC',
+    'include'          => '',
+    'exclude'          => '',
+    'meta_key'         => '',
+    'meta_value'       => '',
+    'post_type'        => 'post',
+    'post_mime_type'   => '',
+    'post_parent'      => '',
+    'author'	   => '',
+    'author_name'	   => '',
+    'post_status'      => 'publish',
+    'suppress_filters' => true,
+    'paged' => $paged
+  );
+ 
+  $the_query = new \wp_query( $args ); 
+  return $the_query;
+  wp_reset_query();
+}
+
+
+
+
+
+
+
+
+

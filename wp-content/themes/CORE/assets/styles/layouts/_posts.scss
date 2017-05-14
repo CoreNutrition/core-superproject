@@ -1,0 +1,37 @@
+.single {
+	.entry-title {
+		color:$brand-primary;
+		padding-bottom: 3.333rem;
+	}
+	.post-featured {
+		text-align: center;
+		img {
+			padding-top:0 !important;
+			margin: 0 auto;
+		}
+	}
+	.entry-content {
+		img {
+			padding-top:3rem;
+			padding-bottom:3rem;
+		}
+	}
+	footer.article-footer {
+		background: $brand-secondary;
+		@extend .row_inner_padding;
+		.related-title {
+			@extend h1;
+			padding-bottom:3.333rem;
+		}
+		.related_link {
+			@extend .content-box-offset;
+			h2 {
+
+			}
+			a {
+				color: $text-color;
+				display: block;
+			}
+		}
+	}
+}

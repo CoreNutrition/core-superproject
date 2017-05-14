@@ -2,41 +2,7 @@
 /************ HOMEPAGE **************************/
 
 .featured-posts {
-	.grid-sizer,
-	.grid-item.half { width: 48.5%; }
-	
-	.gutter-sizer { width: 3%; }
-	.grid-item.full { width: 100%; }
-	
-	.grid-item {
-		margin-bottom:1.666rem;
-		.justify {
-			align-items: center;
-		}
-		.content-headline {
-			@extend .content-box-offset;
-			h2 {
-				margin-bottom:10px;
-			}
-			a {
-				
-				color:$text-color;
-				&:hover > img {
-					margin-left:15px;
-				}
-			}
-			&.overtop {
-				position:absolute;
-				top:0;
-				left:0;
-			}
-			&.overbottom {
-				position:absolute;
-				bottom:0;
-				left:0;
-			}
-		}
-	}
+	//see global;
 }
 
 .lifestyle {
@@ -178,15 +144,11 @@ section {
 
 }
 
-.content-box-offset {
-	padding:1.666rem;
-}
-
-
 .owl-carousel {
 	.item {
 		.container {
-			.row {
+			.row-content {
+				display: flex;
 				flex-direction: column;
     			align-content: center;
     			height: 100%;

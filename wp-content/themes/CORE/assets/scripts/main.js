@@ -22,6 +22,11 @@
         
         var admin_bar_h = 30;
 
+        //adjust header padding if sub nav is visible
+        if ($('.sub-menu').is(':visible')) {
+          $('header.banner .row.header-row').css("padding-bottom","1.8rem");
+        }
+
          //init carousels
         $('.mini-carousel').owlCarousel({
           center: true,
@@ -36,7 +41,7 @@
             }
           }
         });
-        var navArrow = "<img src='/wp-content/themes/CORE/dist/images/Arrow.svg' alt='Arrow next' class='arrow'>";
+        var navArrow = "<img src='/wp-content/themes/CORE/dist/images/Arrow.svg' alt='Arrow next' class='arrow inverse'>";
         $('.owl-carousel').owlCarousel({
         	items:1,
         	nav : true, // Show next and prev buttons
