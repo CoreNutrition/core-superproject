@@ -209,7 +209,19 @@
 }
 
 
+/**************************************************/
+/************ BLOG listing **************************/
 
+.blog-pagination {
+	text-align: center;
+	padding-top:3rem;
+	padding-bottom: 6rem;
+	a, span {
+		@extend h2;
+		display: inline-block;
+		padding:.5rem;
+	}
+}
 
 /**************************************************/
 /************ PAGEs COMMON **************************/
