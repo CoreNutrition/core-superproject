@@ -34,20 +34,21 @@
           }
         });*/
         var hamburger = function() {
-          $('.menu-link').css('display','none');
-          if ($(window).width() <= breakpoint) {
+          //$('.menu-link').css('display','none');
+          /*if ($(window).width() <= breakpoint) {
             //show ham
-            //$('.menu-link').css('display','block');
+            $('.menu-link').css('display','block');
             //hide desktop nav
-            //$('.nav').css('display','none');
+            $('#menu-top-navigation').css('display','none');
             //hide social To DO: move into slide nav
-            //$('.social-channels').css('display','none');
+            $('.social-channels').css('display','none');
+
             //nav
           } else {
-            //$('.menu-link').css('display','none');
-            //$('.nav').css('display','block');
-            //$('.social-channels').css('display','block');
-          }
+            $('.menu-link').css('display','none');
+            $('#menu-top-navigation').css('display','flex');
+            $('.social-channels').css('display','block');
+          }*/
         };
         hamburger();
 
@@ -78,9 +79,14 @@
         });
 
         //adjust header padding if sub nav is visible
-        if ($('.sub-menu').is(':visible')) {
-          $('header.banner .row.header-row').css("padding-bottom","1.8rem");
-        }
+        var adjust_for_subnav = function () {
+          if ($(window).width() > breakpoint) {
+            if ($('.sub-menu').is(':visible')) {
+              $('header.banner .row.header-row').css("padding-bottom","1.8rem");
+            }
+          }
+        };
+        adjust_for_subnav();
 
          //init carousels
         $('.mini-carousel').owlCarousel({
@@ -121,10 +127,14 @@
         		}
       		});
       		//alert(bodyTopPadding);
-      		$('body').css({'padding-top': bodyTopPadding + 'px'});
-      		if ($('body').hasClass("admin-bar")) {
-      			$("header.banner").css("top",admin_bar_h+"px");
-      		}
+      		if ($(window).width() > breakpoint) {
+            $('body').css({'padding-top': bodyTopPadding + 'px'});
+            
+          }
+          if ($('body').hasClass("admin-bar")) {
+            $("header.banner").css("top",admin_bar_h+"px");
+          }
+      		
     	};
 
     	// Add some body padding dynamically based on open submenus
@@ -155,6 +165,8 @@
         $( window ).resize(function() {
           set_hero_overlay_height();
           hamburger();
+          bodyPadding();
+          adjust_for_subnav();
         });
 
       },

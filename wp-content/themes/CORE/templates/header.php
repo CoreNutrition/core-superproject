@@ -1,14 +1,14 @@
 <header class="banner">
   <div class="container main-header">
     <div class="row header-row">
-      <div class="col-md-2 brand-logo-wrapper">
+      <div class="col-md-2 col-6 brand-logo-wrapper">
     		<?php
     			$custom_logo_id = get_theme_mod( 'custom_logo' );
 				$image = wp_get_attachment_image_src( $custom_logo_id , 'full' );
 			?>
     		<a class="brand" href="<?= esc_url(home_url('/')); ?>"><img src="<?php echo $image[0]; ?>" alt="<?php bloginfo('name'); ?>"></a>
     	</div>
-    	<div class="col-md-8">
+    	<div class="col-md-8 col-2">
     		<nav class="nav-primary">
           
           <?php
@@ -20,8 +20,8 @@
         </nav>
 
     	</div>
-    	<div class="col-md-2 top-right">
-        <a href="#menu" class="menu-link">&#9776;</a>
+    	<div class="col-md-2 col-4 top-right">
+        <a href="#menu" class="menu-link"><i class="fa fa-bars fa-2x" aria-hidden="true"></i></a>
         <div class="social-channels">
           <a href="https://www.facebook.com/CoreHydration" target="_blank" style="color: #000;" class="no-style" onclick="return trackOutboundLink('https://www.facebook.com/CoreHydration', true)">
             <i class="fa fa-facebook" aria-hidden="true"></i></a>
