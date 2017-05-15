@@ -154,7 +154,7 @@
 						<?php 	
 						//there's only product, set this up 
 						$total_rows = count(get_field('product_nutritional_information'));
-						$row_col_counter = 0;
+						$row_col_counter = 1;
 						$row_opened = false;
 						while( have_rows('product_nutritional_information') ): the_row(); 
 							
