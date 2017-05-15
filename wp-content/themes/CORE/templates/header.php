@@ -18,7 +18,6 @@
             endif;
           ?>
         </nav>
-
     	</div>
     	<div class="col-md-2 col-4 top-right">
         <a href="#menu" class="menu-link"><i class="fa fa-bars fa-2x" aria-hidden="true"></i></a>
