@@ -154,14 +154,14 @@ add_action( 'init', __NAMESPACE__ . '\\disable_wp_emojicons' );
 
 //Add options page
 if( function_exists('acf_add_options_page') ) {
- 	
+
  	// add sub page
 	acf_add_options_sub_page(array(
 		'page_title' 	=> 'Theme Options',
 		'menu_title' 	=> 'Theme Options',
 		'parent_slug' 	=> 'options-general.php',
 	));
-	
+
 }
 
 /********************************************
@@ -180,7 +180,7 @@ function hook_meta() {
 	$twitter_handle = get_field('twitter_handle', 'option');
 	$output='<meta name="twitter:site" content="@'.$twitter_handle.'">';
 	$output='<meta name="twitter:creator" content="@'.$twitter_handle.'">';
-	
+
 	//if single post, use the content of the post
 	if (is_single()) {
 		//Twitter card to pull the image along with a tweet
@@ -190,18 +190,18 @@ function hook_meta() {
 			$featured_img_url = $featured[0];
 			$featured_thumbnail = wp_get_attachment_image_src( get_post_thumbnail_id( $post->ID ), "thumbnail" );
 			$featured_thumbnail_url = $featured_thumbnail[0];
-			
+
 			//use square thumbanil for twitter card
 			$output.='<meta name="twitter:image" content="'.$featured_thumbnail_url.'">';
 			$output.='<meta name="twitter:image:alt" content="'.get_the_title($post->ID).'">';
 		}
-		
+
 		//Facebook
 		$output.='<meta property="og:url" content="'.get_post_permalink($post->ID).'">';
 		//Twitter
 		$output.='<meta name="twitter:title" content="'.get_the_title($post->ID).'">';
 		$output.='<meta name="twitter:description" content="'.get_the_excerpt($post->ID).'">';
-		
+
 	} else {
 		//otherwise show general blog description and image
 		$output.='<meta property="og:title" content="'.get_bloginfo("name").'">';
@@ -215,7 +215,7 @@ function hook_meta() {
 	}
 	//Facebook image
 	$output.='<meta property="og:image" content="'.$featured_img_url.'">';
-	
+
 
 	echo $output;
 }
@@ -275,7 +275,7 @@ function get_related_posts($post) {
  * @param string  $paged  Current page number
  * @return array  $the_query  Posts result set
  */
-function get_posts($paged) {
+function get_posts($pParamHash) {
 	$args = array(
     'orderby'		   => 'date',
     'order'            => 'DESC',
@@ -290,10 +290,11 @@ function get_posts($paged) {
     'author_name'	   => '',
     'post_status'      => 'publish',
     'suppress_filters' => true,
-    'paged' => $paged
+    'paged' => ( $pParamHash['paged'] ) ? $pParamHash['paged'] : 1,
+    'posts_per_page' => ( $pParamHash['posts_per_page'] ) ? $pParamHash['posts_per_page'] : 10
   );
- 
-  $the_query = new \wp_query( $args ); 
+
+  $the_query = new \wp_query( $args );
   return $the_query;
   wp_reset_query();
 }

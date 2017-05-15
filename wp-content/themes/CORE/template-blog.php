@@ -6,8 +6,10 @@
 ?>
 
 <?php
-$paged = ( get_query_var('page') ) ? get_query_var('page') : 1;
-$the_query =  Extras\get_posts($paged);
+$pParamHash = array();
+$pParamHash['paged'] = ( get_query_var('paged') ) ? get_query_var('paged') : 1;
+$pParamHash['posts_per_page'] = 10;
+$the_query =  Extras\get_posts($pParamHash);
 $posts_array = $the_query->posts;
 ?>
 
@@ -43,5 +45,13 @@ $posts_array = $the_query->posts;
 <?php endwhile; ?>
 
 <div>
-<?php the_posts_navigation(); ?>
+<?php
+  $big = 999999999; // need an unlikely integer
+  echo paginate_links( array(
+    'base' => str_replace( $big, '%#%', esc_url( get_pagenum_link( $big ) ) ),
+    'format' => '?paged=%#%',
+    'current' => max( 1, get_query_var('paged') ),
+    'total' => $the_query->max_num_pages
+    ) );
+ ?>
 </div>
