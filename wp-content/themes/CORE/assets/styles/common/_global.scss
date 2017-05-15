@@ -116,6 +116,11 @@ h1, h2, h3, .nav-primary {
   padding-bottom:3rem;
 }
 
+main {
+  padding-right:0 !important;
+  padding-left: 0 !important;
+}
+
 h1 {
 	font-size:2.333rem;
 	line-height:2rem;
@@ -149,6 +154,7 @@ h3 {
 h4 {
 	font-size:1rem;
 	line-height:0.9rem;
+  @extend .Proximanova_Bold;
 }
 .page-header h1 {
 	color:$brand-primary;

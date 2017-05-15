@@ -251,3 +251,148 @@ section {
   	}
 }
 
+
+
+
+
+/* SPECIAL PAGE ELLIE STYLES*/
+
+#ellie_header {
+	/*background-image: url('../images/ellie/hero-header-ellie.jpg');
+	background-repeat: no-repeat;
+	background-size: contain;
+	background-position: right;*/
+	margin-bottom: 60px;
+}
+
+#ellie_header_content {
+	background-color: rgba(255,255,255,0);
+}
+
+.btn.contest-enter {
+	background-color: #00aeef;
+	border: none;
+	border-radius: 0;
+	font-family: flamaBold;
+	color: #fff;
+	font-size: 20px;
+    letter-spacing: 0.015rem;
+    line-height: 1.1;
+}
+
+#ellie_follow_bg {
+	background-image: url('../images/ellie/ellie-follow@2x.jpg');
+	background-repeat: no-repeat;
+	background-size: cover;
+	background-position: top center;
+	padding: 60px 0 140px;
+}
+
+#ellie_follow_bg i {
+	color: #00aeef;
+	font-size: 34px;
+}
+
+#ellie_follow_bg ul {
+	padding: 0;
+	margin: 60px auto;
+	display:table;
+    width:100%;
+}
+
+#ellie_follow_bg ul li {
+	display:table-cell;
+	list-style: none;
+	margin: 30px 28px;
+}
+
+
+@media (max-width: 575px) {
+	#ellie_header_content {
+		background-color: rgba(255,255,255,0.5);
+		text-align: center;
+	}
+
+	.row.reorder-xs {
+		-webkit-transform: rotate(180deg);
+		-moz-transform: rotate(180deg);
+		-ms-transform: rotate(180deg);
+		-o-transform: rotate(180deg);
+		transform: rotate(180deg);
+
+		direction: rtl;
+	}
+
+	.row.reorder-xs > [class*="col-"] {
+		-webkit-transform: rotate(-180deg);
+		-moz-transform: rotate(-180deg);
+		-ms-transform: rotate(-180deg);
+		-o-transform: rotate(-180deg);
+		transform: rotate(-180deg);
+
+		direction: ltr;
+	}
+
+	#ellie_follow_bg {
+		padding: 20px 0 80px;
+		text-align: center;
+	}
+
+	#ellie_follow_bg ul {
+		display:inline;
+	}
+
+	#ellie_follow_bg ul li {
+		list-style: none;
+		display: inline;
+		margin: 30px 16px;
+	}
+
+	#ellie_follow_bg i {
+		font-size: 28px;
+		margin: 10px auto;
+	}
+}
+
+@media (min-width: 576px) and (max-width: 767px) {
+	#ellie_header_content {
+		background-color: rgba(255,255,255,0.5);
+		text-align: center;
+	}
+
+	.row.reorder-xs {
+		-webkit-transform: rotate(180deg);
+		-moz-transform: rotate(180deg);
+		-ms-transform: rotate(180deg);
+		-o-transform: rotate(180deg);
+		transform: rotate(180deg);
+
+		direction: rtl;
+	}
+
+	.row.reorder-xs > [class*="col-"] {
+		-webkit-transform: rotate(-180deg);
+		-moz-transform: rotate(-180deg);
+		-ms-transform: rotate(-180deg);
+		-o-transform: rotate(-180deg);
+		transform: rotate(-180deg);
+
+		direction: ltr;
+	}
+
+	#ellie_follow_bg {
+		text-align: center;
+	}
+}
+
+.pullup {
+	margin-top: 0;
+	@include media-breakpoint-up(md) {
+		margin-top: -170px;
+	}
+}
+
+
+/* END NEW ELLIE STYLES */
+
+
