@@ -44,10 +44,3 @@
     
   </div>
 </footer>
-<!-- The Modal -->
-<div id="video_core_modal" class="modal-core">
-    <span class="close-modal-core">&times;</span>
-    <!-- Modal content -->
-    <div id="modal-core-content" class="modal-core-content"></div>
-</div>
-<!-- END Modal -->

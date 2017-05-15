@@ -31,8 +31,9 @@ if( have_rows('featured_slideshow') ):
                   <?php } ?>
               </div>
               <?php if ($video_embed) { ?>
-                <a href="#" data-toggle="modal" data-target="#video_core_modal" class="play hidden-xs"><img src="<?php echo get_stylesheet_directory_uri(); ?>/dist/images/play-button.svg" alt="<?php _e("Play video","sage"); ?>"></a>
-                <div class="modal-embed-content"><?php echo($video_embed); ?></div>
+                <a href="<?php echo $video_embed; ?>" class="play" data-lity><img src="<?php echo get_stylesheet_directory_uri(); ?>/dist/images/play-button.svg" alt="<?php _e("Play video","sage"); ?>"></a>
+                
+                
               <?php } ?>
             </div>
             <?php } ?>
