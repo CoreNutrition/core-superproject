@@ -16,7 +16,7 @@
                     <?php
                     // check if the repeater field has rows of data
                     $total_rows = count(get_field('press_stories'));
-                    $row_col_counter = 0;
+                    $row_col_counter = 1;
                     $row_opened = false;
                     if( have_rows('press_stories') ):
                         // loop through the rows of data

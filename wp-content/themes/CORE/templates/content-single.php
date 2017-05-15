@@ -11,11 +11,11 @@
           <div class="entry-content">
             <?php
               //If there's a featured images, show it.
-              if (has_post_thumbnail()) {
+              /*if (has_post_thumbnail()) {
                 echo "<div class='post-featured'>";
                   the_post_thumbnail('large');
                 echo "</div>";
-              } ?>
+              }*/ ?>
             <div class="row">
               <div class="col-md-10 offset-md-1">
                 <?php the_content(); ?>
