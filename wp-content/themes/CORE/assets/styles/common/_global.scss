@@ -181,6 +181,14 @@ em strong, strong em {
   padding:1.666rem;
 }
 
+/* grid item hover on blog only */
+.page-template-template-blog {
+  .grid-item {
+    &:hover {
+      background-color:$blog-rollover
+    }
+  }
+}
 
 .featured-posts {
   .grid-sizer,
@@ -236,9 +244,7 @@ em strong, strong em {
   .grid-item {
     margin-bottom:1.666rem;
     @include transition;
-    &:hover {
-      background-color:$blog-rollover
-    }
+    
     .justify {
       align-items: center;
     }

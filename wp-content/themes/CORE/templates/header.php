@@ -18,8 +18,15 @@
     		</nav>
 
     	</div>
-    	<div class="col-md-2">
-    		Social
+    	<div class="col-md-2 social-channels">
+        <a href="https://www.facebook.com/CoreHydration" target="_blank" style="color: #000;" class="no-style" onclick="return trackOutboundLink('https://www.facebook.com/CoreHydration', true)">
+          <i class="fa fa-facebook" aria-hidden="true"></i></a>
+           &nbsp; &nbsp; &nbsp;
+        <a href="https://twitter.com/COREdrinks" target="_blank" style="color: #000;" class="no-style" onclick="return trackOutboundLink('https://twitter.com/COREdrinks', true)">
+          <i class="fa fa-twitter" aria-hidden="true"></i></a>
+          &nbsp; &nbsp; &nbsp;
+        <a href="https://www.instagram.com/CORE/" target="_blank" style="color: #000;" class="no-style" onclick="return trackOutboundLink('https://www.instagram.com/CORE/', true)">
+          <i class="fa fa-instagram" aria-hidden="true"></i></a>
     	</div>
     </div>
   </div>
