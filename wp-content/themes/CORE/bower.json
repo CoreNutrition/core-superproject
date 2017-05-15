@@ -22,10 +22,10 @@
       ],
       "dependencies": {}
     },
-    "waypoints": {
+    "font-awesome": {
       "main": [
-        "./lib/jquery.waypoints.min.js",
-        "./lib/shortcuts/sticky.min.js"
+        "./scss/font-awesome.scss",
+        "./fonts/*"
       ]
     }
   }

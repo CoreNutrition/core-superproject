@@ -18,6 +18,7 @@
 	}
 	footer.article-footer {
 		background: $brand-secondary;
+		margin-top:3rem;
 		@extend .row_inner_padding;
 		.related-title {
 			@extend h1;
