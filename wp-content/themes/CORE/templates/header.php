@@ -10,12 +10,14 @@
     	</div>
     	<div class="col-md-8">
     		<nav class="nav-primary">
-      		<?php
-      			if (has_nav_menu('primary_navigation')) :
-        			wp_nav_menu(['theme_location' => 'primary_navigation', 'menu_class' => 'nav']);
-      			endif;
-      		?>
-    		</nav>
+          <a href="#menu" class="menu-link">&#9776;</a>
+          <?php
+            if (has_nav_menu('primary_navigation')) :
+              wp_nav_menu(['theme_location' => 'primary_navigation', 'menu_class' => 'nav']);
+              wp_nav_menu(['theme_location' => 'primary_navigation', 'menu_class' => 'resposnive_nav', 'menu_id' => 'menu']);
+            endif;
+          ?>
+        </nav>
 
     	</div>
     	<div class="col-md-2 social-channels">
