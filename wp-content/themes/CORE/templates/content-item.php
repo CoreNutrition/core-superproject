@@ -2,9 +2,16 @@
 	<?php
 		//push title copy and link into var so we can place it based on user selection
 		$zIndex = 200+$item_counter;
+		//if listing details field is present foer title, use that
+		if (get_field("listing_page_headline",$content_item_id)) {
+			$item_title = get_field("listing_page_headline",$content_item_id);
+		} else {
+			//otherwise use the page / post title
+			$item_title = get_the_title($content_item_id);
+		}
 		$copy = "<div class='content-copy ".$header_position."' style='z-index:".$zIndex."'>";
 		$copy .= "";
-		$copy .= "<h2><a class='animsition-link' href='".get_the_permalink($content_item_id)."'>".get_the_title($content_item_id)."</a></h2>";
+		$copy .= "<h2><a class='animsition-link' href='".get_the_permalink($content_item_id)."'>".$item_title."</a></h2>";
 		if (isset($content_excerpt)) {
 			$copy .= "<p class='excerpt'>".wp_trim_excerpt($content_excerpt)."</p>";
 		}
