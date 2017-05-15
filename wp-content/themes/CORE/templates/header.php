@@ -18,7 +18,6 @@
             endif;
           ?>
         </nav>
-
     	</div>
     	<div class="col-md-2 top-right">
         <a href="#menu" class="menu-link">&#9776;</a>

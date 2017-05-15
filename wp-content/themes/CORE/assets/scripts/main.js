@@ -35,7 +35,8 @@
         });*/
         var hamburger = function() {
           $('.menu-link').css('display','none');
-          if ($(window).width() <= breakpoint) {
+          if ($(window).width() <= breakpoint) { 
+            
             //show ham
             //$('.menu-link').css('display','block');
             //hide desktop nav
