@@ -4,11 +4,11 @@
 		$zIndex = 200+$item_counter;
 		$copy = "<div class='content-copy ".$header_position."' style='z-index:".$zIndex."'>";
 		$copy .= "";
-		$copy .= "<h2><a href='".get_the_permalink($content_item_id)."'>".get_the_title($content_item_id)."</a></h2>";
+		$copy .= "<h2><a class='animsition-link' href='".get_the_permalink($content_item_id)."'>".get_the_title($content_item_id)."</a></h2>";
 		if (isset($content_excerpt)) {
 			$copy .= "<p class='excerpt'>".wp_trim_excerpt($content_excerpt)."</p>";
 		}
-		$copy .= "<a href='".get_the_permalink($content_item_id)."'>";
+		$copy .= "<a class='animsition-link' href='".get_the_permalink($content_item_id)."'>";
 		$copy .= "<img src='".get_stylesheet_directory_uri()."/dist/images/Arrow.svg' alt='Arrow' width='50'>";
 		$copy .= "</a></div>";
 		
@@ -40,14 +40,14 @@
 					if ( $header_position == "left") {
 						echo $copy;
 					} else {
-						echo '<a href="'.get_the_permalink($content_item_id).'">';
+						echo '<a class="animsition-link" href="'.get_the_permalink($content_item_id).'">';
 						echo get_the_post_thumbnail( $content_item_id, 'large' );
 						echo '</a>';
 					}
 				echo "</div>";
 				echo "<div class='col-md-6'>";
 					if ( $header_position == "left") {
-						echo '<a href="'.get_the_permalink($content_item_id).'">';
+						echo '<a class="animsition-link" href="'.get_the_permalink($content_item_id).'">';
 						echo get_the_post_thumbnail( $content_item_id, 'large' );
 						echo '</a>';
 					} else {
