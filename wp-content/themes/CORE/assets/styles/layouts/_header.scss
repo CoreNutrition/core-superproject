@@ -21,13 +21,13 @@ header.banner {
 		}
 	}
 	&.headroom {
-    @include transition;
-    background-color:#fff;
+    transition: transform .25s ease-in-out;
+    will-change: transform;
   }
   &.headroom--unpinned {
-    opacity:0;
+    transform: translateY(-100%);
   }
  &.headroom--pinned {
-    opacity:1;
+    transform: translateY(0)
   }
 }
