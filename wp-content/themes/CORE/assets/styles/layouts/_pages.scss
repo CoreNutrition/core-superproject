@@ -109,6 +109,25 @@
 
 /********* //END PRDUCTS PAGEs **************************/
 
+/**************************************************/
+/************ LISTING PAGEs **************************/
+.press {
+	.press-item {
+		position: relative;
+		a {
+			display: block;
+			&.press_logo_link {
+				position: absolute;
+				z-index: 14;
+				left: 25px;
+				bottom:10px;
+			}
+		}
+	}
+}
+
+
+
 
 /**************************************************/
 /************ LISTING PAGEs **************************/
