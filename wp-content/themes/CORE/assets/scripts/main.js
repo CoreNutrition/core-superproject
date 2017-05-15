@@ -21,9 +21,35 @@
         // JavaScript to be fired on all pages
         
         var admin_bar_h = 30;
+        var breakpoint = 768; //breakpoint where to switch some elements to mobile layout
 
         //init slide/responsove nav
-        $('.menu-link').bigSlide();
+        $('.menu-link').bigSlide({
+          side: 'right'
+        });
+
+            //setup the hamburger menu
+        /*$('.menu-link').on( "click", function() {
+          if ($(window).width() <= breakpoint) {
+          }
+        });*/
+        var hamburger = function() {
+          $('.menu-link').css('display','none');
+          if ($(window).width() <= breakpoint) {
+            //show ham
+            //$('.menu-link').css('display','block');
+            //hide desktop nav
+            //$('.nav').css('display','none');
+            //hide social To DO: move into slide nav
+            //$('.social-channels').css('display','none');
+            //nav
+          } else {
+            //$('.menu-link').css('display','none');
+            //$('.nav').css('display','block');
+            //$('.social-channels').css('display','block');
+          }
+        };
+        hamburger();
 
 
         $(document).ready(function() {
@@ -128,6 +154,7 @@
 
         $( window ).resize(function() {
           set_hero_overlay_height();
+          hamburger();
         });
 
       },

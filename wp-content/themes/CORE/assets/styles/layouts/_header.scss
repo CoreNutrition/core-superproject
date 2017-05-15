@@ -8,6 +8,13 @@ header.banner {
 	height: auto;
 	z-index:500;
 	transition: transform .5s;
+
+
+	.menu-link {
+		//revealed via js 
+		//display: none;
+	}
+
 	.header-row {
 		align-items:center;
 		padding-top:1.388rem;
@@ -34,7 +41,7 @@ header.banner {
  &.headroom--pinned {
     transform: translateY(0)
   }
-  .social-channels {
+  .top-right {
   	@include media-breakpoint-up(md) {
   		text-align: right;
   	}
