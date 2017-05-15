@@ -22,6 +22,9 @@
         
         var admin_bar_h = 30;
 
+        //init slide/responsove nav
+        $('.menu-link').bigSlide();
+
 
         $(document).ready(function() {
           $(".animsition").animsition({
