@@ -56,11 +56,14 @@
          //init carousels
         $('.mini-carousel').owlCarousel({
           center: true,
+          autoplay: 3000,
+          stopOnHover: true,
+          addClassActive: true,
           items:3,
-          rewind: false,
-          loop: false,
+          rewind: true,
+          loop: true,
           margin:30,
-          dots: false,
+          dots: true,
           responsive:{
             600:{
               items:3
