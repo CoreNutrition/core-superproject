@@ -16,9 +16,13 @@ header.banner {
 	}
 
 	.header-row {
-		align-items:center;
-		padding-top:1.388rem;
-		padding-bottom:1.388rem;
+		padding-top:.5rem;
+		@include media-breakpoint-up(md) {
+			align-items:center;
+			padding-top:1.388rem;
+			padding-bottom:1.388rem;
+		}
+		
 		.brand {
 			display:block;
 			margin-bottom: 1rem;

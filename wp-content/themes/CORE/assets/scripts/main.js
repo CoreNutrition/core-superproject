@@ -22,35 +22,84 @@
         
         var admin_bar_h = 30;
         var breakpoint = 768; //breakpoint where to switch some elements to mobile layout
+        var menuOpen = false; ///init hamburger and slideout nav menu
 
-        //init slide/responsove nav
-        $('.menu-link').bigSlide({
-          side: 'right'
-        });
-
-            //setup the hamburger menu
-        /*$('.menu-link').on( "click", function() {
-          if ($(window).width() <= breakpoint) {
-          }
-        });*/
-        var hamburger = function() {
-          $('.menu-link').css('display','none');
-          if ($(window).width() <= breakpoint) { 
-            
-            //show ham
-            //$('.menu-link').css('display','block');
-            //hide desktop nav
-            //$('.nav').css('display','none');
-            //hide social To DO: move into slide nav
-            //$('.social-channels').css('display','none');
-            //nav
-          } else {
-            //$('.menu-link').css('display','none');
-            //$('.nav').css('display','block');
-            //$('.social-channels').css('display','block');
+        //store selector references in cache
+        DOMCACHESTORE = {};
+        DOMCACHE = {
+          get: function(selector, force) {
+            if (DOMCACHESTORE[selector] !== undefined && force === undefined) {
+              return DOMCACHESTORE[selector];
+            }
+            DOMCACHESTORE[selector] = $(selector);
+            return DOMCACHESTORE[selector];
           }
         };
-        hamburger();
+
+        var hamburger = DOMCACHE.get('#nav-toggle'); //nav trigger hamburger icon
+        var mobile_nav = DOMCACHE.get('.resposnive_nav_container'); //mobile nav
+        var desktop_nav = DOMCACHE.get('#menu-top-navigation'); //mobile nav
+        var header = DOMCACHE.get('header.banner');
+        var social = DOMCACHE.get('.social-channels');
+
+
+        hamburger.on( "click", function() {
+          if (menuOpen) {
+            mobile_nav.width(0);
+            hamburger.removeClass('active');
+            
+            $('.push').css('position','relative');
+            $('.push').css('right','0');
+
+           
+
+            mobile_nav.find('li').css('opacity','0');
+            menuOpen=false;
+            header.css('left','0');
+
+          } else {
+            mobile_nav.find('li').css('opacity','1');
+            mobile_nav.width('65%');
+            $('.push').css('right','70%');
+            
+            hamburger.addClass('active');
+            $('.push').css('position','relative');
+
+            $('.push').css('position','relative');
+           
+            header.css('left','-70%');
+           
+
+            menuOpen=true;
+          }
+        });
+
+        //If below breakpoint, hide social and desktop nav and reveal the hamburger
+        var switch_nav = function() {
+          if ( $(window).width() >= breakpoint ) {
+            desktop_nav.css('display','flex');
+            hamburger.css('display','none');
+            //force mobile nav closed if it's open
+
+             //move social out of the sidebar nav social
+            social.removeClass('in_nav');
+
+            social.prependTo('.top-right');
+
+            menuOpen=true;
+            hamburger.click();
+          } else {
+            desktop_nav.css('display','none');
+            hamburger.css('display','block');
+
+             //move social into the sidebar
+            social.addClass('in_nav');
+            social.prependTo('#menu').wrap( "<li></li>" );
+
+          }
+        };
+        switch_nav();
+
 
 
         $(document).ready(function() {
@@ -78,8 +127,10 @@
           });
         });
 
+        
+
         //adjust header padding if sub nav is visible
-        if ($('.sub-menu').is(':visible')) {
+        if ($('.nav-primary .sub-menu').is(':visible')) {
           $('header.banner .row.header-row').css("padding-bottom","1.8rem");
         }
 
@@ -110,7 +161,7 @@
       		navSpeed : 400
     	});
       	// Handle body padding dynamically based on visible submenus
-    	var bodyPadding = function() {
+    	/*var bodyPadding = function() {
       		var bodyTopPadding = $('header.banner').outerHeight();
           	$('header.banner').each(function(){
         		if ($(this).is(':visible')) {
@@ -126,10 +177,11 @@
       		if ($('body').hasClass("admin-bar")) {
       			$("header.banner").css("top",admin_bar_h+"px");
       		}
-    	};
+    	};*/
+      $('header.banner').headroom();
 
     	// Add some body padding dynamically based on open submenus
-      	bodyPadding();
+      	//bodyPadding();
 
       	var $grid = $('.grid').imagesLoaded().always( function( instance ) {
       		// init Masonry after all images have loaded
@@ -148,14 +200,16 @@
 
         //on Product pages, we need to adjust the gradient row for the absolutely position lifestyle image
         var set_hero_overlay_height = function() {
-          $lifestyle_image_height = $('.slideshow-overlay .img-overlay img').height()-100;
-          $('.slideshow-overlay').css('min-height', $lifestyle_image_height);
+          $('.slideshow-overlay .img-overlay').imagesLoaded().always( function( instance ) {
+            $lifestyle_image_height = $('.slideshow-overlay .img-overlay img').height()-100;
+            $('.slideshow-overlay').css('min-height', $lifestyle_image_height);
+          });
         };
         set_hero_overlay_height();
 
         $( window ).resize(function() {
           set_hero_overlay_height();
-          hamburger();
+          switch_nav();
         });
 
       },
