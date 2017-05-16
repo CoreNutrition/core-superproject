@@ -45,29 +45,35 @@
 					<?php
 						$lifestyle_photos = get_field('lifestyle_photos');
 						$lifestyle_callout_text = get_field('lifestyle_callout_text');
+						$lifestyle_url = get_field('lifestyle_url');
 						$counter = 1;
 
 						if( $lifestyle_photos ):
+							//start the row
+				        	echo "<div class='row'>";
 							foreach( $lifestyle_photos as $lifestyle_photo ): 
-				        		if ($counter==1) {
-				        			//start the row
-				        			echo "<div class='row'>";
-				        			echo "<div class='col-md-3 offset-md-3 image'>";
+				        		if ($counter==1) {	
+				        			echo "<div class='col-md-3 offset-md-3 col-6 image'>";
 				        		} else {
-				        			echo "<div class='col-md-3 image'>";
+				        			echo "<div class='col-md-3 col-6 image'>";
 				        		}
-				        		
+				        		if ($lifestyle_url) {
+				        			echo "<a href='".$lifestyle_url."'>";
+				        		}
 				        		echo "<img src='".$lifestyle_photo['sizes']['medium']."' alt='".$lifestyle_photo['alt']."' />";
+				        		if ($lifestyle_url) {
+				        			echo "</a>";
+				        		}
 				        		echo "</div>";
 				        		
-				        		if ($counter==3) {
-				        			//close the row
-				        			echo "</div>";
+				        		if ($counter==3) {	
 				        			$counter=1;
 				        		} else {
 				        			$counter++;
 				        		}
-				            endforeach; ?>
+				            endforeach; 
+				            //close the row
+				        	echo "</div>"; ?>
 				            <div class="lifestyle-caption">
 				            	<?php echo $lifestyle_callout_text; ?>
 				            </div>
