@@ -1,17 +1,34 @@
 <div class="col-md-3 col-sm-6 press-item">
+	<div class="press-overlays">
 	<?php 
 	if ($press_clipping) {
-		echo "<a class='press_logo_image' href='".$press_clipping['sizes']['large']."' data-lity data-lity-desc='".$press_clipping['alt']."'>";
-	} ?>
-	<img src="<?php echo $publication_logo['sizes']['square']; ?>" alt="<?php echo $publication_logo['alt']; ?>">
-	<?php
-	if ($press_clipping) {
+		echo "<a href='".$press_clipping['sizes']['large']."' title='".__('See the press clipping','sage')."' data-lity data-lity-desc='".$press_clipping['alt']."' onclick='return trackOutboundLink('".$press_clipping['sizes']['large']."', true)'>";
+		echo '<i class="fa fa-paperclip" aria-hidden="true"></i>';
 		echo "</a>";
-	} ?>
-
-	<?php
+	} 
 	if ($press_link) {
-		echo "<a class='press_logo_link' href='".$press_link."' target='_blank'><span class='small'>".__("Read article","sage")."</small></a>";
+		echo "<a href='".$press_link."' target='_blank' onclick='return trackOutboundLink('".$press_link."', true)'>";
+		echo '<i class="fa fa-external-link" aria-hidden="true"></i>';
+		echo "</a>";
 	}
+
+	?>
+	</div>
+
+	<img src="<?php echo $publication_logo['sizes']['square']; ?>" alt="<?php echo $publication_logo['alt']; ?>">
+	
+	<?php 
+	echo "<h3>";
+		if ($press_link) {
+			echo "<a class='press_logo_link' href='".$press_link."' onclick='return trackOutboundLink('".$press_link."', true)' target='_blank'>";
+		}
+		echo $press_title;
+		
+		if ($press_link) {
+			echo " <img src='".get_stylesheet_directory_uri()."/dist/images/Arrow.svg' alt='Arrow' width='35'>";
+			echo "</a>";
+		}
+	echo "</h3>";
+
 	?>
 </div>

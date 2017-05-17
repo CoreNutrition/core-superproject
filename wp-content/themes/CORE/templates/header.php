@@ -8,19 +8,19 @@
 			?>
     		<a class="brand" href="<?= esc_url(home_url('/')); ?>"><img src="<?php echo $image[0]; ?>" alt="<?php bloginfo('name'); ?>"></a>
     	</div>
-    	<div class="col-md-8 col-2">
-    		<nav class="nav-primary">
+      <div class="col-md-8 col-4">
+    		<nav class="nav-primary panel">
           
           <?php
             if (has_nav_menu('primary_navigation')) :
               wp_nav_menu(['theme_location' => 'primary_navigation', 'menu_class' => 'nav']);
-              wp_nav_menu(['theme_location' => 'primary_navigation', 'menu_class' => 'resposnive_nav', 'menu_id' => 'menu']);
             endif;
           ?>
         </nav>
     	</div>
-    	<div class="col-md-2 col-4 top-right">
-        <a href="#menu" class="menu-link"><i class="fa fa-bars fa-2x" aria-hidden="true"></i></a>
+    <div class="col-md-2 col-2 top-right">
+        <!--<a href="#menu" class="menu-link">&#9776;</a>-->
+        <a id="nav-toggle" class="hamburger" href="#menu"><span></span></a>
         <div class="social-channels">
           <a href="https://www.facebook.com/CoreHydration" target="_blank" style="color: #000;" class="no-style" onclick="return trackOutboundLink('https://www.facebook.com/CoreHydration', true)">
             <i class="fa fa-facebook" aria-hidden="true"></i></a>

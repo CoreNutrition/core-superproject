@@ -10,15 +10,14 @@
 			$item_title = get_the_title($content_item_id);
 		}
 		$copy = "<div class='content-copy ".$header_position."' style='z-index:".$zIndex."'>";
-		$copy .= "";
-		$copy .= "<h2><a class='animsition-link' href='".get_the_permalink($content_item_id)."'>".$item_title."</a></h2>";
+		$copy .= "<h2>".$item_title."</h2>";
 		if (isset($content_excerpt)) {
 			$copy .= "<p class='excerpt'>".wp_trim_excerpt($content_excerpt)."</p>";
 		}
-		$copy .= "<a class='animsition-link' href='".get_the_permalink($content_item_id)."'>";
 		$copy .= "<img src='".get_stylesheet_directory_uri()."/dist/images/Arrow.svg' alt='Arrow' width='50'>";
-		$copy .= "</a></div>";
+		$copy .= "</div>";
 		
+		echo "<a class='animsition-link' href='".get_the_permalink($content_item_id)."'>";
 		if ( $header_position == "outsidetop" || $header_position == "overtop" ) {
 			echo $copy;
 		}
@@ -47,22 +46,18 @@
 					if ( $header_position == "left") {
 						echo $copy;
 					} else {
-						echo '<a class="animsition-link" href="'.get_the_permalink($content_item_id).'">';
 						echo get_the_post_thumbnail( $content_item_id, 'large' );
-						echo '</a>';
 					}
 				echo "</div>";
 				echo "<div class='col-md-6'>";
 					if ( $header_position == "left") {
-						echo '<a class="animsition-link" href="'.get_the_permalink($content_item_id).'">';
 						echo get_the_post_thumbnail( $content_item_id, 'large' );
-						echo '</a>';
 					} else {
 						echo $copy;
 					}
 				echo "</div>";
 			echo "</div>";
 		}
-		
+		echo "</a>";
 	?>
 </div>

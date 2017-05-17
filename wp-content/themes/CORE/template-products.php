@@ -125,7 +125,7 @@
 							</div>
 							<?php if (get_field('shop_now_url')) { ?>
 							<div class="product_availability_link">
-								<a href="<?php echo get_field('shop_now_url'); ?>" class="black-btn"><?php _e("Shop Now","sage"); ?></a>
+								<a href="<?php echo get_field('shop_now_url'); ?>" class="black-btn" target="_blank"><?php _e("Shop Now","sage"); ?></a>
 							</div> 
 							<?php } ?>
 						</div>

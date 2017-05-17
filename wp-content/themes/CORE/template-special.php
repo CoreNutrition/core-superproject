@@ -35,7 +35,7 @@
       <div class="row">
         <div class="col-12">
           <div class="embed-responsive embed-responsive-16by9">
-            <iframe class="embed-responsive-item"  src="https://player.vimeo.com/video/213576514?color=00d1fe&title=0&byline=0&portrait=0" width="640" height="360" frameborder="0" webkitallowfullscreen mozallowfullscreen allowfullscreen></iframe>
+            <iframe class="embed-responsive-item"  src="https://player.vimeo.com/video/217851094?color=00d1fe&title=0&byline=0&portrait=0" width="640" height="360" frameborder="0" webkitallowfullscreen mozallowfullscreen allowfullscreen></iframe>
           </div>
 
         </div>
@@ -77,7 +77,7 @@
                 </h2>
                 <h4>On Fitness</h4>
                 <p>
-                 “I have done a lot of workouts over the years, but the thing that has definitely made me feel the most confident and empowered is boxking and kickboxing. I love the extra kick of adrenalin. I think it is important to find a workout you really love.”
+                 “I have done a lot of workouts over the years, but the thing that has definitely made me feel the most confident and empowered is boxing and kickboxing. I love the extra kick of adrenalin. I think it is important to find a workout you really love.”
                 </p>
 
                 <div class="row">
@@ -116,7 +116,7 @@
                 
                 <h4>On Beauty</h4>
                 <p>
-                  “I also love to wear makeup. Even if I’m waring tracksuit bottoms, I find putting make up on therapeutic.”
+                  “I also love to wear makeup. Even if I’m wearing tracksuit bottoms, I find putting make up on therapeutic.”
                 </p>
                 
               </div>
@@ -204,31 +204,22 @@ with human emotion, body parts, physicality.”
           <div class="col-sm-10 offset-sm-1 text-center">
             <ul>
               <li>
-                <i class="fa fa-facebook" aria-hidden="true"></i>
+                <a href="https://www.facebook.com/elliegoulding/" target="_blank" onclick="return trackOutboundLink('https://www.facebook.com/elliegoulding', true)"><i class="fa fa-facebook" aria-hidden="true"></i></a>
               </li>
               <li>
-                <i class="fa fa-twitter" aria-hidden="true"></i>
+                <a href="https://twitter.com/elliegoulding" target="_blank" onclick="return trackOutboundLink('https://twitter.com/elliegoulding', true)"><i class="fa fa-twitter" aria-hidden="true"></i></a>
               </li>
               <li>
-                <i class="fa fa-instagram" aria-hidden="true"></i>
+                <a href="https://www.instagram.com/elliegoulding/" target="_blank" onclick="return trackOutboundLink('https://www.instagram.com/elliegoulding/', true)"><i class="fa fa-instagram" aria-hidden="true"></i></a>
               </li>
               <li>
-                <i class="fa fa-youtube-play" aria-hidden="true"></i>
+                <a href="https://www.youtube.com/user/EllieGouldingVEVO" target="_blank" onclick="return trackOutboundLink('https://www.youtube.com/user/EllieGouldingVEVO', true)"><i class="fa fa-youtube-play" aria-hidden="true"></i></a>
               </li>
               <li>
-                <i class="fa fa-tumblr" aria-hidden="true"></i>
+                <a href="https://open.spotify.com/artist/0X2BH1fck6amBIoJhDVmmJ" target="_blank" onclick="return trackOutboundLink('https://open.spotify.com/artist/0X2BH1fck6amBIoJhDVmmJ', true)"><i class="fa fa-spotify" aria-hidden="true"></i></a>
               </li>
               <li>
-                <i class="fa fa-spotify" aria-hidden="true"></i>
-              </li>
-              <li>
-                <i class="fa fa-soundcloud" aria-hidden="true"></i>
-              </li>
-              <li>
-                <i class="fa fa-google-plus" aria-hidden="true"></i>
-              </li>
-              <li>
-                <i class="fa fa-apple" aria-hidden="true"></i>
+                <a href="https://soundcloud.com/elliegoulding" target="_blank" onclick="return trackOutboundLink('https://soundcloud.com/elliegoulding', true)"><i class="fa fa-soundcloud" aria-hidden="true"></i></a>
               </li>
             </ul>
       

@@ -107,10 +107,10 @@ body {
     line-height:22px;
 }
 .wrap {
-  margin-top:3rem;
+  margin-top:5rem;
 }
 .home .wrap {
-  margin-top:0;
+  margin-top:2.2rem;
 }
 
 h1, h2, h3, .nav-primary {
@@ -242,6 +242,11 @@ em strong, strong em {
   .grid-item.full { width: 100%; }
   
   .grid-item {
+    a {  
+        color:$text-color;
+        display: block;
+      }
+
     margin-bottom:1.666rem;
     @include transition;
     
@@ -256,13 +261,7 @@ em strong, strong em {
       .excerpt {
         a { display: none; } //hide "continued" link
       }
-      a {
-        
-        color:$text-color;
-        &:hover > img {
-          margin-left:15px;
-        }
-      }
+      
       &.overtop {
          @include media-breakpoint-up(md) {
             position:absolute;
@@ -387,6 +386,143 @@ nav {
 		}
 	}
 }
+
+
+.push {
+  transition: left .2s;
+}
+
+#nav-toggle { 
+  cursor: pointer;
+  display:inline-block;
+  padding:15px 0;
+  width:35px;
+  float: right;
+  
+  span, span:before, span:after {
+      transition: all 500ms ease-in-out;
+      cursor: pointer;
+      border-radius: 1px;
+      height: 5px;
+      width: 35px;
+      background: $link-default;
+      position: absolute;
+      display: block;
+      content: '';
+  }
+  span:before {
+      top: -10px; 
+  }
+  span:after {
+      bottom: -10px;
+  }
+
+  &.active span {
+      background-color: transparent;
+  }
+  &.active span:before, &.active span:after {
+      top: 0;
+  }
+  &.active span:before {
+      transform: rotate(45deg);
+  }
+  &.active span:after {
+      transform: rotate(-45deg);
+    }
+}
+
+/*Slideout nav*/
+.resposnive_nav_container {
+    background-color: $nav-bg-color;
+    height: 100%; /* 100% Full-height */
+    width: 0; /* 0 width - change this with JavaScript */
+    position: fixed; /* Stay in place */
+    z-index: 8000; /* Stay on top of everything */
+    top: 0;
+    right: 0;
+    overflow-x: hidden; /* Disable horizontal scroll */
+    //transition: 0.2s; /* 0.2 second transition effect to slide in the sidenav */
+
+    
+    
+    .menu-top-navigation-container{
+      height:100vh; 
+      padding-bottom:3rem;
+      overflow-y: scroll; /* has to be scroll, not auto */
+      -webkit-overflow-scrolling: touch;
+      @include media-breakpoint-up(sm) {
+        overflow-y: auto;
+      }
+    }
+    ul {
+      //@extend .nostyle-list;
+      padding: 0;
+      margin: 0;
+      list-style-type:none;
+      /*display:flex;
+      flex-direction:column;
+      justify-content:center;
+      align-items:center;
+      align-content:center;*/
+
+       li {
+        padding: 0;
+        margin: 0;
+        opacity:0;
+        -webkit-transition: opacity 0.2s ease-in;
+      -moz-transition: opacity 0.2s ease-in;
+      -ms-transition: opacity 0.2s ease-in;
+      -o-transition: opacity 0.2s ease-in;
+      transition: opacity 0.2s ease-in;
+        
+        width:100%;
+        margin-top:0 !important;
+        color:$white;
+        border-top:1px solid $dark-grey;
+        
+        &.current-menu-item {
+          
+        }
+         a {
+           @include transition();
+          @extend h3;
+          font-size:1.4rem;     
+          display:block;
+          padding:1rem;
+          text-decoration:none !important;
+          color:#FFF;
+        }
+        &.menu-item-has-children {
+          a {
+            padding-bottom:.2rem;
+          }
+          li {
+            border-top: none;
+          }
+        }
+       
+       }
+    }
+    ul.sub-menu {
+      a {
+        font-size:1rem;  
+        padding: 0 0 0 2rem;
+      }
+    }
+    .social-channels {
+      padding:1.4rem 1rem;
+      background: $dark-grey;
+      .fa {
+        color: #FFF;
+      }
+      a {
+        display: inline;
+        padding: 1rem 0;
+      }
+    }
+    
+}
+
 
 /************ //END NAVIGATION **************************/
 /************ HOMEPAGE MODAL **************************/

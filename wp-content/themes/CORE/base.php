@@ -9,6 +9,13 @@ use Roots\Sage\Wrapper;
 <html <?php language_attributes(); ?>>
   <?php get_template_part('templates/head'); ?>
   <body <?php body_class(); ?>>
+    <div class="resposnive_nav_container">
+      <?php
+        if (has_nav_menu('primary_navigation')) :
+              wp_nav_menu(['theme_location' => 'primary_navigation', 'menu_class' => 'mobile_nav', 'menu_id' => 'menu']);
+        endif;
+      ?>
+    </div>
     <div id="animsition" class="js-animsition-home animsition push" data-animsition-in-duration="600">
       <!--[if IE]>
         <div class="alert alert-warning">
@@ -46,6 +53,18 @@ use Roots\Sage\Wrapper;
     ga('create', 'UA-53712018-1', 'auto');
     ga('send', 'pageview');
     
+    </script>
+    <script>
+          var trackOutboundLink = function(url, isExternal) {
+            var params = {};
+          if (!isExternal) {
+              params.hitCallback = function () {
+                  document.location = url;
+              }
+          }
+          ga('send', 'event', 'outbound', 'click', url, params);
+          return isExternal;
+          }
     </script>
   </body>
 </html>
