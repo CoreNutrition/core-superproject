@@ -21,13 +21,32 @@
 					// check if the repeater field has rows of data
 					$item_counter = 0;
 					if( have_rows('content_posts') ):
+						//is the mailchimp signup configured?
+						$mailchimp_user_id = get_field('mailchimp_user_id');
+						$mailchimp_list_id = get_field('mailchimp_list_id');
+						$show_email_signup = false;	
+						$email_signup_printed = false; //since this will be isnide a loop, we only want to show the email signup form once, set this to true once the block is printed.
+						if ($mailchimp_user_id && $mailchimp_list_id) {
+							//if the user ID and list ID exist, get the rest of the data
+							$show_email_signup = true;	
+							$signup_title = get_field('signup_title');
+							$mailchimp_list_id = get_field('mailchimp_list_id');
+							$email_images = get_field('email_images');
+							$email_images_url = get_field('email_images_url');
+						}
+
 						// loop through the rows of data
 						while ( have_rows('content_posts') ) : the_row();
 							$item_counter++;
 							$content_item_id = get_sub_field('content_item');
 							$content_item_size = get_sub_field('content_item_size');
-							$header_position = get_sub_field('header_position');
+							$header_position = get_sub_field('header_position');	
+							//setup the email signup form
 							include( locate_template( 'templates/content-item.php' ) );
+							if (isset($show_email_signup) && $show_email_signup && !$email_signup_printed && $item_counter == 3) {
+								$email_signup_printed = true;
+								include( locate_template( 'templates/content-mailchimp.php' ) );
+							}
 			            endwhile;
 					endif; 
 					?>

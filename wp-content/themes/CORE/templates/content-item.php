@@ -16,6 +16,7 @@
 		}
 		$copy .= "<img src='".get_stylesheet_directory_uri()."/dist/images/Arrow.svg' alt='Arrow' width='50'>";
 		$copy .= "</div>";
+
 		
 		echo "<a class='animsition-link' href='".get_the_permalink($content_item_id)."'>";
 		if ( $header_position == "outsidetop" || $header_position == "overtop" ) {
