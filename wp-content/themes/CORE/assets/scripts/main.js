@@ -137,8 +137,8 @@
          //init carousels
         $('.mini-carousel').owlCarousel({
           center: true,
-          autoplay: 3000,
-          stopOnHover: true,
+          autoplay:true,
+          autoplayTimeout:2000,
           addClassActive: true,
           items:3,
           rewind: true,
