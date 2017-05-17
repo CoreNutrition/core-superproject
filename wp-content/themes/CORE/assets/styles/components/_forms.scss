@@ -35,11 +35,17 @@ form {
 	}
 	select {
 		-webkit-appearance: none;
+    	-moz-appearance: none;
+    	background:url('../images/dropdown-arrow.svg');
+    	background-repeat:no-repeat;
+    	background-size:10px 10px;
+    	background-position: 99% 50%;
 	}
 }
 
 // Contact form
 .frm_forms {
+	margin-bottom:3rem;
 	h3 {
 		@extend .Flama_Condensed_Bold;
 		margin-bottom:1rem
