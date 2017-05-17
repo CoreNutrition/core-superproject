@@ -13,3 +13,24 @@
   @extend .btn;
   @extend .btn-secondary;
 }
+
+//input fields
+form {
+	input[type="text"],
+	input[type="email"] {
+		width: 100%;
+		border:2px solid $text-color;
+		padding:.5rem;
+	}
+	.black-btn {
+		padding:.5rem;
+		width: 100%;
+		color:#FFF;
+		border:2px solid $text-color;
+		background: $text-color;
+		&:hover {
+			border:2px solid $brand-primary;
+			background: $brand-primary;
+		}
+	}
+}
