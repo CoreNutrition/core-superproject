@@ -24,11 +24,6 @@
         var breakpoint = 768; //breakpoint where to switch some elements to mobile layout
         var menuOpen = false; ///init hamburger and slideout nav menu
 
-        //stick footer to bottom always
-        var bodyBottomPadding = $('footer.content-info').outerHeight();
-        $('body').css('padding-bottom',bodyBottomPadding+'px');
-        
-
         //store selector references in cache
         DOMCACHESTORE = {};
         DOMCACHE = {

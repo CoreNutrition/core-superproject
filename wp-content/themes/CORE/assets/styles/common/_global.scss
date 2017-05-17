@@ -100,6 +100,7 @@
 
 html {
   height: 100%;
+  position: relative;
   box-sizing: border-box;
 }
 
@@ -110,7 +111,7 @@ html {
 }
 
 body {
-	color: $text-color;
+  color: $text-color;
   @extend .Proximanova_Regular;
   font-size: 18px;
   line-height:22px;
