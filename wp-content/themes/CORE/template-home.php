@@ -77,7 +77,7 @@
 				        			echo "<div class='col-md-3 col-6 image'>";
 				        		}
 				        		if ($lifestyle_url) {
-				        			echo "<a href='".$lifestyle_url."'>";
+				        			echo "<a href='".$lifestyle_url."' target='_blank'>";
 				        		}
 				        		echo "<img src='".$lifestyle_photo['sizes']['medium']."' alt='".$lifestyle_photo['alt']."' />";
 				        		if ($lifestyle_url) {

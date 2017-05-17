@@ -1,5 +1,10 @@
 footer {
 	&.content-info {
+		position: absolute;
+  		right: 0;
+  		bottom: 0;
+  		left: 0;
+
 		 background: $light-grey;
 		 padding-top:1.666rem;
 		 .brand {

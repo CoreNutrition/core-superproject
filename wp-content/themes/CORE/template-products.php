@@ -214,13 +214,20 @@
 					<?php
 						$lifestyle_photos = get_field('lifestyle_photos');
 						$lifestyle_callout_text = get_field('lifestyle_callout_text');
+						$lifestyle_url = get_field('lifestyle_url');
 						$counter = 1;
 
 						if( $lifestyle_photos ):
 							echo "<div class='featured-posts grid'>";
 								foreach( $lifestyle_photos as $lifestyle_photo ): 
 				        			echo "<div class='grid-item half'>";
+				        				if ($lifestyle_url) {
+						        			echo "<a href='".$lifestyle_url."' target='_blank'>";
+						        		}
 				        				echo "<img src='".$lifestyle_photo['sizes']['medium']."' alt='".$lifestyle_photo['alt']."' />";
+				        				if ($lifestyle_url) {
+						        			echo "</a>";
+						        		}
 				       				echo "</div>";
 				       				$counter ++;
 				       				if ( $counter == 2 ) {
