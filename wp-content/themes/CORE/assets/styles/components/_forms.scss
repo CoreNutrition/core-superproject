@@ -33,4 +33,15 @@ form {
 			background: $brand-primary;
 		}
 	}
+	select {
+		-webkit-appearance: none;
+	}
+}
+
+// Contact form
+.frm_forms {
+	h3 {
+		@extend .Flama_Condensed_Bold;
+		margin-bottom:1rem
+	}
 }
