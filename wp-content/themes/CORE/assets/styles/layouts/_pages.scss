@@ -117,11 +117,23 @@
 		position: relative;
 		a {
 			display: block;
+			
 			&.press_logo_link {
-				position: absolute;
+				//@extend .content-box-offset;
+				position: relative;
 				z-index: 14;
-				left: 25px;
-				bottom:10px;
+				margin-top: -35px;
+				color: $text-color;
+			}
+		}
+		.press-overlays {
+			position: absolute;
+			top: 10px;
+			right:30px;
+			a {
+				display: inline-block;
+				padding-left:10px;
+				color: $text-color;
 			}
 		}
 	}
