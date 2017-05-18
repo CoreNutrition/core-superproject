@@ -223,6 +223,11 @@
 #storemapper {
 	position: relative;
 }
+a.storemapper-map-directions {
+	border:none;
+	padding: 0;
+	font-size: inherit;
+}
 #storemapper-left {
 	@include media-breakpoint-up(md) {
 		margin-top: -100px;
@@ -253,10 +258,39 @@
 	h4 {
 		@extend h3;
 	}
-	a.storemapper-map-directions {
-		border:none;
-		padding: 0;
-		font-size: inherit;
+	.storemapper-categories {
+		display: flex;
+    	justify-content: space-between;
+		label {
+			font-size:1rem;
+			text-transform: none;
+			display: inline;
+			@extend .Proximanova_Regular;
+
+			input {
+				margin-right: 5px;
+				display: inline-block;
+				width: auto;
+			}
+		}
+		.help-block {
+			line-height: normal;
+			padding-bottom: 1rem;
+		}
+	}
+	#storemapper-list {
+		li {
+			clear: both;
+			h4 {
+				margin-top: 1rem;
+			}
+			p {
+				margin:0;
+				font-size: .875rem;
+				line-height: normal;
+			}
+			
+		}
 	}
 }
 
