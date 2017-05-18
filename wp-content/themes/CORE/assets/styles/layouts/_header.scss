@@ -49,5 +49,12 @@ header.banner {
   	@include media-breakpoint-up(md) {
   		text-align: right;
   	}
+  	a {
+  		@include transition;
+  		color:$text-color;
+  		&:hover {
+  			color:$brand-primary;
+  		}
+  	}
   }
 }
