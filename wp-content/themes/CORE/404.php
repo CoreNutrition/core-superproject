@@ -3,7 +3,7 @@
 
 <div class="container">
 	<div class="row">
-		<div class="col-12" style="padding-bottom:10rem">
+		<div class="col-12">
 			<div class="alert alert-warning">
   				<?php _e('Sorry, but the page you were trying to view does not exist.', 'sage'); ?>
 			</div>

@@ -24,7 +24,27 @@
         var breakpoint = 768; //breakpoint where to switch some elements to mobile layout
         var menuOpen = false; ///init hamburger and slideout nav menu
 
+       //Sticky footer
+       var bumpIt = function() { 
+        var footer_height = $('footer.content-info').height();
+        var viewport_height = $(window).height();
+        var header_height = $('header.banner').height();
+        var container_height = viewport_height - header_height - footer_height;
+       	$('.wrap').css('min-height', container_height);
+       }, didResize = false;
+       bumpIt();
        
+       $(window).resize(function() {
+       	didResize = true;
+       });
+       
+       setInterval(function() {  
+       	if(didResize) {
+       		didResize = false;
+       		bumpIt();
+       	}
+       }, 250);
+        //END sticky
 
         //store selector references in cache
         DOMCACHESTORE = {};
