@@ -193,16 +193,16 @@ function hook_meta() {
 
 			//use square thumbanil for twitter card
 			$output.='<meta name="twitter:image" content="'.$featured_thumbnail_url.'">';
-			$output.='<meta name="twitter:image:alt" content="'.urlencode(get_the_title($post->ID)).'">';
+			$output.='<meta name="twitter:image:alt" content="'.str_replace('"','&quot;',get_the_title($post->ID)).'">';
 		}
 
 		//Facebook
 		$output.='<meta property="og:url" content="'.get_the_permalink($post->ID).'">';
-		$output.='<meta property="og:title" content="'.urlencode(get_the_title($post->ID)).' | '.get_bloginfo("name").'">';
-		$output.='<meta property="og:description" content="'.urlencode(get_the_excerpt($post->ID)).'">';
+		$output.='<meta property="og:title" content="'.str_replace('"','&quot;',get_the_title($post->ID)).' | '.get_bloginfo("name").'">';
+		$output.='<meta property="og:description" content="'.str_replace('"','&quot;',get_the_excerpt($post->ID)).'">';
 		//Twitter
-		$output.='<meta name="twitter:title" content="'.urlencode(get_the_title($post->ID)).'">';
-		$output.='<meta name="twitter:description" content="'.urlencode(get_the_excerpt($post->ID)).'">';
+		$output.='<meta name="twitter:title" content="'.str_replace('"','&quot;',get_the_title($post->ID)).'">';
+		$output.='<meta name="twitter:description" content="'.str_replace('"','&quot;',get_the_excerpt($post->ID)).'">';
 
 	} else {
 		//otherwise show general blog description and image
