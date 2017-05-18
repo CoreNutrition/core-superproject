@@ -22,8 +22,7 @@
             <div class="col-md-6">
               <h2>
                 SHOWS US WHAT IS AT HER CORE:<br>
-                MUSIC, FITNESS, STYLE<br>
-                AND A LOVE OF CORE HYDRATION.
+                MUSIC, FITNESS, STYLE AND A<br>LOVE OF CORE HYDRATION.
               </h2>
             </div>
             <div class="col-md-6">
