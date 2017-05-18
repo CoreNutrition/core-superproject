@@ -51,6 +51,12 @@ header.banner {
   	@include media-breakpoint-up(md) {
   		align-self: center;
   	}
-
+ 	a {
+  		@include transition;
+  		color:$text-color;
+  		&:hover {
+  			color:$brand-primary;
+  		}
+  	}
   }
 }

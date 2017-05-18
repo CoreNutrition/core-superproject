@@ -46,6 +46,7 @@
        }, 250);
         //END sticky
 
+      
         //store selector references in cache
         DOMCACHESTORE = {};
         DOMCACHE = {
