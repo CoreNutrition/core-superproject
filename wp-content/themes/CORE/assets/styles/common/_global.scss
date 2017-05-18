@@ -98,24 +98,13 @@
 /*  //END FONTS *****/
 /********************************************/
 
-html {
-  height: 100%;
-  position: relative;
-  box-sizing: border-box;
-}
-
-*,
-*:before,
-*:after {
-  box-sizing: inherit;
-}
 
 body {
   color: $text-color;
   @extend .Proximanova_Regular;
   font-size: 18px;
   line-height:22px;
-  height: 100%;
+
 }
 .wrap {
   margin-top:5rem;

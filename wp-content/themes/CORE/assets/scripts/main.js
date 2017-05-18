@@ -24,6 +24,8 @@
         var breakpoint = 768; //breakpoint where to switch some elements to mobile layout
         var menuOpen = false; ///init hamburger and slideout nav menu
 
+       
+
         //store selector references in cache
         DOMCACHESTORE = {};
         DOMCACHE = {
