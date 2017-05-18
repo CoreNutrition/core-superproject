@@ -277,7 +277,7 @@ a.storemapper-map-directions {
 	}
 	.storemapper-categories {
 		display: flex;
-    	justify-content: space-between;
+    	justify-content: space-around;
 		label {
 			font-size:1rem;
 			text-transform: none;
@@ -289,12 +289,16 @@ a.storemapper-map-directions {
 				display: inline-block;
 				width: auto;
 			}
+			&:last-child {
+				display: none
+			}
 		}
 		.help-block {
 			line-height: normal;
 			padding-bottom: 1rem;
 		}
 	}
+
 
 	#storemapper-list {
 		li {
