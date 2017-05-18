@@ -11,7 +11,7 @@
 		<a href="#<?php echo str_replace(' ', '', $product_name); ?>" class="black-btn" data-lity><?php _e("Nutritional Facts", "sage"); ?></a>
 	</div>
 	<!-- Modal -->
-	<div class="modal-label animated fadeIn lity-hide container" id="<?php echo str_replace(' ', '', $product_name); ?>" tabindex="-1" style="background: <?php echo $product_color; ?>">
+	<div class="modal-label animated fadeIn lity-hide container" id="<?php echo str_replace(' ', '', $product_name); ?>" tabindex="-1" style="overflow:auto; background: <?php echo $product_color; ?>">
 	 	<div class="row" style="padding: 2rem 1.333rem;">
 			<div class="col-md-6">
 				<div>

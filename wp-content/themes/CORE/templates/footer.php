@@ -26,11 +26,11 @@
         </div>
     </div>
     <div class="row">
-       	<div class="col-md-6 copyright">
+       	<div class="col-md-7 copyright">
            	<?php //dynamic_sidebar('sidebar-footer'); ?>
            	<p>&copy; <?php echo date("Y"); ?> &#8212; <?php echo get_bloginfo("name"); ?> | <span style="color:#ccc"><em>*approximately 7.4 pH</em></span></p>
            </div>
-        <div class="col-md-6 legal">
+        <div class="col-md-5 legal">
            	<nav class="nav-legal">
       		<?php
       			if (has_nav_menu('legal_navigation')) :
