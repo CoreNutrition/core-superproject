@@ -162,14 +162,13 @@
 	.press-item {
 		margin-bottom: 30px;
 		position: relative;
-		a {
-			display: block;
-			
-			&.press_logo_link {
-				@extend .content-box-offset;
-				position: relative;
-				z-index: 14;
-				/*margin-top: -35px;*/
+		h3 {
+			padding-top: 0.5rem;
+			@include media-breakpoint-up(xl) {
+				padding:1.333rem;
+			}
+			a {
+				display: block;
 				color: $text-color;
 			}
 		}
