@@ -124,9 +124,15 @@
 }
 
 .bottle-facts {
+	
+	background-color: $brand-primary;
 	background-size:cover;
-	background-position:center;
+	background-position:right center;
 	background-repeat:no-repeat;
+	@include media-breakpoint-up(md) {
+		background-position:center center;
+	}
+
 }
 
 .product_availability {
@@ -207,13 +213,17 @@
 		background-size:cover;
 		background-position:center;
 		background-repeat:no-repeat;
-		
+
 		.description {			
 			display: flex;
 			color:#FFF;
     		flex-direction: column;
     		justify-content: center;
-			
+    		text-shadow: 1px 1px 10px $text-color;
+    		width: 100%;
+    		@include media-breakpoint-up(lg) {
+    			width: 50%;
+    		}
 			.listing_header {
 				@extend h1;
 			}
