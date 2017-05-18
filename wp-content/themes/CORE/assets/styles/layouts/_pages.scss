@@ -389,9 +389,7 @@ section {
 				}
     		}
     	}
-    	background-size:cover;
-    	background-position:50% 20%;
-    	background-repeat:no-repeat;
+    	
     	
 
     	
@@ -399,6 +397,9 @@ section {
     }
     .item, .item .container {
     	height:340px;
+    	background-size:cover;
+    	background-position:center;
+    	background-repeat:no-repeat;
  
     	@include media-breakpoint-up(md) {
     		height:540px;
@@ -406,6 +407,7 @@ section {
     	/*becuase the homepage has a full width hero, we can adjust sizing for larger screens*/
     	&.home,
     	&.home .container {
+    		background-position:50% 20%;
     		@include media-breakpoint-up(lg) {
     			height:640px;
     		}
