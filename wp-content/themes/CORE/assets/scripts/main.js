@@ -170,7 +170,13 @@
           margin:30,
           dots: true,
           responsive:{
-            600:{
+            0:{
+              items:3
+            },
+            768:{
+              items:2
+            },
+            992:{
               items:3
             }
           }
