@@ -278,6 +278,7 @@ a.storemapper-map-directions {
 			padding-bottom: 1rem;
 		}
 	}
+
 	#storemapper-list {
 		li {
 			clear: both;
@@ -366,7 +367,7 @@ section {
     		}
     	}
     	background-size:cover;
-    	background-position:center;
+    	background-position:50% 20%;
     	background-repeat:no-repeat;
     	
 
@@ -380,6 +381,12 @@ section {
     	}*/
     	@include media-breakpoint-up(md) {
     		height:540px;
+    	}
+    	@include media-breakpoint-up(lg) {
+    		height:640px;
+    	}
+    	@include media-breakpoint-up(xl) {
+    		height:740px;
     	}
     }
 
