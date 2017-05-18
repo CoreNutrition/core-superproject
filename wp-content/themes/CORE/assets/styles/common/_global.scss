@@ -106,10 +106,16 @@ body {
   line-height:22px;
 }
 .wrap {
-  margin-top:8rem;
+  margin-top:6rem;
+  @include media-breakpoint-up(md) {
+    margin-top:8rem;
+  }
 }
 .home .wrap {
-  margin-top:4rem;
+  margin-top:3rem;
+  @include media-breakpoint-up(md) {
+    margin-top:4rem;
+  }
 }
 
 h1, h2, h3, .nav-primary {
@@ -241,6 +247,11 @@ em strong, strong em {
   .grid-item.full { width: 100%; }
   
   .grid-item {
+    /* separate grid items in mobile view with a divider*/
+    border-bottom: 1px solid $medium-grey;
+    @include media-breakpoint-up(md) {
+      border-bottom:none;
+    }
     a {  
         color:$text-color;
         display: block;
@@ -381,7 +392,12 @@ nav {
 			margin-bottom:0;
 		}
 		ul li {
-			margin-left:15px;
+      margin-right:15px;
+      margin-left:0;
+      @include media-breakpoint-up(md) {
+			 margin-left:15px;
+       margin-right:0;
+      }
 		}
 	}
 }
@@ -524,71 +540,7 @@ nav {
 
 
 /************ //END NAVIGATION **************************/
-/************ HOMEPAGE MODAL **************************/
-.modal-core {
-  display: none;
-  /* Hidden by default */
-  position: absolute;
-  /* Stay in place */
-  z-index: 1041;
-  /* Sit on top */
-  left: 0;
-  top: 0;
-  width: 100%;
-  /* Full width */
-  height: 100%;
-  overflow: hidden;
-  /* Enable scroll if needed */
-  background-color: black;
-  /* Fallback color */
-  background-color: rgba(0, 0, 0, 0.8);
-  /* Black w/ opacity */
-}
-.modal-embed-content{
-  display: none;
-}
-.modal-core-content {
-  position: relative;
-  padding-bottom: 56.25%;
-  height: 0;
-  overflow: hidden;
-}
-.modal-core-content iframe, .modal-core-content object, .modal-core-content embed {
-    position: absolute;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
-}
 
-.close-modal-core {
-  color: #fff;
-  text-align: right;
-  font-size: 28px;
-  /*font-weight: bold;*/
-  width: 100%;
-  margin: 10px auto;
-  max-width: 1100px;
-  display: block;
-  position: absolute;
-  z-index: 1000;
-  right: 10%;
-  top: 10%;
-  background-color: rgba(0, 0, 0, 0.5);
-  width: 50px;
-  height: 50px;
-  border-radius: 50%;
-  text-align: center;
-  padding-top: 12px;
-}
-
-.close-modal-core:hover,
-.close-modal-core:focus {
-  opacity: 0.8;
-  text-decoration: none;
-  cursor: pointer;
-}
-/************ END HOMEPAGE MODAL **************************/
 
 /**************************************************/
 /************ OVERWRITES **************************/
@@ -596,31 +548,3 @@ nav {
 	cursor:url('../images/grabbing.png') !important;
 }
 
-.modal {
-  text-align: center;
-  padding: 0!important;
-}
-
-.modal:before {
-  content: '';
-  display: inline-block;
-  height: 100%;
-  vertical-align: middle;
-  margin-right: -4px;
-}
-
-.modal-dialog {
-  display: inline-block;
-  text-align: left;
-  vertical-align: middle;
-  max-width: none;
-}
-.modal-content {
-  border: none;
-  border-radius: 0;
-  @extend .content-box-offset;
-}
-.modal-header {
-  padding: 0;
-  border:none;
-}

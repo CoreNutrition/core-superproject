@@ -20,7 +20,7 @@ if( have_rows('featured_slideshow') ):
 		$button_link = get_sub_field('button_link');
 		$video_embed = get_sub_field('video_embed');
 		?>
-		<div class="item" style="background-image:url('<?php echo $image['url']; ?>');">
+		<div class="item<?php if (is_front_page()){ echo ' home'; } ?>" style="background-image:url('<?php echo $image['url']; ?>');">
             <!--<img src="<?php echo $image['url']; ?>" alt="<?php echo $image['alt'] ?>" />-->
             <?php if ($title) { ?>
             <div class="container overlay-content">

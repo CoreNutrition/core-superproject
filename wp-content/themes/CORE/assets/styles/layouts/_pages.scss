@@ -75,7 +75,9 @@
 /************ PRDUCTS PAGEs **************************/
 
 .slideshow-overlay {
-	margin-top:1.666rem;
+	@include media-breakpoint-up(md) {
+		margin-top:1.666rem;
+	}
 	
 	.img-overlay {
 		position:relative;
@@ -112,6 +114,12 @@
 		@extend h4;
 		text-align:center;
 		padding-top:1rem;
+		@include media-breakpoint-up(md) {
+			padding-top:2rem;
+		}
+	}
+	.mini-carousel {
+		margin-bottom: 3rem;
 	}
 }
 
@@ -129,7 +137,7 @@
 			margin-bottom:1.666rem;
 		}
 		.product_availability_link {
-			
+			margin-bottom: 2rem;
 		}
 	}
 }
@@ -158,10 +166,10 @@
 			display: block;
 			
 			&.press_logo_link {
-				//@extend .content-box-offset;
+				@extend .content-box-offset;
 				position: relative;
 				z-index: 14;
-				margin-top: -35px;
+				/*margin-top: -35px;*/
 				color: $text-color;
 			}
 		}
@@ -349,8 +357,14 @@ section {
     			@include transition;
     			position: absolute;
     			z-index: 15;
-    			top: 45%;
-    			left: 45%;
+    			/*total hack*/
+    			top: 40%;
+    			left: 40%;
+    			@include media-breakpoint-up(md) {
+    				//otherwise center
+    				top: 45%;
+    				left: 45%;
+    			}
     			-webkit-box-shadow: 0 0 10px 10px rgba(0,0,0,0.1);
     			box-shadow: 0 0 10px 10px rgba(0,0,0,0.1);
     			border-radius:50%;
@@ -376,17 +390,19 @@ section {
     }
     .item, .item .container {
     	height:340px;
-    	/*@include media-breakpoint-up(sm) {
-    		height:500px;
-    	}*/
+ 
     	@include media-breakpoint-up(md) {
     		height:540px;
     	}
-    	@include media-breakpoint-up(lg) {
-    		height:640px;
-    	}
-    	@include media-breakpoint-up(xl) {
-    		height:740px;
+    	/*becuase the homepage has a full width hero, we can adjust sizing for larger screens*/
+    	&.home,
+    	&.home .container {
+    		@include media-breakpoint-up(lg) {
+    			height:640px;
+    		}
+    		@include media-breakpoint-up(xl) {
+    			height:740px;
+    		}
     	}
     }
 
