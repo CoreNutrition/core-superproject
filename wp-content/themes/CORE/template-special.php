@@ -21,8 +21,9 @@
        
             <div class="col-md-6">
               <h2>
-                SHOWS US WHAT IS AT HER CORE:
-                MUSIC, FITNESS, STYLE  AND A LOVE OF CORE HYDRATION.
+                SHOWS US WHAT IS AT HER CORE:<br>
+                MUSIC, FITNESS, STYLE<br>
+                AND A LOVE OF CORE HYDRATION.
               </h2>
             </div>
             <div class="col-md-6">
@@ -77,7 +78,7 @@
                 </h2>
                 <h4>On Fitness</h4>
                 <p>
-                 “I have done a lot of workouts over the years, but the thing that has definitely made me feel the most confident and empowered is boxing and kickboxing. I love the extra kick of adrenalin. I think it is important to find a workout you really love.”
+                 “I have done a lot of workouts over the years, but the thing that has definitely made me feel the most confident and empowered is boxing and kickboxing. I love the extra kick of adrenaline. I think it is important to find a workout you really love.”
                 </p>
 
                 <div class="row">
@@ -116,7 +117,7 @@
                 
                 <h4>On Beauty</h4>
                 <p>
-                  “I also love to wear makeup. Even if I’m wearing tracksuit bottoms, I find putting make up on therapeutic.”
+                  “I also love to wear makeup. Even if I’m wearing tracksuit bottoms, I find putting makeup on therapeutic.”
                 </p>
                 
               </div>
