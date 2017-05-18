@@ -31,7 +31,7 @@
 					} else {
 						$span = 12;
 					}
-					echo "<div class='col-md-".$span."'>";
+					echo "<div class='col-md-".$span."''>";
 						echo get_the_post_thumbnail( $content_item_id, 'large' );
 					echo "</div>";
 				echo "</div>";

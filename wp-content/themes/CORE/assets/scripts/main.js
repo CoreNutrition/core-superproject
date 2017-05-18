@@ -24,29 +24,6 @@
         var breakpoint = 768; //breakpoint where to switch some elements to mobile layout
         var menuOpen = false; ///init hamburger and slideout nav menu
 
-       //Sticky footer
-       var bumpIt = function() { 
-        var footer_height = $('footer.content-info').height();
-        var viewport_height = $(window).height();
-        var header_height = $('header.banner').height();
-        var container_height = viewport_height - header_height - footer_height;
-       	$('.wrap').css('min-height', container_height);
-       }, didResize = false;
-       bumpIt();
-       
-       $(window).resize(function() {
-       	didResize = true;
-       });
-       
-       setInterval(function() {  
-       	if(didResize) {
-       		didResize = false;
-       		bumpIt();
-       	}
-       }, 250);
-        //END sticky
-
-      
         //store selector references in cache
         DOMCACHESTORE = {};
         DOMCACHE = {
@@ -64,7 +41,34 @@
         var desktop_nav = DOMCACHE.get('#menu-top-navigation'); //mobile nav
         var header = DOMCACHE.get('header.banner');
         var social = DOMCACHE.get('.social-channels');
+        var footer = DOMCACHE.get('footer.content-info');
+        var wrap = DOMCACHE.get('.wrap');
 
+
+       //Sticky footer
+       var bumpIt = function() { 
+        var footer_height = footer.height();
+        var viewport_height = $(window).height();
+        var header_height = header.height();
+        var container_height = viewport_height - header_height - footer_height;
+       	wrap.css('min-height', container_height);
+       }, didResize = false;
+       bumpIt();
+       
+       $(window).resize(function() {
+       	didResize = true;
+       });
+       
+       setInterval(function() {  
+       	if(didResize) {
+       		didResize = false;
+       		bumpIt();
+       	}
+       }, 250);
+        //END sticky
+
+      
+        
 
         hamburger.on( "click", function() {
           if (menuOpen) {
@@ -183,29 +187,11 @@
       		smartSpeed : 300,
       		navSpeed : 400
     	});
-      	// Handle body padding dynamically based on visible submenus
-    	/*var bodyPadding = function() {
-      		var bodyTopPadding = $('header.banner').outerHeight();
-          	$('header.banner').each(function(){
-        		if ($(this).is(':visible')) {
-        			if ($("body").hasClass("admin-bar")) {
-          				//add padding for that too
-          				bodyTopPadding +=admin_bar_h;
-          			}
-          			$(this).headroom();
-        		}
-      		});
-      		//alert(bodyTopPadding);
-      		$('body').css({'padding-top': bodyTopPadding + 'px'});
-      		if ($('body').hasClass("admin-bar")) {
-      			$("header.banner").css("top",admin_bar_h+"px");
-      		}
-    	};*/
+      
+      //add JS for the header reveal when we need it / hide it when we don't
       $('header.banner').headroom();
 
-    	// Add some body padding dynamically based on open submenus
-      	//bodyPadding();
-
+      //Masonry grid where used
       	var $grid = $('.grid').imagesLoaded().always( function( instance ) {
       		// init Masonry after all images have loaded
       		$grid.masonry({

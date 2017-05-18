@@ -16,10 +16,10 @@
 						<?php include( locate_template( 'templates/content-slideshow.php' ) );	 ?>
 					</div>
 					<div class="row slideshow-overlay">
-						<div class="col-7 col-md-5 offset-md-1">
+						<div class="col-md-5 offset-md-1">
 							<?php the_content(); ?>
 						</div>
-						<div class="col-5 col-md-4 offset-md-1 img-overlay">
+						<div class="col-md-4 offset-md-1 img-overlay">
 						<?php $lifestyle_image_overlay = get_field('lifestyle_image_overlay');
 							if ($lifestyle_image_overlay) {
 								echo "<img src='".$lifestyle_image_overlay['sizes']['medium']."' alt='".$lifestyle_image_overlay['alt']."' />";
@@ -230,7 +230,7 @@
 						        		}
 				       				echo "</div>";
 				       				$counter ++;
-				       				if ( $counter == 2 ) {
+				       				if ( $counter == 2 && $lifestyle_callout_text ) {
 				       					echo "<div class='grid-item half content-box-offset'>";
 				        					echo "<h2>".$lifestyle_callout_text."</h2>";
 				       					echo "</div>";
