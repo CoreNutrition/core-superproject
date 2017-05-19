@@ -124,9 +124,15 @@
 }
 
 .bottle-facts {
+	
+	background-color: $brand-primary;
 	background-size:cover;
-	background-position:center;
+	background-position:right center;
 	background-repeat:no-repeat;
+	@include media-breakpoint-up(md) {
+		background-position:center center;
+	}
+
 }
 
 .product_availability {
@@ -207,13 +213,17 @@
 		background-size:cover;
 		background-position:center;
 		background-repeat:no-repeat;
-		
+
 		.description {			
 			display: flex;
 			color:#FFF;
     		flex-direction: column;
     		justify-content: center;
-			
+    		text-shadow: 1px 1px 10px $text-color;
+    		width: 100%;
+    		@include media-breakpoint-up(lg) {
+    			width: 50%;
+    		}
 			.listing_header {
 				@extend h1;
 			}
@@ -236,7 +246,7 @@ a.storemapper-map-directions {
 	font-size: inherit;
 }
 #storemapper-left {
-	@include media-breakpoint-up(md) {
+	@include media-breakpoint-up(lg) {
 		margin-top: -100px;
     	width: 50% !important;
     	float: right !important;
@@ -267,7 +277,7 @@ a.storemapper-map-directions {
 	}
 	.storemapper-categories {
 		display: flex;
-    	justify-content: space-between;
+    	justify-content: space-around;
 		label {
 			font-size:1rem;
 			text-transform: none;
@@ -279,12 +289,16 @@ a.storemapper-map-directions {
 				display: inline-block;
 				width: auto;
 			}
+			&:last-child {
+				display: none
+			}
 		}
 		.help-block {
 			line-height: normal;
 			padding-bottom: 1rem;
 		}
 	}
+
 
 	#storemapper-list {
 		li {
@@ -379,9 +393,7 @@ section {
 				}
     		}
     	}
-    	background-size:cover;
-    	background-position:50% 20%;
-    	background-repeat:no-repeat;
+    	
     	
 
     	
@@ -389,6 +401,9 @@ section {
     }
     .item, .item .container {
     	height:340px;
+    	background-size:cover;
+    	background-position:center;
+    	background-repeat:no-repeat;
  
     	@include media-breakpoint-up(md) {
     		height:540px;
@@ -396,6 +411,7 @@ section {
     	/*becuase the homepage has a full width hero, we can adjust sizing for larger screens*/
     	&.home,
     	&.home .container {
+    		background-position:50% 20%;
     		@include media-breakpoint-up(lg) {
     			height:640px;
     		}

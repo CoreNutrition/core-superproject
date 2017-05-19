@@ -73,10 +73,10 @@
 			<div class="col-12">
 				<div class="icon-slideshow">
 					<div class="row">
-						<div class="col-md-4 offset-md-1">
+						<div class="col-md-6 col-xl-4 offset-xl-1">
 							<?php get_template_part('templates/entry-minicarousel'); ?>
 						</div>
-						<div class="col-md-5 offset-md-1">
+						<div class="col-md-6 col-xl-5 offset-xl-1">
 							<?php echo get_field('carousel_description'); ?>
 						</div>
 					</div>
