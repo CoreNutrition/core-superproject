@@ -34,7 +34,7 @@
      * @private
      */
     update : function() {
-      this.callback && this.callback();
+      if(this.callback){ this.callback(); }
       this.ticking = false;
     },
 
@@ -180,7 +180,7 @@
       if(classList.contains(classes.pinned) || !classList.contains(classes.unpinned)) {
         classList.add(classes.unpinned);
         classList.remove(classes.pinned);
-        this.onUnpin && this.onUnpin.call(this);
+        if(this.onUnpin){ this.onUnpin.call(this); }
       }
     },
 
@@ -194,7 +194,7 @@
       if(classList.contains(classes.unpinned)) {
         classList.remove(classes.unpinned);
         classList.add(classes.pinned);
-        this.onPin && this.onPin.call(this);
+        if(this.onPin){ this.onPin.call(this); }
       }
     },
 
@@ -208,7 +208,7 @@
       if(!classList.contains(classes.top)) {
         classList.add(classes.top);
         classList.remove(classes.notTop);
-        this.onTop && this.onTop.call(this);
+        if(this.onTop){ this.onTop.call(this); }
       }
     },
 
@@ -222,7 +222,7 @@
       if(!classList.contains(classes.notTop)) {
         classList.add(classes.notTop);
         classList.remove(classes.top);
-        this.onNotTop && this.onNotTop.call(this);
+        if(this.onNotTop){ this.onNotTop.call(this); }
       }
     },
 

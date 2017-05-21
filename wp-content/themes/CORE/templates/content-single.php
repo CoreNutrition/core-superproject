@@ -27,6 +27,9 @@
       </div>
     </div>
    
+   <?php 
+   $related_posts = Extras\get_related_posts($post);
+   if($related_posts) { ?>
     <footer class="article-footer">
       <div class="container">
         <div class="row">
@@ -36,37 +39,38 @@
             </div>
             <div class="row">
                <?php 
-                  $related_posts = Extras\get_related_posts($post);
                   $max = 3;
                   $current = 0;
-                  while ( $related_posts->have_posts() ) {
-                      $related_posts->the_post();
-                      if ($current < $max) {
-                        echo '<div class="col-md-4">';
-                          //$media = get_attached_media( 'image', $post->ID );
-                          //echo count($media);
+                  if ( $related_posts ) {
+                    while ( $related_posts->have_posts() ) {
+                        $related_posts->the_post();
+                        if ($current < $max) {
+                          echo '<div class="col-md-4">';
+                            //$media = get_attached_media( 'image', $post->ID );
+                            //echo count($media);
 
-                          if (has_post_thumbnail()) {
-                             echo "<div class='related_image'>";
+                            if (has_post_thumbnail()) {
+                               echo "<div class='related_image'>";
+                                echo '<a href="'.get_the_permalink().'">';
+                                  the_post_thumbnail('medium');
+                                echo '</a>';
+                               echo '</div>';
+                            } else {
+                              //see if there are any images within the post we can use
+
+                            }
+                            echo "<div class='related_link'>";
                               echo '<a href="'.get_the_permalink().'">';
-                                the_post_thumbnail('medium');
+                                echo '<h2>';
+                                  echo get_the_title();
+                                echo '</h2>';
+                                echo '<img src="'.get_stylesheet_directory_uri().'/dist/images/Arrow.svg" alt="Arrow" width="50">';
                               echo '</a>';
-                             echo '</div>';
-                          } else {
-                            //see if there are any images within the post we can use
-
-                          }
-                          echo "<div class='related_link'>";
-                            echo '<a href="'.get_the_permalink().'">';
-                              echo '<h2>';
-                                echo get_the_title();
-                              echo '</h2>';
-                              echo '<img src="'.get_stylesheet_directory_uri().'/dist/images/Arrow.svg" alt="Arrow" width="50">';
-                            echo '</a>';
+                            echo '</div>';
                           echo '</div>';
-                        echo '</div>';
-                        $current++;
-                      }
+                          $current++;
+                        }
+                    }
                   }
                   /* Restore original Post Data */
                   wp_reset_postdata();
@@ -77,6 +81,7 @@
       </div>
      
     </footer>
+    <?php } ?>
     <?php //comments_template('/templates/comments.php'); ?>
   </article>
 <?php endwhile; ?>
