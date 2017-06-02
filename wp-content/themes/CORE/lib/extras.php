@@ -171,6 +171,7 @@ function hook_meta() {
 	//default image, if there's no featured
 	//image added via the options page under Settings --> Theme options
 	$featured_img_url = get_field('social', 'option');
+	$site_description = get_field('site_description', 'option');
 
 	//Facebook
 	$output='<meta property="og:type" content="website">';
@@ -184,7 +185,7 @@ function hook_meta() {
 			
 	
 	//if single post, use the content of the post
-	if (is_single()) {
+	if (is_single() || is_page()) {
 		//check if featured image is set
 		$featured = wp_get_attachment_image_src( get_post_thumbnail_id( $post->ID ), "large" );
 		if( $featured ) {
@@ -205,12 +206,12 @@ function hook_meta() {
 		//Facebook
 		$output.='<meta property="og:title" content="'.get_bloginfo("name").'">';
 		$output.='<meta property="og:url" content="'.get_bloginfo("url").'">';
-		$output.='<meta property="description" content="'.get_bloginfo('description').'">';
-		$output.='<meta name="description" property="og:description" content="'.get_bloginfo("description").'">';
+		$output.='<meta property="description" content="'.$site_description.'">';
+		$output.='<meta name="description" property="og:description" content="'.$site_description.'">';
 
 		//Twitter
 		$output.='<meta name="twitter:title" content="'.str_replace('"','&quot;',get_the_title($post->ID)).'">';
-		$output.='<meta name="twitter:description" content="'.get_bloginfo('description').'">';
+		$output.='<meta name="twitter:description" content="'.$site_description.'">';
 	}
 	//Facebook image
 	$output.='<meta property="og:image" content="'.$featured_img_url.'">';
@@ -223,6 +224,12 @@ function hook_meta() {
 }
 add_action('wp_head', __NAMESPACE__ . '\\hook_meta');
 /* END meta tags ****************************/
+
+/* Add excerpt support to pages */
+add_action( 'init', __NAMESPACE__ . '\\add_excerpts_to_pages' );
+function add_excerpts_to_pages() {
+     add_post_type_support( 'page', 'excerpt' );
+}
 
 
 //Shorten automatic excerpt
