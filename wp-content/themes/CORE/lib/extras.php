@@ -203,10 +203,10 @@ function hook_meta() {
 		//Facebook
 		$output.='<meta property="og:url" content="'.get_the_permalink($post->ID).'">';
 		$output.='<meta property="og:title" content="'.str_replace('"','&quot;',get_the_title($post->ID)).' | '.get_bloginfo("name").'">';
-		$output.='<meta name="description" property="og:description" content="'.str_replace('"','&quot;',get_the_excerpt($post->ID)).'">';
+		$output.='<meta name="description" property="og:description" content="'.$desc.'">';
 
 		//Twitter
-		$output.='<meta name="twitter:title" content="'.str_replace('"','&quot;',get_the_title($post->ID)).'">';
+		$output.='<meta name="twitter:title" content="'.str_replace('"','&quot;',str_replace('"','&quot;',get_the_title($post->ID)).' | '.get_bloginfo("name").'">';
 		$output.='<meta name="twitter:description" content="'.$desc.'">';
 		
 	} else {
