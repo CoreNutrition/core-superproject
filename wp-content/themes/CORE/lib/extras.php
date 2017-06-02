@@ -191,6 +191,14 @@ function hook_meta() {
 		if( $featured ) {
 			$featured_img_url = $featured[0];
 		}
+		//See if excerpt is set for this page or post
+		$desc = get_the_excerpt($post->ID);
+		if ($desc) {
+			$desc = str_replace('"','&quot;',$desc);
+		} else {
+			//if not set, use generic one
+			$desc = $site_description;
+		}
 
 		//Facebook
 		$output.='<meta property="og:url" content="'.get_the_permalink($post->ID).'">';
@@ -199,7 +207,7 @@ function hook_meta() {
 
 		//Twitter
 		$output.='<meta name="twitter:title" content="'.str_replace('"','&quot;',get_the_title($post->ID)).'">';
-		$output.='<meta name="twitter:description" content="'.str_replace('"','&quot;',get_the_excerpt($post->ID)).'">';
+		$output.='<meta name="twitter:description" content="'.$desc.'">';
 		
 	} else {
 		//otherwise show general blog description and image
@@ -307,12 +315,3 @@ function get_posts($pParamHash) {
   return $the_query;
   wp_reset_query();
 }
-
-
-
-
-
-
-
-
-
