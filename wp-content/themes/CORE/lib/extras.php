@@ -172,48 +172,44 @@ function hook_meta() {
 	//image added via the options page under Settings --> Theme options
 	$featured_img_url = get_field('social', 'option');
 
-
 	//Facebook
 	$output='<meta property="og:type" content="website">';
 	$output.='<meta property="og:site_name" content="'.get_bloginfo("name").'">';
-	//Twitter
-	$twitter_handle = get_field('twitter_handle', 'option');
-	$output='<meta name="twitter:site" content="@'.$twitter_handle.'">';
-	$output='<meta name="twitter:creator" content="@'.$twitter_handle.'">';
-
+	
 	//if single post, use the content of the post
 	if (is_single()) {
-		//Twitter card to pull the image along with a tweet
 		//check if featured image is set
-		$featured = wp_get_attachment_image_src( get_post_thumbnail_id( $post->ID ), "full" );
+		$featured = wp_get_attachment_image_src( get_post_thumbnail_id( $post->ID ), "large" );
 		if( $featured ) {
 			$featured_img_url = $featured[0];
-			$featured_thumbnail = wp_get_attachment_image_src( get_post_thumbnail_id( $post->ID ), "thumbnail" );
-			$featured_thumbnail_url = $featured_thumbnail[0];
 
-			//use square thumbanil for twitter card
-			$output.='<meta name="twitter:image" content="'.$featured_thumbnail_url.'">';
+			//Pull twitter card only if featured image is set
+			//Twitter
+			$twitter_handle = get_field('twitter_handle', 'option');
+
+			$output.='<meta name="twitter:card" content="summary_large_image">';
+			$output.='<meta name="twitter:site" content="@'.$twitter_handle.'">';
+			$output.='<meta name="twitter:creator" content="@'.$twitter_handle.'">';		
+			$output.='<meta name="twitter:title" content="'.str_replace('"','&quot;',get_the_title($post->ID)).'">';
+			$output.='<meta name="twitter:description" content="'.str_replace('"','&quot;',get_the_excerpt($post->ID)).'">';
+			$output.='<meta name="twitter:image" content="'.$featured_img_url.'">';
 			$output.='<meta name="twitter:image:alt" content="'.str_replace('"','&quot;',get_the_title($post->ID)).'">';
 		}
 
+		//Description
+		$output.='<meta property="description" content="'.str_replace('"','&quot;',get_the_excerpt($post->ID)).'">';
+		
 		//Facebook
 		$output.='<meta property="og:url" content="'.get_the_permalink($post->ID).'">';
 		$output.='<meta property="og:title" content="'.str_replace('"','&quot;',get_the_title($post->ID)).' | '.get_bloginfo("name").'">';
 		$output.='<meta property="og:description" content="'.str_replace('"','&quot;',get_the_excerpt($post->ID)).'">';
-		//Twitter
-		$output.='<meta name="twitter:title" content="'.str_replace('"','&quot;',get_the_title($post->ID)).'">';
-		$output.='<meta name="twitter:description" content="'.str_replace('"','&quot;',get_the_excerpt($post->ID)).'">';
-
+		
 	} else {
 		//otherwise show general blog description and image
 		$output.='<meta property="og:title" content="'.get_bloginfo("name").'">';
 		$output.='<meta property="og:url" content="'.get_bloginfo("url").'">';
+		$output.='<meta property="description" content="'.get_bloginfo('description').'">';
 		$output.='<meta property="og:description" content="'.get_bloginfo("description").'">';
-		//Twitter
-		$output.='<meta name="twitter:card" content="summary_large_image">';
-		$output.='<meta name="twitter:title" content="'.get_bloginfo("name").'">';
-		$output.='<meta name="twitter:description" content="'.get_bloginfo("description").'">';
-		$output.='<meta name="twitter:image" content="'.$featured_img_url.'">';
 	}
 	//Facebook image
 	$output.='<meta property="og:image" content="'.$featured_img_url.'">';
