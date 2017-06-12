@@ -14,6 +14,14 @@
   @extend .btn-secondary;
 }
 
+.select-base {
+	-webkit-appearance: none;
+    -moz-appearance: none;
+    background-repeat:no-repeat;
+    background-size:10px 10px;
+    background-position: 95% 50%;
+}
+
 //input fields
 form {
 	input[type="text"],
@@ -34,16 +42,14 @@ form {
 		}
 	}
 	select {
-		-webkit-appearance: none;
-    	-moz-appearance: none;
     	background:url('../images/dropdown-arrow.svg');
-    	background-repeat:no-repeat;
-    	background-size:10px 10px;
-    	background-position: 95% 50%;
+    	@extend .select-base;
+    	
 	}
 	.white-dropdown-arrow {
 		select {
 			background:url('../images/white-dropdown-arrow.svg');
+			@extend .select-base;
 		}
 	}
 }
