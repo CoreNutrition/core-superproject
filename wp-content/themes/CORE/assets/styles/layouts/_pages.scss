@@ -511,14 +511,18 @@ section {
 }
 
 .btn.contest-enter {
+	@extend h2; 
 	background-color: #00aeef;
 	border: none;
 	border-radius: 0;
-	font-family: flamaBold;
 	color: #fff;
 	font-size: 20px;
     letter-spacing: 0.015rem;
     line-height: 1.1;
+    display: inline-block;
+    width: auto;
+    margin-top: 15px;
+    padding: 10px 40px;
 }
 
 #ellie_follow_bg {
@@ -545,6 +549,24 @@ section {
 	display:table-cell;
 	list-style: none;
 	margin: 30px 28px;
+}
+
+.sweepstakes {
+	background: #00aeef;
+	color: #FFF;
+	header {
+		text-align: center;
+	}
+	a {
+		&:link, &:visited {
+			color: #FFF;
+			text-decoration: underline;
+		}
+		&:hover, &:focus, &:active {
+			color:#000;
+			text-decoration: none;
+		}
+	}
 }
 
 
@@ -589,6 +611,11 @@ section {
 		margin: 30px 16px;
 	}
 
+	.btn.contest-enter {
+		display:block;
+	    width: 100%;
+	}
+
 	#ellie_follow_bg i {
 		font-size: 28px;
 		margin: 10px auto;
@@ -619,6 +646,11 @@ section {
 		transform: rotate(-180deg);
 
 		direction: ltr;
+	}
+
+	.btn.contest-enter {
+		display:block;
+	    width: 100%;
 	}
 
 	#ellie_follow_bg {
