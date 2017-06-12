@@ -24,7 +24,7 @@
                 SHOWS US WHAT IS AT HER CORE:<br>
                 MUSIC, FITNESS, STYLE AND A<br>LOVE OF CORE HYDRATION.
               </h2>
-              <a href="#" class="btn contest-enter btn-block">
+              <a href="#enter" class="btn contest-enter btn-block">
                     <span style="color: #000;">ENTER HERE</span><br>
                     FOR A CHANCE TO WIN<br>
                     <span style="color: #000;">A  WORKOUT WITH ELLIE</span>
@@ -192,7 +192,7 @@ with human emotion, body parts, physicality.”
 
     </div>
 
-    <div class="container-fluid padded sweepstakes">
+    <div id="enter" class="container-fluid padded sweepstakes">
       <div class="container">
           <div class="row">
             <div class="col-md-6 offset-md-3">
