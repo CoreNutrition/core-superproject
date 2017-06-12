@@ -24,6 +24,11 @@
                 SHOWS US WHAT IS AT HER CORE:<br>
                 MUSIC, FITNESS, STYLE AND A<br>LOVE OF CORE HYDRATION.
               </h2>
+              <a href="#" class="btn contest-enter btn-block">
+                    <span style="color: #000;">ENTER HERE</span><br>
+                    FOR A CHANCE TO WIN<br>
+                    <span style="color: #000;">A  WORKOUT WITH ELLIE</span>
+                  </a>
             </div>
             <div class="col-md-6">
               <img class="img-responsive" src="<?php echo get_stylesheet_directory_uri(); ?>/dist/images/ellie/hero-header-ellie.jpg" />
@@ -185,6 +190,21 @@ with human emotion, body parts, physicality.”
       </div>
       <!-- END Music & CORE -->
 
+    </div>
+
+    <div class="container-fluid padded sweepstakes">
+      <div class="container">
+          <div class="row">
+            <div class="col-md-6 offset-md-3">
+              <header>
+                <h2>Enter for a chance to win</h2>
+                <p>make it a priortiy to drink a lot of CORE water throughout the day. It’s pH balanced with electroytes and minerals so I know it’s working in harmony with my body while it hydrates me</p>
+                <p><a href="#" target="_blank"><strong>Official Rules</strong></a></p>
+              </header>
+              <?php echo FrmFormsController::show_form($key='cucen', $title=false, $description=false); ?>
+            </div>
+          </div>
+        </div>
     </div>
 
 
