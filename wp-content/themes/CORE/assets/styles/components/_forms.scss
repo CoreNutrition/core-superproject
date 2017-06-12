@@ -41,6 +41,11 @@ form {
     	background-size:10px 10px;
     	background-position: 95% 50%;
 	}
+	.white-dropdown-arrow {
+		select {
+			background:url('../images/white-dropdown-arrow.svg');
+		}
+	}
 }
 
 // Contact form
