@@ -554,7 +554,10 @@ section {
 .sweepstakes {
 	background: #00aeef;
 	color: #FFF;
-	header {
+	.frm_form_title {
+		@extend h2;
+	}
+	.frm_form_title, .frm_description {
 		text-align: center;
 	}
 	a {

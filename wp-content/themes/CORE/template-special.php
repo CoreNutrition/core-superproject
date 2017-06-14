@@ -196,12 +196,7 @@ with human emotion, body parts, physicality.”
       <div class="container">
           <div class="row">
             <div class="col-md-6 offset-md-3">
-              <header>
-                <h2>Enter for a chance to win</h2>
-                <p>make it a priortiy to drink a lot of CORE water throughout the day. It’s pH balanced with electroytes and minerals so I know it’s working in harmony with my body while it hydrates me</p>
-                <p><a href="/wp-content/uploads/2017/06/Win-A-Workout-with-Ellie-Sweepstakes-Official-Rules.pdf" target="_blank"><strong>Official Rules</strong></a></p>
-              </header>
-              <?php echo FrmFormsController::show_form($key='cucen', $title=false, $description=false); ?>
+              <?php echo FrmFormsController::get_form_shortcode(array('key' => 'cucen', 'title' => true, 'description' => true)); ?>
             </div>
           </div>
         </div>
