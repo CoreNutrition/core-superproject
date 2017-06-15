@@ -315,3 +315,42 @@ function get_posts($pParamHash) {
   return $the_query;
   wp_reset_query();
 }
+
+
+
+//Formidable forms hooks
+add_action('frm_display_form_action', __NAMESPACE__ . '\\check_entry_count', 8, 3);
+function check_entry_count($params, $fields, $form) {
+	global $user_ID;
+	remove_filter('frm_continue_to_new', '__return_false', 50);
+	if($form->id == 7 and !is_admin()){ 
+		//get date/time in NYC
+		date_default_timezone_set('America/New_York');
+		$now = time();
+		$cutoff = 1501502399; // 07/31/2017 11:59:59
+		if($now > $cutoff){ //close the form
+			echo '<h2 style="text-align:center;">'.__('This contest has concluded','sage').'</h2>';
+			add_filter('frm_continue_to_new', '__return_false', 50);
+		}
+	}
+}
+
+//Make sure there's only one entry per IG account
+add_filter('frm_add_entry_meta', __NAMESPACE__ . '\\format_instagram_handle');
+function format_instagram_handle($new_values) {
+	 if($new_values['field_id'] == 98 and !is_admin()) { // 98 is instagram handle field
+		//trip and force to lower case
+		$new_values['meta_value'] = trim(strtolower($new_values['meta_value']));
+
+		//check if the @sign is there, if not, add it
+	 	if($new_values['meta_value'][0] !="@") {
+	 		$new_values['meta_value'] = "@".$new_values['meta_value'];
+	 	}
+   	}
+	return $new_values;
+}
+
+// END
+
+
+
