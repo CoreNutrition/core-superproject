@@ -336,9 +336,33 @@ function check_entry_count($params, $fields, $form) {
 }
 
 //Make sure there's only one entry per IG account
+add_filter('frm_validate_field_entry', __NAMESPACE__ . '\\validate_instagram_handle', 10, 3);
+function validate_instagram_handle($errors, $posted_field, $posted_value){
+  if($posted_field->id == 98 && $posted_value){ // 98 is instagram handle field ID
+    //check if the @sign is there, if not, add it
+	 if($posted_value[0] !="@") {
+	 	$posted_value = "@".$posted_value;
+	 }
+	 //Create an array of all submitted instagram handles
+	 global $wpdb;
+	 $current_insta_handles = $wpdb->get_results( "SELECT meta_value FROM " . $wpdb->prefix . "frm_item_metas WHERE field_id='98'",ARRAY_N );
+	 //print_r($current_insta_handles);
+	 //break;
+    foreach($current_insta_handles as $current_insta_handle) {
+	    if(in_array($posted_value, $current_insta_handle)){ //if in array, reject submission
+	      	//if it doesn't match up, add an error:
+	    	$errors['field'. $posted_field->id] = __("This Instagram handle has already been submitted","sage");
+	    }
+	}
+  }
+  return $errors;
+}
+
+
+//Format the Instagram handle
 add_filter('frm_add_entry_meta', __NAMESPACE__ . '\\format_instagram_handle');
 function format_instagram_handle($new_values) {
-	 if($new_values['field_id'] == 98 and !is_admin()) { // 98 is instagram handle field
+	 if($new_values['field_id'] == 98 and !is_admin()) { // 98 is instagram handle field ID
 		//trip and force to lower case
 		$new_values['meta_value'] = trim(strtolower($new_values['meta_value']));
 
@@ -349,6 +373,9 @@ function format_instagram_handle($new_values) {
    	}
 	return $new_values;
 }
+
+
+
 
 // END
 
