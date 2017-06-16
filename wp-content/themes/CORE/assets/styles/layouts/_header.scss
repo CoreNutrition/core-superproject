@@ -46,10 +46,12 @@ header.banner {
     transform: translateY(0)
   }
   .top-right {
+  	text-align: right;
+  	align-self: flex-start;
   	@include media-breakpoint-up(md) {
-  		text-align: right;
+  		align-self: center;
   	}
-  	a {
+ 	a {
   		@include transition;
   		color:$text-color;
   		&:hover {

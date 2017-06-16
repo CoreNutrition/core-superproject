@@ -67,9 +67,6 @@
        }, 250);
         //END sticky
 
-      
-        
-
         hamburger.on( "click", function() {
           if (menuOpen) {
             mobile_nav.width(0);
@@ -193,7 +190,7 @@
       		smartSpeed : 300,
       		navSpeed : 400
     	});
-      
+
       //add JS for the header reveal when we need it / hide it when we don't
       $('header.banner').headroom();
 
