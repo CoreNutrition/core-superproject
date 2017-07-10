@@ -7,6 +7,7 @@
 
 <?php
 $pParamHash = array();
+$content_item_size = "";
 $pParamHash['paged'] = ( get_query_var('paged') ) ? get_query_var('paged') : 1;
 $pParamHash['posts_per_page'] = 10;
 $the_query =  Extras\get_posts($pParamHash);
@@ -24,8 +25,8 @@ $posts_array = $the_query->posts;
 				  		foreach ( $posts_array as $post ) : setup_postdata( $post );
 				  			$item_counter++;
 				  			$content_item_id = $post->ID;
-							$content_item_size = get_field('featured_size',$post->ID)[0];
-							if (!$content_item_size) {
+							if (get_field('featured_size',$post->ID)) {
+								$content_item_size = get_field('featured_size',$post->ID)[0];
 								$content_item_size="one-third";
 							}
 							$content_excerpt = get_the_excerpt($post->ID);
