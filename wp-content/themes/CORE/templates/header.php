@@ -1,3 +1,7 @@
+<script>
+  //set var for fb pixel code, if not reset with another trigger, use this default
+  var fb_trigger = "PageView";
+</script>
 <header class="banner">
   <div class="container main-header">
     <div class="row header-row">
