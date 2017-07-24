@@ -1,4 +1,4 @@
-<div class="col-md-4 nutrition-item">
+<div class="col-md-<?php echo $col; ?> nutrition-item">
 	<div class="product-image">
 		<a href="#<?php echo str_replace(' ', '', $product_name); ?>" data-lity>
 			<img src="<?php echo $product_image['sizes']['square']; ?>" alt="<?php echo $product_image['alt']; ?>">
