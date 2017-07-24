@@ -68,7 +68,24 @@
 	</section>
 	
 	
-	<section class="container" >
+	
+	<!-- Mini Carousel -->
+	<section class="container">
+		<?php
+		$mini_carousel_header_image = get_field('mini_carousel_header_image');
+		$mini_carousel_header_intro = get_field('mini_carousel_header_intro');
+		if ($mini_carousel_header_image && $mini_carousel_header_intro) { ?>
+			<!-- mini carousel intro -->
+			<div class="row mini-carousel-header">
+				<div class="col-md-6">
+					<?php echo "<img src='".$mini_carousel_header_image['sizes']['large']."' alt='".$mini_carousel_header_image['alt']."' />"; ?>
+				</div>
+				<div class="col-md-6">
+					<?php echo $mini_carousel_header_intro; ?>
+				</div>
+			</div>
+
+		<?php } ?>
 		<div class="row">
 			<div class="col-12">
 				<div class="icon-slideshow">
@@ -156,6 +173,18 @@
 						$total_rows = count(get_field('product_nutritional_information'));
 						$row_col_counter = 1;
 						$row_opened = false;
+						$nutrition_fact_items_per_row = get_field('nutrition_fact_items_per_row');
+
+						if ($nutrition_fact_items_per_row == 1) {
+							$col = 12;
+						} elseif($nutrition_fact_items_per_row == 2) {
+							$col = 6;
+						} elseif($nutrition_fact_items_per_row == 3) {
+							$col = 4;
+						} elseif($nutrition_fact_items_per_row == 4) {
+							$col = 3;
+						}
+
 						while( have_rows('product_nutritional_information') ): the_row(); 
 							
 							// vars
@@ -165,26 +194,26 @@
 							$product_image = get_sub_field('product_image');
 							$product_color = get_sub_field('product_color');
 						
-							if ($total_rows > 1) {
+							if ($total_rows > 1 && $nutrition_fact_items_per_row > 1 ) {
 								//setup multiple
-								if ($row_col_counter<3 && !$row_opened) {
+								if ($row_col_counter<$nutrition_fact_items_per_row && !$row_opened) {
 									echo "<div class='row nutrition-gridded'>";
 									$row_opened = true;
 								}
 								
 								include( locate_template( 'templates/content-item-nutrition.php' ) );
 								
-								if ($row_col_counter<3) {
+								if ($row_col_counter<$nutrition_fact_items_per_row) {
 									$row_col_counter++;
 								}else {
 									//close the row adn reset counter
 									echo "</div>";
-									$row_col_counter=0;
+									$row_col_counter=1;
 									$row_opened = false;
 								}
 							} else {
 								//single product
-								echo "<div class='row'>";
+								echo "<div class='row padded'>";
 									echo "<div class='col-md-6'>";
 										echo "<h2>".$product_name."</h2>";
 										echo $nutritional_info;
