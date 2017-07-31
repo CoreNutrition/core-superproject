@@ -325,9 +325,10 @@ function check_entry_count($params, $fields, $form) {
 	remove_filter('frm_continue_to_new', '__return_false', 50);
 	if($form->id == 7 and !is_admin()){ 
 		//get date/time in NYC
-		date_default_timezone_set('America/New_York');
+		//date_default_timezone_set('America/New_York');
 		$now = time();
-		$cutoff = 1501502399; // 07/31/2017 11:59:59
+		$cutoff = 1501559999; // 08/01/2017 @ 3:59am (UTC)
+		//echo $now ." : " .$cutoff;
 		if($now > $cutoff){ //close the form
 			echo '<h2 style="text-align:center;">'.__('This contest has concluded','sage').'</h2>';
 			add_filter('frm_continue_to_new', '__return_false', 50);
