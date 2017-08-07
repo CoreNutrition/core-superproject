@@ -111,7 +111,7 @@
 		$bottle_facts_description = get_field('intro'); 
 	?>
 	<?php if ($bottle_facts_description) { ?>
-	<section class="bottle-facts" style="background-image:url('<?php echo $bottle_facts_background['sizes']['large']; ?>');">
+	<section class="bottle-facts" style="background-image:url('<?php echo $bottle_facts_background['url']; ?>');">
 		<div class="container">
 			<div class="row">
 				<div class="col-12">
