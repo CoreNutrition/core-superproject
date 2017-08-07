@@ -322,18 +322,28 @@ function get_posts($pParamHash) {
 add_action('frm_display_form_action', __NAMESPACE__ . '\\check_entry_count', 8, 3);
 function check_entry_count($params, $fields, $form) {
 	global $user_ID;
+	global $post;
 	remove_filter('frm_continue_to_new', '__return_false', 50);
-	if($form->id == 7 and !is_admin()){ 
-		//get date/time in NYC
-		//date_default_timezone_set('America/New_York');
-		$now = time();
-		$cutoff = 1501559999; // 08/01/2017 @ 3:59am (UTC)
-		//echo $now ." : " .$cutoff;
-		if($now > $cutoff){ //close the form
+	//get date/time in NYC
+	date_default_timezone_set('America/New_York');
+	$now = time();
+	$UTC_offset = date('Z');
+	//get the form's desired cutoff time
+	$cutoff = strtotime(get_field('special_contest_close',$post->ID));
+	if ($cutoff) {
+		//echo $now+$UTC_offset ." : " .$cutoff ;
+		if(($now+$UTC_offset) > $cutoff){ //close the form
 			echo '<h2 style="text-align:center;">'.__('This contest has concluded','sage').'</h2>';
 			add_filter('frm_continue_to_new', '__return_false', 50);
 		}
 	}
+}
+
+//save the date/time as unix timestamp from the contest fomr
+//https://www.advancedcustomfields.com/resources/date-time-picker/
+add_filter('acf/update_value/type=date_time_picker', __NAMESPACE__ . '\\my_update_value_date_time_picker', 10, 3);
+function my_update_value_date_time_picker( $value, $post_id, $field ) {
+	return strtotime($value);	
 }
 
 //Make sure there's only one entry per IG account
