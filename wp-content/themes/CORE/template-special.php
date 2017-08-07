@@ -21,17 +21,14 @@
        
             <div class="col-md-6">
               <h2>
-                SHOWS US WHAT IS AT HER CORE:<br>
-                MUSIC, FITNESS, STYLE AND A<br>LOVE OF CORE HYDRATION.
+               <?php echo get_field('special_subtitle'); ?>
               </h2>
               <a href="#enter" class="btn contest-enter btn-block">
-                    <span style="color: #000;">ENTER HERE</span><br>
-                    FOR A CHANCE TO WIN<br>
-                    <span style="color: #000;"> an autographed guitar signed by Ellie</span>
+                    <?php echo get_field('special_call_to_action'); ?>
                   </a>
             </div>
             <div class="col-md-6">
-              <img class="img-responsive" src="<?php echo get_stylesheet_directory_uri(); ?>/dist/images/ellie/core-ellie-goulding-guitar.jpg" alt="Elle Goulding plays guitar" />
+              <img class="img-responsive" src="<?php echo get_field('special_header_image')['sizes']['medium']; ?>" alt="<?php echo get_field('special_header_image')['alt']; ?>" />
             </div>
       </div>
       </div>
@@ -192,15 +189,20 @@ with human emotion, body parts, physicality.”
 
     </div>
 
+
+    <?php 
+    //if form key exists
+    if (get_field('special_form_key')) { ?>
     <div id="enter" class="container-fluid padded sweepstakes">
       <div class="container">
           <div class="row">
             <div class="col-md-6 offset-md-3">
-              <?php echo FrmFormsController::get_form_shortcode(array('key' => 'cucen', 'title' => true, 'description' => true)); ?>
+              <?php echo FrmFormsController::get_form_shortcode(array('key' => get_field('special_form_key'), 'title' => true, 'description' => true)); ?>
             </div>
           </div>
         </div>
     </div>
+    <?php } ?>
 
 
     <!-- Follow Ellie -->
