@@ -27,11 +27,11 @@
               <a href="#enter" class="btn contest-enter btn-block">
                     <span style="color: #000;">ENTER HERE</span><br>
                     FOR A CHANCE TO WIN<br>
-                    <span style="color: #000;">A  WORKOUT WITH ELLIE</span>
+                    <span style="color: #000;"> an autographed guitar signed by Ellie</span>
                   </a>
             </div>
             <div class="col-md-6">
-              <img class="img-responsive" src="<?php echo get_stylesheet_directory_uri(); ?>/dist/images/ellie/hero-header-ellie.jpg" />
+              <img class="img-responsive" src="<?php echo get_stylesheet_directory_uri(); ?>/dist/images/ellie/core-ellie-goulding-guitar.jpg" alt="Elle Goulding plays guitar" />
             </div>
       </div>
       </div>
@@ -62,7 +62,7 @@
 
       <div class="row">
         <div class="col-12">
-          <img class="img-responsive" src="<?php echo get_stylesheet_directory_uri(); ?>/dist/images/ellie/ellie-poster.jpg" />
+          <img class="img-responsive" src="<?php echo get_stylesheet_directory_uri(); ?>/dist/images/ellie/ellie-poster.jpg" alt="Ellie Goulding Poster" />
         </div>
         
       </div>
@@ -87,7 +87,7 @@
 
                 <div class="row">
                   <div class="col-xs-12 col-sm-9 col-md-8 offset-sm-3 offset-md-4">
-                    <img class="img-responsive" src="<?php echo get_stylesheet_directory_uri(); ?>/dist/images/ellie/ellie-fitness@2x.jpg" />
+                    <img class="img-responsive" src="<?php echo get_stylesheet_directory_uri(); ?>/dist/images/ellie/ellie-fitness@2x.jpg" alt="Ellie Goulding" />
                   </div>
                 </div>
                 
@@ -100,7 +100,7 @@
             <div class="row">
 
                 <div class="col-xs-10 col-sm-12 offset-xs-1 offset-sm-0">
-                  <img class="img-responsive" src="<?php echo get_stylesheet_directory_uri(); ?>/dist/images/ellie/ellie-boxing@2x.jpg" />
+                  <img class="img-responsive" src="<?php echo get_stylesheet_directory_uri(); ?>/dist/images/ellie/ellie-boxing@2x.jpg" alt="Ellie Goulding" />
                 </div>
 
             </div>
@@ -132,7 +132,7 @@
             <div class="row">
 
                 <div class="col-xs-10 col-sm-12 offset-xs-1 offset-sm-0">
-                  <img class="img-responsive" src="<?php echo get_stylesheet_directory_uri(); ?>/dist/images/ellie/ellie-beauty@2x.jpg" />
+                  <img class="img-responsive" src="<?php echo get_stylesheet_directory_uri(); ?>/dist/images/ellie/ellie-beauty@2x.jpg" alt="Ellie Goulding" />
                 </div>
 
             </div>
@@ -156,7 +156,7 @@
 with human emotion, body parts, physicality.”
                 </p>
                 
-                <img class="img-responsive" src="<?php echo get_stylesheet_directory_uri(); ?>/dist/images/ellie/ellie-music@2x.jpg" />
+                <img class="img-responsive" src="<?php echo get_stylesheet_directory_uri(); ?>/dist/images/ellie/ellie-music@2x.jpg" alt="Ellie Goulding" />
               </div>
             </div>
           </div>
@@ -169,7 +169,7 @@ with human emotion, body parts, physicality.”
                   <div class="row reorder-xs">
 
                     <div class="col-sm-12">
-                      <img class="img-responsive" src="<?php echo get_stylesheet_directory_uri(); ?>/dist/images/ellie/ellie-core@2x.jpg" />
+                      <img class="img-responsive" src="<?php echo get_stylesheet_directory_uri(); ?>/dist/images/ellie/ellie-core@2x.jpg" alt="Ellie Goulding" />
                     </div>
 
                     <div class="col-sm-12">
