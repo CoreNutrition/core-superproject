@@ -41,7 +41,7 @@
         </div>
     </div>
 
-    
+
   </div>
 </footer>
 <!-- Facebook Pixel Code -->
@@ -54,7 +54,7 @@ n.queue=[];t=b.createElement(e);t.async=!0;
 t.src=v;s=b.getElementsByTagName(e)[0];
 s.parentNode.insertBefore(t,s)}(window,document,'script',
 'https://connect.facebook.net/en_US/fbevents.js');
-fbq('init', '1897217020534667'); 
+fbq('init', '1897217020534667');
 fbq('track', fb_trigger);
 </script>
 
@@ -62,3 +62,6 @@ fbq('track', fb_trigger);
 <img height="1" width="1" src="https://www.facebook.com/tr?id=1897217020534667&ev=PageView&noscript=1"/>
 </noscript>
 <!-- End Facebook Pixel Code -->
+<!-- Amazon Pixel Code -->
+<script type='text/javascript'>var _pix = document.getElementById('_pix_id_ab92c577-ea30-4ed0-1db5-2f0fdb42230b');if (!_pix) { var protocol = '//'; var a = Math.random() * 1000000000000000000; _pix = document.createElement('img'); _pix.style.display = 'none'; _pix.setAttribute('src', protocol + 's.amazon-adsystem.com/iu3?d=forester-did&ex-fargs=%3Fid%3Dab92c577-ea30-4ed0-1db5-2f0fdb42230b%26type%3D55%26m%3D1&ex-fch=416613&ex-src=core-hydration.com/&ex-hargs=v%3D1.0%3Bc%3D6035515370401%3Bp%3DAB92C577-EA30-4ED0-1DB5-2F0FDB42230B' + '&cb=' + a); _pix.setAttribute('id','_pix_id_ab92c577-ea30-4ed0-1db5-2f0fdb42230b'); document.body.appendChild(_pix);}</script><noscript> <img height='1' width='1' border='0' alt='' src='https://s.amazon-adsystem.com/iui3?d=forester-did&ex-fargs=%3Fid%3Dab92c577-ea30-4ed0-1db5-2f0fdb42230b%26type%3D55%26m%3D1&ex-fch=416613&ex-src=core-hydration.com/&ex-hargs=v%3D1.0%3Bc%3D6035515370401%3Bp%3DAB92C577-EA30-4ED0-1DB5-2F0FDB42230B' /></noscript>
+<!-- End Amazon Pixel Code -->
