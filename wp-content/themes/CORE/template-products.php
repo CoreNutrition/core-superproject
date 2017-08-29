@@ -22,7 +22,8 @@
 						<div class="col-md-4 offset-md-1 img-overlay">
 						<?php $lifestyle_image_overlay = get_field('lifestyle_image_overlay');
 							if ($lifestyle_image_overlay) {
-								echo "<img src='".$lifestyle_image_overlay['sizes']['medium']."' alt='".$lifestyle_image_overlay['alt']."' />";
+								//print_r($lifestyle_image_overlay);
+								echo "<img src='".$lifestyle_image_overlay['sizes']['large']."' alt='".$lifestyle_image_overlay['alt']."' />";
 							}
 						?>
 						</div>
