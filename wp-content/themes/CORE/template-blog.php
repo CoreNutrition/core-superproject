@@ -27,7 +27,8 @@ $posts_array = $the_query->posts;
 				  			$content_item_id = $post->ID;
 							if (get_field('featured_size',$post->ID)) {
 								$content_item_size = get_field('featured_size',$post->ID)[0];
-								$content_item_size="one-third";
+							} else {
+								$content_item_size = "one-third";
 							}
 							$content_excerpt = get_the_excerpt($post->ID);
 							$header_position = ""; //this is used by homepage, so setting an empty one here since we're using the same template
