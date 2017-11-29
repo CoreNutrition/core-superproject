@@ -233,6 +233,17 @@
 .frm_dropzone.dz-clickable.frm_single_upload{
 	max-width: 200px;
 }
+
+.frm_form_field.frm_full .frm_dropzone.dz-clickable.frm_single_upload,
+.frm_form_field.frm_full_upload .frm_dropzone.dz-clickable.frm_single_upload{
+	max-width:100%;
+}
+
+.frm_form_field.frm_full .frm_dropzone.dz-clickable.frm_single_upload .dz-message,
+.frm_form_field.frm_full_upload .frm_dropzone.dz-clickable.frm_single_upload .dz-message{
+	margin: .5em 0 1em;
+}
+
 .frm_dropzone .dz-message{
 	display:none;
 	font-size:20px;

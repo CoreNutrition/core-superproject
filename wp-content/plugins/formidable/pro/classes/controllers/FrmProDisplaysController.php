@@ -209,7 +209,7 @@ class FrmProDisplaysController {
 				$val = FrmFormsHelper::edit_form_link( $form_id );
 				break;
 			case 'shortcode':
-				$code = '[display-frm-data id=' . $id . ' filter=1]';
+				$code = '[display-frm-data id=' . $id . ' filter=limited]';
 
 				$val = '<input type="text" readonly="readonly" class="frm_select_box" value="' . esc_attr( $code ) . '" />';
 				break;
@@ -401,7 +401,6 @@ class FrmProDisplaysController {
 		}
 
 		$entry_id = false;
-		$filter = apply_filters( 'frm_filter_auto_content', true );
 
 		if ( $post->post_type == self::$post_type && in_the_loop() ) {
 			global $frm_displayed;
@@ -415,7 +414,7 @@ class FrmProDisplaysController {
 
 			$frm_displayed[] = $post->ID;
 
-			return self::get_display_data( $post, $content, false, compact( 'filter' ) );
+			return self::get_display_data( $post, $content, false );
 		}
 
 		if ( is_singular() && post_password_required() ) {
@@ -465,7 +464,7 @@ class FrmProDisplaysController {
 
 		$frm_displayed[] = $display->ID;
 		$content = self::get_display_data( $display, $content, $entry_id, array(
-			'filter' => $filter, 'auto_id' => $entry_id,
+			'auto_id' => $entry_id,
 		) );
 
 		return $content;
@@ -828,7 +827,20 @@ class FrmProDisplaysController {
 		wp_die();
 	}
 
-	/* Shortcodes */
+	/**
+	 * @param string|int $atts[id] The View id or key
+	 * @param string|int $atts[entry_id] entry key, id ot list of ids/keys
+	 * @param string $atts[filter] 1, 0, or limited
+	 * @param string|int $atts[user_id] user id, email, or login
+	 * @param string|int $atts[limit] 10 or 10, 20
+	 * @param int $atts[page_size]
+	 * @param string $atts[order_by] field id or key or list of fields
+	 * @param string $atts[order] ASC, DESC, or RAND
+	 * @param string $atts[get]
+	 * @param string $atts[get_value]
+	 * @param string $atts[drafts] 1, 0, or both
+	 * @return string
+	 */
 	public static function get_shortcode( $atts ) {
 		$defaults = array(
 			'id' => '', 'entry_id' => '', 'filter' => false,
@@ -838,12 +850,12 @@ class FrmProDisplaysController {
 		);
 
 		$sc_atts = shortcode_atts( $defaults, $atts );
-		$atts = array_merge( (array)$atts, (array)$sc_atts );
+		$atts = array_merge( (array) $atts, (array) $sc_atts );
 
 		$display = FrmProDisplay::getOne( $atts['id'], false, true );
 		$user_id = FrmAppHelper::get_user_id_param( $atts['user_id'] );
 
-		if ( !empty( $atts['get'] ) ) {
+		if ( ! empty( $atts['get'] ) ) {
 			$_GET[ $atts['get'] ] = $atts['get_value'];
 		}
 
@@ -857,15 +869,19 @@ class FrmProDisplaysController {
 			unset( $att, $val );
 		}
 
-		if ( !$display ) {
+		if ( ! $display ) {
 			return __( 'There are no views with that ID', 'formidable' );
 		}
 
-		return self::get_display_data( $display, '', $atts['entry_id'], array(
-			'filter' => $atts['filter'], 'user_id' => $user_id,
-			'limit' => $atts['limit'], 'page_size' => $atts['page_size'],
-			'order_by' => $atts['order_by'], 'order' => $atts['order'],
-			'drafts' => $atts['drafts'],
+		return self::get_view_data( $display, '', array(
+			'filter'    => sanitize_title( $atts['filter'] ),
+			'user_id'   => sanitize_text_field( $user_id ),
+			'limit'     => sanitize_text_field( $atts['limit'] ),
+			'page_size' => sanitize_title( $atts['page_size'] ),
+			'order_by'  => sanitize_text_field( $atts['order_by'] ),
+			'order'     => sanitize_text_field( $atts['order'] ),
+			'drafts'    => sanitize_title( $atts['drafts'] ),
+			'entry_id'  => sanitize_text_field( $atts['entry_id'] ),
 		) );
 	}
 
@@ -919,7 +935,7 @@ class FrmProDisplaysController {
 
 		self::do_all_shortcodes_except_formidable( $view_content );
 
-		self::maybe_apply_the_content_filter( $atts, $view_content );
+		self::maybe_filter_content( $atts, $view_content );
 
 		// load the styling for css classes and pagination
 		FrmStylesController::enqueue_style();
@@ -1093,7 +1109,7 @@ class FrmProDisplaysController {
 	 * @return array
 	 */
 	private static function get_where_query_for_view_listing_page( $view, $atts ) {
-		$where = array( 'it.form_id' => $view->frm_form_id );
+		$where = array( 'it.form_id' => absint( $view->frm_form_id ) );
 
 		if ( self::skip_view_filters( $atts ) ) {
 			$where['it.id'] = self::get_entry_ids_that_override_filters( $atts );
@@ -1432,9 +1448,7 @@ class FrmProDisplaysController {
 	 * @return int
 	 */
 	private static function convert_single_entry_to_numeric_id( $e_id ) {
-		if ( is_numeric( $e_id ) ) {
-			// keep it as is
-		} else {
+		if ( ! is_numeric( $e_id ) ) {
 			$e_id = FrmEntry::get_id_by_key( $e_id );
 		}
 
@@ -1749,14 +1763,14 @@ class FrmProDisplaysController {
 	 * @param string|array $where_val
 	 */
 	private static function prepare_where_val_for_id_and_key_columns( $view, $i, &$where_val ) {
-		if ( in_array( $view->frm_where[ $i ], array( 'id', 'item_key', 'post_id' ) ) && ! is_array( $where_val ) && strpos( $where_val, ',' ) ) {
-			$where_val = explode( ',', $where_val );
-			$where_val = array_filter( $where_val );
-		}
+		if ( in_array( $view->frm_where[ $i ], array( 'id', 'item_key', 'post_id' ) ) && ! is_array( $where_val ) ) {
 
-		// Make sure entry ID values are always an array
-		if ( $view->frm_where[ $i ] == 'id' && ! is_array( $where_val ) ) {
-			$where_val = (array) $where_val;
+			if ( strpos( $where_val, ',' ) ) {
+				$where_val = explode( ',', $where_val );
+				$where_val = array_filter( $where_val );
+			} else if ( in_array( $view->frm_where_is[ $i ], array( '=', 'LIKE' ) ) ) {
+				$where_val = (array) $where_val;
+			}
 		}
 	}
 
@@ -1770,9 +1784,9 @@ class FrmProDisplaysController {
 	private static function prepare_where_is( $i, &$view ) {
 		$where_is = $view->frm_where_is[ $i ];
 
-		if ( is_array( $view->frm_where_val[ $i ] ) && !empty( $view->frm_where_val[ $i ] ) ) {
+		if ( is_array( $view->frm_where_val[ $i ] ) && ! empty( $view->frm_where_val[ $i ] ) ) {
 			if ( strpos( $where_is, '!' ) === false && strpos( $where_is, 'not' ) === false ) {
-				$where_is = ' in ';
+				$where_is = 'in';
 			} else {
 				$where_is = 'not in';
 			}
@@ -1874,6 +1888,10 @@ class FrmProDisplaysController {
 	 */
 	private static function add_to_frm_items_query( $view, $i, &$where ) {
 		$array_key = 'it.' . sanitize_title( $view->frm_where[ $i ] ) . FrmDb::append_where_is( $view->frm_where_is[ $i ] );
+
+		if ( $array_key === 'it.id ' ) {
+			$array_key = rtrim( $array_key );
+		}
 
 		if ( isset( $where[ $array_key ] ) ) {
 			if ( $array_key == 'it.id' ) {
@@ -2221,7 +2239,7 @@ class FrmProDisplaysController {
 	 */
 	private static function maybe_add_limit_to_query( $view, &$display_page_query ){
 		if ( is_numeric( $view->frm_limit ) ) {
-			$display_page_query['limit'] = ' LIMIT ' . $view->frm_limit;
+			$display_page_query['limit'] = FrmDb::esc_limit( $view->frm_limit );
 		}
 	}
 
@@ -2567,11 +2585,7 @@ class FrmProDisplaysController {
 			$empty_msg = '<div class="frm_no_entries">' . FrmProFieldsHelper::get_default_value( $view->frm_empty_msg, false ) . '</div>';
 		}
 
-		$empty_msg = apply_filters( 'frm_no_entries_message', $empty_msg, array( 'display' => $view ) );
-
-		self::maybe_apply_the_content_filter( $atts, $empty_msg );
-
-		return $empty_msg;
+		return apply_filters( 'frm_no_entries_message', $empty_msg, array( 'display' => $view ) );
 	}
 
 	/**
@@ -2589,17 +2603,58 @@ class FrmProDisplaysController {
 	}
 
 	/**
-	 * Apply the content filter if filter=1 is set
+	 * Apply the filters normally run on the_content if filter=1 is set
 	 *
 	 * @since 2.0.23
+	 *
 	 * @param string $content
 	 * @param array $atts
-	 * @return string
 	 */
-	private static function maybe_apply_the_content_filter( $atts, &$content ) {
-		if ( $atts['filter'] ) {
+	private static function maybe_filter_content( $atts, &$content ) {
+		if ( $atts['filter'] == 'limited' ) {
+			self::filter_embeds( $content );
+			self::add_content_filters();
+
+			$content = apply_filters( 'frm_the_content', $content );
+		} elseif ( $atts['filter'] ) {
 			$content = apply_filters( 'the_content', $content );
 		}
+	}
+
+	/**
+	 * Filter embeds instead of using the_content filter
+	 *
+	 * @since 2.05
+	 */
+	private static function filter_embeds( &$content ) {
+		global $wp_embed;
+		$content = $wp_embed->run_shortcode( $content );
+		$content = $wp_embed->autoembed( $content );
+	}
+
+	/**
+	 * Add all the default the_content filters to be run
+	 * on frm_the_content
+	 *
+	 * @since 2.05
+	 */
+	private static function add_content_filters() {
+		if ( has_filter( 'frm_the_content', 'do_shortcode' ) ) {
+			// don't add the filters a second time
+			return;
+		}
+
+		if ( has_filter('the_content', 'wptexturize' ) ) {
+			add_filter( 'frm_the_content', 'wptexturize' );
+		}
+
+		if ( has_filter('the_content', 'wpautop' ) ) {
+			add_filter( 'frm_the_content', 'wpautop' );
+		}
+
+		add_filter( 'frm_the_content', 'wp_make_content_images_responsive' );
+		add_filter( 'frm_the_content', 'shortcode_unautop' );
+		add_filter( 'frm_the_content', 'do_shortcode', 11 );
 	}
 
 	/**

@@ -13,7 +13,7 @@ class FrmStyle {
     public function get_new() {
 		$this->id = 0;
 
-        $max_slug_value = pow(36, 6);
+        $max_slug_value = 2147483647;
         $min_slug_value = 37; // we want to have at least 2 characters in the slug
         $key = base_convert( rand($min_slug_value, $max_slug_value), 10, 36 );
 
@@ -31,7 +31,7 @@ class FrmStyle {
     }
 
 	public function save( $settings ) {
-		return FrmAppHelper::save_settings( $settings, 'frm_styles' );
+		return FrmDb::save_settings( $settings, 'frm_styles' );
     }
 
 	public function duplicate( $id ) {
@@ -148,9 +148,9 @@ class FrmStyle {
 			'order'       => 'ASC',
 		);
 
-		FrmAppHelper::delete_cache_and_transient( serialize( $default_post_atts ), 'frm_styles' );
-		FrmAppHelper::cache_delete_group( 'frm_styles' );
-		FrmAppHelper::delete_cache_and_transient( 'frmpro_css' );
+		FrmDb::delete_cache_and_transient( serialize( $default_post_atts ), 'frm_styles' );
+		FrmDb::cache_delete_group( 'frm_styles' );
+		FrmDb::delete_cache_and_transient( 'frmpro_css' );
 	}
 
 	public function destroy( $id ) {
@@ -194,13 +194,13 @@ class FrmStyle {
 			'order'       => $order,
         );
 
-        $temp_styles = FrmAppHelper::check_cache(serialize($post_atts), 'frm_styles', $post_atts, 'get_posts');
+		$temp_styles = FrmDb::check_cache( serialize( $post_atts ), 'frm_styles', $post_atts, 'get_posts' );
 
         if ( empty($temp_styles) ) {
             global $wpdb;
             // make sure there wasn't a conflict with the query
 			$query = $wpdb->prepare( 'SELECT * FROM ' . $wpdb->posts . ' WHERE post_type=%s AND post_status=%s ORDER BY post_title ASC LIMIT 99', FrmStylesController::$post_type, 'publish' );
-            $temp_styles = FrmAppHelper::check_cache('frm_backup_style_check', 'frm_styles', $query, 'get_results');
+            $temp_styles = FrmDb::check_cache('frm_backup_style_check', 'frm_styles', $query, 'get_results');
 
             if ( empty($temp_styles) ) {
                 // create a new style if there are none

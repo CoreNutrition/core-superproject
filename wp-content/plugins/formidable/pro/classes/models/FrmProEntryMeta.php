@@ -197,11 +197,8 @@ class FrmProEntryMeta{
             $value = '';
         }
 
-        //Don't require a conditionally hidden field
-        self::validate_conditional_field($errors, $field, $value);
-
-        //Don't require a field hidden in a conditional page or section heading
-        self::validate_child_conditional_field($errors, $field, $value);
+		// Don't require a conditionally hidden field
+		self::clear_errors_and_value_for_conditionally_hidden_field( $field, $errors, $value );
 
         //make sure the [auto_id] is still unique
         self::validate_auto_id($field, $value);
@@ -279,34 +276,45 @@ class FrmProEntryMeta{
         }
     }
 
-    /**
-     * Remove any errors set on fields with no input
-     * Also set global to indicate whether section is hidden
-     */
-    public static function validate_no_input_fields(&$errors, $field) {
-		if ( ! in_array($field->type, array( 'break', 'html', 'divider', 'end_divider', 'form' ) ) ) {
-            return;
-        }
-
-        $hidden = FrmProFieldsHelper::is_field_hidden($field, stripslashes_deep($_POST));
-        if ( $field->type == 'break' ) {
-            global $frm_hidden_break;
-            $frm_hidden_break = array( 'field_order' => $field->field_order, 'hidden' => $hidden);
-        } else if ( $field->type == 'divider' ) {
-            global $frm_hidden_divider;
-            $frm_hidden_divider = array( 'field_order' => $field->field_order, 'hidden' => $hidden);
-		} else if ( $field->type == 'end_divider' ) {
-			global $frm_hidden_divider;
-			$frm_hidden_divider = false;
-		} else if ( $field->type == 'form' && $hidden ) {
-			global $frm_hidden_form;
-			$frm_hidden_form = $field->field_options['form_select'];
+	/**
+	 * Remove any errors set on fields with no input
+	 * Also set global to indicate whether section is hidden
+	 */
+	public static function validate_no_input_fields( &$errors, $field ) {
+		if ( ! in_array( $field->type, array( 'break', 'html', 'divider', 'end_divider', 'form' ) ) ) {
+			return;
 		}
 
-        if ( isset($errors['field'. $field->temp_id]) ) {
-            unset($errors['field'. $field->temp_id]);
-        }
-    }
+		if ( $field->type == 'break' ) {
+			global $frm_hidden_break;
+
+			$frm_hidden_break = self::is_individual_field_conditionally_hidden( $field );
+
+		} else if ( $field->type == 'divider' ) {
+			global $frm_hidden_divider;
+
+			$frm_hidden_divider = self::is_individual_field_conditionally_hidden( $field );
+
+		} else if ( $field->type == 'form' ) {
+			global $frm_hidden_form;
+
+			if ( self::is_individual_field_conditionally_hidden( $field ) ) {
+				$frm_hidden_form = $field->field_options['form_select'];
+			} else {
+				$frm_hidden_form = false;
+			}
+
+		} else if ( $field->type == 'end_divider' ) {
+			global $frm_hidden_divider;
+
+			$frm_hidden_divider = false;
+
+		}
+
+		if ( isset( $errors['field' . $field->temp_id ] ) ) {
+			unset( $errors['field' . $field->temp_id ] );
+		}
+	}
 
     public static function validate_hidden_shortcode_field(&$errors, $field, &$value) {
         if ( ! isset($errors['field'. $field->temp_id]) ) {
@@ -326,51 +334,112 @@ class FrmProEntryMeta{
 	 */
 	private static function is_field_hidden_by_shortcode( $field, $errors ) {
 		global $frm_vars;
-		return ( isset( $frm_vars['show_fields'] ) && ! empty( $frm_vars['show_fields'] ) && is_array( $frm_vars['show_fields'] ) && $field->required == '1' && isset( $errors[ 'field' . $field->temp_id ] ) && ! in_array( $field->id, $frm_vars['show_fields'] ) && ! in_array( $field->field_key, $frm_vars['show_fields'] ) );
+		return ( isset( $frm_vars['show_fields'] ) && ! empty( $frm_vars['show_fields'] ) && is_array( $frm_vars['show_fields'] ) && $field->required == '1' && isset( $errors['field' . $field->temp_id ] ) && ! in_array( $field->id, $frm_vars['show_fields'] ) && ! in_array( $field->field_key, $frm_vars['show_fields'] ) );
 	}
-    /**
-     * Don't require a conditionally hidden field
-     */
-    public static function validate_conditional_field(&$errors, $field, &$value) {
-		if ( FrmField::is_option_empty( $field, 'hide_field' ) ) {
-            return;
-        }
 
-        if ( FrmProFieldsHelper::is_field_hidden($field, stripslashes_deep($_POST)) ) {
-            if ( isset($errors['field'. $field->temp_id]) ) {
-                unset($errors['field'. $field->temp_id]);
-            }
-            $value = '';
-        }
-    }
 
-    /**
-     * Don't require a field hidden in a conditional page or section heading
-     */
-    public static function validate_child_conditional_field(&$errors, $field, &$value) {
-        if ( ! isset($errors['field'. $field->temp_id]) && $value == '' ) {
-            return;
-        }
+	/**
+	 * Clear a field's errors and value when it is conditionally hidden
+	 *
+	 * @since 2.03.08
+	 *
+	 * @param stdClass $field
+	 * @param array $errors
+	 * @param mixed $value
+	 */
+	private static function clear_errors_and_value_for_conditionally_hidden_field( $field, &$errors, &$value ) {
+		// TODO: prevent additional validation when field is conditionally hidden
 
-		if ( self::is_field_on_skipped_page( $field ) ) {
-            if ( isset($errors['field'. $field->temp_id]) ) {
-                unset($errors['field'. $field->temp_id]);
-            }
+		if ( ! isset( $errors['field' . $field->temp_id ] ) && $value === '' ) {
+			return;
+		}
 
-			if ( $field->type != 'user_id' ) {
+		if ( self::is_field_conditionally_hidden( $field ) ) {
+
+			if ( self::is_field_on_skipped_page() && $field->type == 'user_id' ) {
+				// Leave value alone
+			} else {
 				$value = '';
 			}
-        }
-    }
 
-	private static function is_field_on_skipped_page( $field ) {
-		global $frm_hidden_break, $frm_hidden_divider, $frm_hidden_form;
+			if ( isset( $errors['field' . $field->temp_id ] ) ) {
+				unset( $errors['field' . $field->temp_id ] );
+			}
 
-		$in_hidden_form = $frm_hidden_form && $frm_hidden_form == $field->form_id;
-		$in_hidden_page = $frm_hidden_break && $frm_hidden_break['hidden'];
-		$in_hidden_section = $frm_hidden_divider && $frm_hidden_divider['hidden'] && ( ! $frm_hidden_break || $frm_hidden_break['field_order'] < $frm_hidden_divider['field_order'] );
+		}
+	}
 
-		return ( $in_hidden_page || $in_hidden_form || $in_hidden_section );
+	/**
+	 * Check if a field is conditionally hidden during validation
+	 *
+	 * @since 2.03.08
+	 *
+	 * @param stdClass $field
+	 *
+	 * @return bool
+	 */
+	private static function is_field_conditionally_hidden( $field ) {
+		return self::is_individual_field_conditionally_hidden( $field )
+			   || self::is_field_in_hidden_section( $field )
+			   || self::is_field_in_hidden_embedded_form( $field )
+			   || self::is_field_on_skipped_page();
+	}
+
+	/**
+	 * Check if an individual field has logic that is hiding it
+	 *
+	 * @since 2.03.08
+	 *
+	 * @param stdClass $field
+	 *
+	 * @return bool
+	 */
+	private static function is_individual_field_conditionally_hidden( $field ) {
+		return FrmProFieldsHelper::is_field_hidden( $field, stripslashes_deep( $_POST ) );
+	}
+
+	/**
+	 * Check if a field is within a conditionally hidden section
+	 *
+	 * @since 2.03.08
+	 *
+	 * @param stdClass $field
+	 *
+	 * @return bool
+	 */
+	private static function is_field_in_hidden_section( $field ) {
+		global $frm_hidden_divider;
+
+		return $frm_hidden_divider;
+
+	}
+
+	/**
+	 * Check if an field is in a conditionally hidden embedded form
+	 *
+	 * @since 2.03.08
+	 *
+	 * @param stdClass $field
+	 *
+	 * @return bool
+	 */
+	private static function is_field_in_hidden_embedded_form( $field ) {
+		global $frm_hidden_form;
+
+		return $frm_hidden_form && $frm_hidden_form == $field->form_id;
+	}
+
+	/**
+	 * Check if a field is on a page skipped with conditional logic
+	 *
+	 * @since 2.03.08
+	 *
+	 * @return bool
+	 */
+	private static function is_field_on_skipped_page() {
+		global $frm_hidden_break;
+
+		return $frm_hidden_break;
 	}
 
     /**
@@ -399,7 +468,7 @@ class FrmProEntryMeta{
 
         if ( $field->type == 'time' ) {
             if ( FrmProTimeField::is_datetime_used( $field, $value, $entry_id ) ) {
-            	$errors[ 'field' . $field->temp_id ] = FrmFieldsHelper::get_error_msg( $field, 'unique_msg' );
+            	$errors['field' . $field->temp_id ] = FrmFieldsHelper::get_error_msg( $field, 'unique_msg' );
             }
         } else if ( $field->type == 'date' ) {
             $value = FrmProAppHelper::maybe_convert_to_db_date($value, 'Y-m-d');
@@ -476,12 +545,12 @@ class FrmProEntryMeta{
             $prev_value = FrmEntryMeta::get_entry_meta_by_field($entry_id, $field->id);
 
             if ( $prev_value != $value && $conf_val != $value ) {
-				$errors[ 'fieldconf_' . $field->temp_id ] = FrmFieldsHelper::get_error_msg( $field, 'conf_msg' );
+				$errors['fieldconf_' . $field->temp_id ] = FrmFieldsHelper::get_error_msg( $field, 'conf_msg' );
                 $errors['field' . $field->temp_id] = '';
             }
         } else if ( $args['action'] == 'create' && $conf_val != $value ) {
             //If creating entry
-			$errors[ 'fieldconf_' . $field->temp_id ] = FrmFieldsHelper::get_error_msg( $field, 'conf_msg' );
+			$errors['fieldconf_' . $field->temp_id ] = FrmFieldsHelper::get_error_msg( $field, 'conf_msg' );
             $errors['field' . $field->temp_id] = '';
         }
     }
@@ -501,7 +570,7 @@ class FrmProEntryMeta{
 					'date' => $value, 'formatted_date' => $formated_date,
 				) );
 				if ( ! $allow_it ) {
-					$errors[ 'field' . $field->temp_id ] = FrmFieldsHelper::get_error_msg( $field, 'invalid' );
+					$errors['field' . $field->temp_id ] = FrmFieldsHelper::get_error_msg( $field, 'invalid' );
 				}
 			}
 
@@ -512,7 +581,7 @@ class FrmProEntryMeta{
 		$date = explode( '-', $value );
 
 		if ( count( $date ) != 3 || ! checkdate( (int) $date[1], (int) $date[2], (int) $date[0] ) ) {
-			$errors[ 'field' . $field->temp_id ] = FrmFieldsHelper::get_error_msg( $field, 'invalid' );
+			$errors['field' . $field->temp_id ] = FrmFieldsHelper::get_error_msg( $field, 'invalid' );
 		}
     }
 
@@ -527,13 +596,7 @@ class FrmProEntryMeta{
 			return true;
 		}
 
-		$is_conditionally_hidden = FrmProFieldsHelper::is_field_hidden( $field, stripslashes_deep( $_POST ) );
-		if ( $is_conditionally_hidden ) {
-			return true;
-		}
-
-		$is_on_skipped_page = self::is_field_on_skipped_page( $field );
-		if ( $is_on_skipped_page ) {
+		if ( self::is_field_conditionally_hidden( $field ) ) {
 			return true;
 		}
 
@@ -649,17 +712,17 @@ class FrmProEntryMeta{
 			// If field is not a post field
 			$get_column .= 'em.meta_value as meta_value';
 			$get_table = $wpdb->prefix . 'frm_item_metas em INNER JOIN ' . $wpdb->prefix . 'frm_items e ON (e.id=em.item_id)';
-			$where[ 'em.field_id' ] = $field->id;
+			$where['em.field_id'] = $field->id;
 
-		} else if ( $field->field_options[ 'post_field' ] === 'post_custom' ) {
+		} else if ( $field->field_options['post_field'] === 'post_custom' ) {
 			// If field is a custom field
 			$get_column .= 'pm.meta_value as meta_value';
 			$get_table = $wpdb->postmeta . ' pm INNER JOIN ' . $wpdb->prefix . 'frm_items e ON pm.post_id=e.post_id';
-			$where[ 'pm.meta_key' ] = $field->field_options[ 'custom_field' ];
+			$where['pm.meta_key'] = $field->field_options['custom_field'];
 
-		} else if ( $field->field_options[ 'post_field' ] !== 'post_category' ) {
+		} else if ( $field->field_options['post_field'] !== 'post_category' ) {
 			// If field is a non-category post field
-			$get_column .= 'p.' . sanitize_title( $field->field_options[ 'post_field' ] ) . ' as meta_value';
+			$get_column .= 'p.' . sanitize_title( $field->field_options['post_field'] ) . ' as meta_value';
 			$get_table = $wpdb->posts . ' p INNER JOIN ' . $wpdb->prefix . 'frm_items e ON p.ID=e.post_id';
 
 		} else {
@@ -717,6 +780,11 @@ class FrmProEntryMeta{
 
 		$operator = self::get_operator_for_query( $args );
 
+		if ( in_array( $field->type, array( 'number', 'scale' ) ) && strpos( $operator, 'LIKE' ) === false ) {
+			// TODO: DRY throughout plugin
+			$operator = ' +0' . $operator;
+		}
+
 		if ( ! FrmField::is_option_true( $field, 'post_field' ) ) {
 			// If field is not a post field
 			$get_field = 'em.item_id';
@@ -738,7 +806,7 @@ class FrmProEntryMeta{
 			$get_field = 'e.id';
 			$get_table = $wpdb->posts . ' p INNER JOIN ' . $wpdb->prefix . 'frm_items e ON p.ID=e.post_id';
 
-			$where[ 'p.' . sanitize_title( $field->field_options['post_field'] )  . $operator ] = $value;
+			$where['p.' . sanitize_title( $field->field_options['post_field'] )  . $operator ] = $value;
 
 		} else {
 			// If field is a category field
@@ -929,5 +997,21 @@ class FrmProEntryMeta{
 	public static function get_disallowed_times( $values, &$remove ) {
 		_deprecated_function( __FUNCTION__, '2.03.02', 'FrmProTimeField::get_disallowed_times' );
 		FrmProTimeField::get_disallowed_times( $values, $remove );
+	}
+
+	/**
+	 * @deprecated 2.03.08
+	 */
+	public static function validate_conditional_field( &$errors, $field, &$value ) {
+		_deprecated_function( __FUNCTION__, '2.03.08', 'custom code' );
+		self::clear_errors_and_value_for_conditionally_hidden_field( $field, $errors, $value );
+	}
+
+	/**
+	 * @deprecated 2.03.08
+	 */
+	public static function validate_child_conditional_field( &$errors, $field, &$value ) {
+		_deprecated_function( __FUNCTION__, '2.03.08', 'custom code' );
+		self::clear_errors_and_value_for_conditionally_hidden_field( $field, $errors, $value );
 	}
 }

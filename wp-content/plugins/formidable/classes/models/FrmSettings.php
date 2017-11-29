@@ -26,8 +26,11 @@ class FrmSettings {
     public $pubkey;
     public $privkey;
     public $re_lang;
+	public $re_type;
     public $re_msg;
 	public $re_multi;
+
+	public $no_ips;
 
     public function __construct() {
         if ( ! defined('ABSPATH') ) {
@@ -97,6 +100,7 @@ class FrmSettings {
             'admin_permission' => __( 'You do not have permission to do that', 'formidable' ),
 
             'email_to' => '[admin_email]',
+			'no_ips'   => 0,
         );
     }
 
@@ -170,6 +174,10 @@ class FrmSettings {
         if ( ! isset($this->re_lang) ) {
             $this->re_lang = $re_lang;
         }
+
+		if ( ! isset( $this->re_type ) ) {
+			$this->re_type = '';
+		}
     }
 
     public function validate( $params, $errors ) {
@@ -196,6 +204,7 @@ class FrmSettings {
 
         $this->pubkey = trim($params['frm_pubkey']);
         $this->privkey = $params['frm_privkey'];
+		$this->re_type = $params['frm_re_type'];
         $this->re_lang = $params['frm_re_lang'];
 		$this->re_multi = isset( $params['frm_re_multi'] ) ? $params['frm_re_multi'] : 0;
 
@@ -206,6 +215,7 @@ class FrmSettings {
 		$this->jquery_css = isset( $params['frm_jquery_css'] ) ? absint( $params['frm_jquery_css'] ) : 0;
 		$this->accordion_js = isset( $params['frm_accordion_js'] ) ? absint( $params['frm_accordion_js'] ) : 0;
 		$this->fade_form = isset( $params['frm_fade_form'] ) ? absint( $params['frm_fade_form'] ) : 0;
+		$this->no_ips = isset( $params['frm_no_ips'] ) ? absint( $params['frm_no_ips'] ) : 0;
     }
 
 	private function update_roles( $params ) {

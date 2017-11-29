@@ -51,6 +51,7 @@ class FrmFieldsHelper {
         } else if ( $type == 'captcha' ) {
             $frm_settings = FrmAppHelper::get_settings();
             $values['invalid'] = $frm_settings->re_msg;
+			$values['field_options']['label'] = 'none';
         } else if ( 'url' == $type ) {
             $values['name'] = __( 'Website', 'formidable' );
         }
@@ -271,9 +272,8 @@ DEFAULT_HTML;
         $html = str_replace('[required_class]', $required_class, $html);
 
         //replace [label_position]
-        $field['label'] = apply_filters('frm_html_label_position', $field['label'], $field, $form);
-        $field['label'] = ( $field['label'] && $field['label'] != '' ) ? $field['label'] : 'top';
-		$html = str_replace( '[label_position]', ( ( in_array( $field['type'], array( 'divider', 'end_divider', 'break' ) ) ) ? $field['label'] : ' frm_primary_label' ), $html );
+		$field['label'] = self::label_position( $field['label'], $field, $form );
+		self::add_class_to_label( $field, $html );
 
         //replace [field_name]
         $html = str_replace('[field_name]', $field['name'], $html);
@@ -347,6 +347,52 @@ DEFAULT_HTML;
 
         return $html;
     }
+
+	/**
+	 * Get the class to use for the label position
+	 * @since 2.05
+	 */
+	private static function &label_position( $position, $field, $form ) {
+		if ( $position && $position != '' ) {
+			return $position;
+		}
+
+		$position = FrmStylesController::get_style_val( 'position', $form );
+		if ( $position == 'none' ) {
+			$position = 'top';
+		} elseif ( $position == 'no_label' ) {
+			$position = 'none';
+		} elseif ( $position == 'inside' && ! self::is_placeholder_field_type( $field['type'] ) ) {
+			$position = 'top';
+		}
+
+		$position = apply_filters( 'frm_html_label_position', $position, $field, $form );
+		$position = ( ! empty( $position ) ) ? $position : 'top';
+
+		return $position;
+	}
+
+	/**
+	 * Check if this field type allows placeholders
+	 * @since 2.05
+	 */
+	public static function is_placeholder_field_type( $type ) {
+		return ! in_array( $type, array( 'select', 'radio', 'checkbox', 'hidden' ) );
+	}
+
+	/**
+	 * Add the label position class into the HTML
+	 * If the label position is inside, add a class to show the label if the field has a value.
+	 *
+	 * @since 2.05
+	 */
+	private static function add_class_to_label( $field, &$html ) {
+		$label_class = in_array( $field['type'], array( 'divider', 'end_divider', 'break' ) ) ? $field['label'] : ' frm_primary_label';
+		$html = str_replace( '[label_position]', $label_class, $html );
+		if ( $field['label'] == 'inside' && $field['value'] != '' ) {
+			$html = str_replace( 'frm_primary_label', 'frm_primary_label frm_visible', $html );
+		}
+	}
 
 	/**
 	 * This filters shortcodes in the field HTML
@@ -488,14 +534,19 @@ DEFAULT_HTML;
 		}
 		$api_js_url = apply_filters( 'frm_recaptcha_js_url', $api_js_url );
 
-        wp_register_script( 'recaptcha-api', $api_js_url, '', true );
+        wp_register_script( 'recaptcha-api', $api_js_url, array( 'formidable' ), true );
         wp_enqueue_script( 'recaptcha-api' );
 
-		// for reverse compatability
+		// for reverse compatibility
 		$field['captcha_size'] = ( $field['captcha_size'] == 'default' ) ? 'normal' : $field['captcha_size'];
+		$field['captcha_size'] = ( $frm_settings->re_type == 'invisible' ) ? 'invisible' : $field['captcha_size'];
 
 ?>
-<div id="field_<?php echo esc_attr( $field['field_key'] ) ?>" class="<?php echo esc_attr( $class_prefix ) ?>g-recaptcha" data-sitekey="<?php echo esc_attr( $frm_settings->pubkey ) ?>" data-size="<?php echo esc_attr( $field['captcha_size'] ) ?>" data-theme="<?php echo esc_attr( $field['captcha_theme'] ) ?>"></div>
+<div id="field_<?php echo esc_attr( $field['field_key'] ) ?>" class="<?php echo esc_attr( $class_prefix ) ?>g-recaptcha" data-sitekey="<?php echo esc_attr( $frm_settings->pubkey ) ?>" data-size="<?php echo esc_attr( $field['captcha_size'] ) ?>" data-theme="<?php echo esc_attr( $field['captcha_theme'] ) ?>" <?php
+	if ( $field['captcha_size'] == 'invisible' && ! $allow_mutiple ) {
+		echo 'data-callback="frmAfterRecaptcha"';
+	}
+?>></div>
 <?php
     }
 
@@ -533,13 +584,8 @@ DEFAULT_HTML;
     }
 
 	public static function value_meets_condition( $observed_value, $cond, $hide_opt ) {
-		// Remove white space from hide_opt
-		if ( ! is_array( $hide_opt ) ) {
-			$hide_opt = rtrim( $hide_opt );
-		}
-
-		$observed_value = wp_kses_post( $observed_value );
-		$hide_opt = wp_kses_post( $hide_opt );
+		$hide_opt = self::get_value_for_comparision( $hide_opt );
+		$observed_value = self::get_value_for_comparision( $observed_value );
 
         if ( is_array($observed_value) ) {
             return self::array_value_condition($observed_value, $cond, $hide_opt);
@@ -564,6 +610,19 @@ DEFAULT_HTML;
         }
         return $m;
     }
+
+	/**
+	 * Trim and sanitize the values
+	 * @since 2.05
+	 */
+	private static function get_value_for_comparision( $value ) {
+		// Remove white space from hide_opt
+		if ( ! is_array( $value ) ) {
+			$value = trim( $value );
+		}
+
+		return wp_kses_post( $value );
+	}
 
 	public static function array_value_condition( $observed_value, $cond, $hide_opt ) {
         $m = false;
@@ -655,6 +714,10 @@ DEFAULT_HTML;
         );
 
         foreach ( $shortcodes[0] as $short_key => $tag ) {
+			if ( empty( $tag ) ) {
+				continue;
+			}
+
             $atts = FrmShortcodeHelper::get_shortcode_attribute_array( $shortcodes[3][ $short_key ] );
 
             if ( ! empty( $shortcodes[3][ $short_key ] ) ) {
@@ -677,7 +740,7 @@ DEFAULT_HTML;
                 case 'user_agent':
                 case 'user-agent':
                     $entry->description = maybe_unserialize($entry->description);
-					$replace_with = FrmEntryFormat::get_browser( $entry->description['browser'] );
+					$replace_with = FrmEntriesHelper::get_browser( $entry->description['browser'] );
                 break;
 
                 case 'created_at':
@@ -802,7 +865,7 @@ DEFAULT_HTML;
             $atts['param'] = str_replace('&#93;', ']', $atts['param']);
         }
 
-        $new_value = FrmAppHelper::get_param($atts['param'], '');
+		$new_value = FrmAppHelper::get_param( $atts['param'], '', 'get', 'sanitize_text_field' );
         $new_value = FrmAppHelper::get_query_var( $new_value, $atts['param'] );
 
         if ( $new_value == '' ) {
@@ -836,7 +899,11 @@ DEFAULT_HTML;
             }
 			unset( $autop );
 		} else if ( is_array( $replace_with ) ) {
-			$replace_with = implode( $sep, $replace_with );
+			if ( isset( $atts['show'] ) && $atts['show'] && isset( $replace_with[ $atts['show'] ] ) ) {
+				$replace_with = $replace_with[ $atts['show'] ];
+			} else {
+				$replace_with = implode( $sep, $replace_with );
+			}
 		}
 
 		return $replace_with;

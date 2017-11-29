@@ -352,6 +352,4 @@ class FrmUpdatesController{
     function no_permission_msg(){
         return __( 'A Formidable Forms update is available, but your license is invalid.', 'formidable' );
     }
-
 }
-

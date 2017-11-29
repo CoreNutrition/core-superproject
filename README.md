@@ -19,6 +19,10 @@ The following notes are more guidelines than enforced policies. Please reach out
 
 * Deployments to staging and production will be triggered manually by the CORE team
 
+## Wordpress updates
+
+* We use wp cli to manage the wordpress core, please SSH to server and run `wp core update` in site's root to update to latest version of Wordpress
+
 #### Branch Descriptions
 * `/master`
   * contains only production ready code

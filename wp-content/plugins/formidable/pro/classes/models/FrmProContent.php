@@ -8,7 +8,14 @@ class FrmProContent {
 		$args['show'] = $show;
 
 		foreach ( $shortcodes[0] as $short_key => $tag ) {
+			$previous_content = $content;
 			self::replace_single_shortcode( $shortcodes, $short_key, $tag, $entry, $display, $args, $content );
+
+			$has_run = ( $content !== $previous_content );
+			if ( $has_run ) {
+				$shortcodes[0][ $short_key ] = '';
+			}
+			unset( $previous_content );
 		}
 
 		if ( ! empty( $shortcodes[0] ) ) {
@@ -74,6 +81,9 @@ class FrmProContent {
 			$replace_with = FrmAppHelper::array_flatten( $replace_with );
 		}
 
+		if ( $field->type == 'address' && ! isset( $atts['blank'] ) ) {
+			$atts['blank'] = 1;
+		}
 		$atts['entry_id'] = $entry->id;
 		$atts['entry_key'] = $entry->item_key;
 		$atts['post_id'] = $entry->post_id;
@@ -353,7 +363,11 @@ class FrmProContent {
 	 */
 	public static function do_shortcode_is_draft( &$content, $atts, $shortcodes, $short_key, $args ) {
 		if ( $args['conditional'] ) {
+			if ( empty( $atts ) ) {
+				$atts['equals'] = 1;
+			}
 			$atts['short_key'] = $shortcodes[0][ $short_key ];
+
 			self::check_conditional_shortcode( $content, $args['entry']->is_draft, $atts, 'is_draft' );
 		} else {
 			$content = str_replace( $shortcodes[0][ $short_key ], $args['entry']->is_draft, $content );
@@ -404,7 +418,7 @@ class FrmProContent {
 
 			$total_len = ( $end_pos + $end_pos_len ) - $start_pos;
 
-			if ( empty( $replace_with ) ) {
+			if ( $replace_with === ''    ) {
 				$content = substr_replace( $content, '', $start_pos, $total_len );
 			} else if ( 'foreach' == $condition ) {
 				$content_len = $end_pos - ( $start_pos + $start_pos_len );
@@ -574,7 +588,7 @@ class FrmProContent {
 			} else {
 				$replace_with = '';
 			}
-		} else if ( ( $atts['equals'] == '' && $replace_with == '' ) || ( $atts['equals'] == '0' && $replace_with == '0' ) ) {
+		} else if ( $atts['equals'] == '' && $replace_with == '' ) {
 			//if the field is blank, give it a value
 			$replace_with = true;
 		}
@@ -620,17 +634,21 @@ class FrmProContent {
 		}
 	}
 
-	private static function eval_less_than_condition( $atts, &$replace_with ) {
-		if ( $atts['less_than'] <= $replace_with ) {
-			$replace_with = '';
-		} else if ( $atts['less_than'] > 0 && $replace_with == '0' ) {
-			$replace_with = true;
+	private static function eval_less_than_condition( $atts, &$field_value ) {
+		if ( $field_value < $atts['less_than'] ) {
+			// Condition is true
+		} else {
+			// Condition is false
+			$field_value = '';
 		}
 	}
 
-	private static function eval_greater_than_condition( $atts, &$replace_with ) {
-		if ( $atts['greater_than'] >= $replace_with ) {
-			$replace_with = '';
+	private static function eval_greater_than_condition( $atts, &$field_value ) {
+		if ( $field_value > $atts['greater_than'] ) {
+			// Condition is true
+		} else {
+			// Condition is false
+			$field_value = '';
 		}
 	}
 

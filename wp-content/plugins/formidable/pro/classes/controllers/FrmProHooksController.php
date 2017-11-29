@@ -19,7 +19,7 @@ class FrmProHooksController{
         // Views
         add_action('init', 'FrmProDisplaysController::register_post_types', 0);
         add_action('before_delete_post', 'FrmProDisplaysController::before_delete_post');
-        add_filter('the_content', 'FrmProDisplaysController::get_content', 8);
+        add_filter( 'the_content', 'FrmProDisplaysController::get_content', 1 );
 		add_action( 'init', 'FrmProContent::add_rewrite_endpoint' );
 
         // Display Shortcodes
@@ -48,18 +48,11 @@ class FrmProHooksController{
         add_action('untrashed_post', 'FrmProEntriesController::trashed_post');
 
 		add_filter( 'frmpro_fields_replace_shortcodes', 'FrmProEntriesController::filter_shortcode_value', 10, 4 );
-		add_filter( 'frm_email_value', 'FrmProEntriesController::filter_value_in_single_entry_table', 10, 4 );
 		add_filter( 'frm_display_value_custom', 'FrmProEntriesController::filter_display_value', 1, 3 );
 		add_filter( 'frm_display_value_atts', 'FrmProEntriesController::display_value_atts', 10, 2 );
 
 		add_action( 'frm_after_create_entry', 'FrmProEntriesController::maybe_set_cookie', 20, 2 );
 		add_filter( 'frm_setup_edit_entry_vars', 'FrmProEntriesController::setup_edit_vars' );
-
-		add_filter( 'frm_prepare_entry_content', 'FrmProEntryFormat::prepare_entry_content', 10, 2 );
-		add_filter( 'frm_prepare_entry_array', 'FrmProEntryFormat::prepare_entry_array', 10, 2 );
-		add_filter( 'frm_field_shortcodes_for_default_html_email', 'FrmProEntryFormat::default_email_shortcodes', 10, 2 );
-		add_filter( 'frm_entry_plain_text_row', 'FrmProEntryFormat::single_plain_text_row', 10, 2 );
-		add_filter( 'frm_entry_html_row', 'FrmProEntryFormat::single_html_row', 10, 2 );
 
 		// Address
 		add_filter( 'frm_validate_address_field_entry', 'FrmProAddress::validate', 10, 4 );
@@ -72,13 +65,13 @@ class FrmProHooksController{
 		add_filter( 'frm_display_credit_card_value_custom', 'FrmProCreditCardsController::display_value' );
 
 		// File field
-		add_filter( 'frm_validate_file_field_entry', 'FrmProFileField::validate', 10, 4 );
+		add_filter( 'frm_validate_file_field_entry', 'FrmProFileField::no_js_validate', 10, 4 );
+		add_filter( 'frm_validate_entry', 'FrmProFileField::upload_files_no_js', 10, 1 );
 		add_filter( 'frm_prepare_data_before_db', 'FrmProFileField::prepare_data_before_db', 10, 4 );
 		add_action( 'frm_before_destroy_entry', 'FrmProFileField::delete_files_with_entry', 10, 2 );
 
         // Entry and Meta Helpers
         add_filter('frm_show_new_entry_page', 'FrmProEntriesHelper::allow_form_edit', 10, 2);
-		add_filter( 'frm_email_value', 'FrmProEntryMetaHelper::email_value', 10, 4 );
 
         // Entry Shortcodes
         add_shortcode('formresults', 'FrmProEntriesController::get_form_results');
@@ -232,7 +225,6 @@ class FrmProHooksController{
 
         // Fields Controller
         add_action('frm_after_field_created', 'FrmProFieldsController::create_multiple_fields', 10, 2);
-        add_filter('frm_prepare_single_field_for_duplication', 'FrmProFieldsController::prepare_single_field_for_duplication' );
         add_action('frm_duplicate_field_divider', 'FrmProFieldsController::duplicate_section', 10, 2);
         add_action('frm_display_added_fields', 'FrmProFieldsController::show');
         add_filter('frm_display_field_options', 'FrmProFieldsController::display_field_options');
@@ -329,8 +321,12 @@ class FrmProHooksController{
 		// Phone Controller
 		add_filter( 'frm_phone_field_options_form', 'FrmProPhoneFieldsController::show_field_options_in_form_builder', 10, 3 );
 
-		// Phone Controller
+		// Text Controller
 		add_filter( 'frm_text_field_options_form', 'FrmProTextFieldsController::show_field_options_in_form_builder', 10, 3 );
+
+		// Time Controller
+		add_action('wp_ajax_frm_fields_ajax_time_options', 'FrmProTimeFieldsController::ajax_time_options');
+		add_action('wp_ajax_nopriv_frm_fields_ajax_time_options', 'FrmProTimeFieldsController::ajax_time_options');
 	}
 
     public static function load_ajax_hooks() {
@@ -419,7 +415,6 @@ class FrmProHooksController{
         add_action('frm_form_fields', 'FrmProFieldsController::form_fields', 10, 3);
         add_action('frm_show_other_field_type', 'FrmProFieldsController::show_other', 10, 3);
         add_action('frm_get_field_scripts', 'FrmProFieldsController::show_field', 10, 3);
-        add_filter('frm_html_label_position', 'FrmProFieldsController::label_position', 10, 3);
         add_action('frm_date_field_js', 'FrmProFieldsController::date_field_js', 10, 2);
 		add_filter( 'frm_is_field_required', 'FrmProFieldsController::maybe_make_field_optional', 10, 2 );
 

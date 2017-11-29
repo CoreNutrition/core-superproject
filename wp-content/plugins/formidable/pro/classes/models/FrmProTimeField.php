@@ -190,18 +190,19 @@ class FrmProTimeField {
 	}
 
 	public static function show_time_field( $field, $values ) {
+		self::prepare_global_js( $field, $values );
 
 		if ( isset( $field['options']['H'] ) ) {
-			if ( ! empty( $field['value'] ) && ! is_array( $field['value'] ) ) {
-				$h = explode( ':', $field['value'] );
-				$m = explode( ' ', $h[1] );
-				$h = reset( $h );
-				$a = isset( $m[1] ) ? $m[1] : '';
-				$m = reset( $m );
-			} else if ( is_array( $field['value'] ) ) {
+			if ( is_array( $field['value'] ) ) {
 				$h = isset( $field['value']['H'] ) ? $field['value']['H'] : '';
 				$m = isset( $field['value']['m'] ) ? $field['value']['m'] : '';
 				$a = isset( $field['value']['A'] ) ? $field['value']['A'] : '';
+			} else if ( is_string( $field['value'] ) && strpos( $field['value'], ':' ) !== false ) {
+				$h = explode( ':', $field['value'] );
+				$m = explode( ' ', $h[ 1 ] );
+				$h = reset( $h );
+				$a = isset( $m[ 1 ] ) ? $m[ 1 ] : '';
+				$m = reset( $m );
 			} else {
 				$h = $m = $a = '';
 			}
@@ -211,6 +212,29 @@ class FrmProTimeField {
 			self::time_array_to_string( $field['value'] );
 			include( FrmAppHelper::plugin_path() . '/pro/classes/views/frmpro-fields/front-end/time-single.php' );
 		}
+	}
+
+	/**
+	 * Prepare the global time field JS information
+	 *
+	 * @since 2.03.08
+	 *
+	 * @param array $field
+	 * @param array $values
+	 */
+	private static function prepare_global_js( $field, $values ) {
+		if ( $field['unique'] && $field['single_time'] && isset( $values['html_id'] ) ) {
+			global $frm_vars;
+
+			if ( ! isset($frm_vars['timepicker_loaded']) || ! is_array($frm_vars['timepicker_loaded']) ) {
+				$frm_vars['timepicker_loaded'] = array();
+			}
+
+			if ( ! isset($frm_vars['timepicker_loaded'][ $values['html_id'] ]) ) {
+				$frm_vars['timepicker_loaded'][ $values['html_id'] ] = true;
+			}
+		}
+
 	}
 
 	public static function is_datetime_used( $field, $value, $entry_id ) {

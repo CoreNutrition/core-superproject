@@ -302,6 +302,10 @@ $arrow_icons = FrmStylesHelper::arrow_icons();
     margin-bottom:0<?php echo esc_html( $important ) ?>;
 }
 
+.<?php echo esc_html( $style_class ) ?> textarea{
+	vertical-align:top;
+}
+
 .<?php echo esc_html( $style_class ) ?> input[type=text],
 .<?php echo esc_html( $style_class ) ?> input[type=password],
 .<?php echo esc_html( $style_class ) ?> input[type=email],
@@ -380,14 +384,6 @@ $arrow_icons = FrmStylesHelper::arrow_icons();
     color:transparent<?php echo esc_html( $important ) ?>;
 }
 
-.<?php echo esc_html( $style_class ) ?> .frm_default,
-.<?php echo esc_html( $style_class ) ?> .placeholder,
-.<?php echo esc_html( $style_class ) ?> .chosen-container-multi .chosen-choices li.search-field .default,
-.<?php echo esc_html( $style_class ) ?> .chosen-container-single .chosen-default{
-    color: <?php echo esc_html( $text_color . $important ) ?>;
-    font-style:italic;
-}
-
 .<?php echo esc_html( $style_class ) ?> select{
     width:<?php echo esc_html( ( $auto_width ? 'auto' : $field_width ) . $important ) ?>;
     max-width:100%;
@@ -396,6 +392,10 @@ $arrow_icons = FrmStylesHelper::arrow_icons();
 .<?php echo esc_html( $style_class ) ?> input.frm_other_input:not(.frm_other_full){
     width:auto <?php echo esc_html( $important ) ?>;
     margin-left:5px <?php echo esc_html( $important ) ?>;
+}
+
+.<?php echo esc_html( $style_class ) ?> .horizontal_radio input.frm_other_input:not(.frm_other_full):not(.frm_pos_none) {
+	display:inline-block<?php echo esc_html( $important ) ?>;
 }
 
 .<?php echo esc_html( $style_class ) ?> .frm_full input.frm_other_input:not(.frm_other_full){
@@ -439,22 +439,36 @@ $arrow_icons = FrmStylesHelper::arrow_icons();
 }
 
 /* These do not work if they are combined */
-.<?php echo esc_html( $style_class ) ?> input::placeholder{
+.<?php echo esc_html( $style_class ) ?> input::placeholder,
+.<?php echo esc_html( $style_class ) ?> textarea::placeholder{
 	color: <?php echo esc_html( $text_color_disabled . $important ) ?>;
 }
-.<?php echo esc_html( $style_class ) ?> input::-webkit-input-placeholder{
+.<?php echo esc_html( $style_class ) ?> input::-webkit-input-placeholder,
+.<?php echo esc_html( $style_class ) ?> textarea::-webkit-input-placeholder{
 	color: <?php echo esc_html( $text_color_disabled . $important ) ?>;
 }
-.<?php echo esc_html( $style_class ) ?> input::-moz-placeholder{
+.<?php echo esc_html( $style_class ) ?> input::-moz-placeholder,
+.<?php echo esc_html( $style_class ) ?> textarea::-moz-placeholder{
 	color: <?php echo esc_html( $text_color_disabled . $important ) ?>;
 }
-.<?php echo esc_html( $style_class ) ?> input:-ms-input-placeholder{
+.<?php echo esc_html( $style_class ) ?> input:-ms-input-placeholder,
+<?php echo esc_html( $style_class ) ?> textarea:-ms-input-placeholder{
 	color: <?php echo esc_html( $text_color_disabled . $important ) ?>;
 }
-.<?php echo esc_html( $style_class ) ?> input:-moz-placeholder{
+.<?php echo esc_html( $style_class ) ?> input:-moz-placeholder,
+.<?php echo esc_html( $style_class ) ?> textarea:-moz-placeholder{
 	color: <?php echo esc_html( $text_color_disabled . $important ) ?>;
 }
 
+.<?php echo esc_html( $style_class ) ?> .frm_default,
+.<?php echo esc_html( $style_class ) ?> input.frm_default,
+.<?php echo esc_html( $style_class ) ?> textarea.frm_default,
+.<?php echo esc_html( $style_class ) ?> select.frm_default,
+.<?php echo esc_html( $style_class ) ?> .placeholder,
+.<?php echo esc_html( $style_class ) ?> .chosen-container-multi .chosen-choices li.search-field .default,
+.<?php echo esc_html( $style_class ) ?> .chosen-container-single .chosen-default{
+    color: <?php echo esc_html( $text_color_disabled . $important ) ?>;
+}
 
 .<?php echo esc_html( $style_class ) ?> .form-field input:not([type=file]):focus,
 .<?php echo esc_html( $style_class ) ?> select:focus,
@@ -576,6 +590,7 @@ if ( ! $submit_style ) { ?>
 .<?php echo esc_html( $style_class ) ?> .frm_loading_form .frm_button_submit:active,
 .<?php echo esc_html( $style_class ) ?> .frm_loading_form .frm_button_submit:focus{
 	color: transparent <?php echo esc_html( $important ) ?>;
+	background: <?php echo esc_html( $submit_bg_color . $important ) ?>;
 }
 
 .<?php echo esc_html( $style_class ) ?> .frm_loading_form .frm_button_submit:before {
@@ -637,6 +652,12 @@ if ( ! $submit_style ) { ?>
 	white-space:normal;
 }
 
+.<?php echo esc_html( $style_class ) ?> .frm_radio input[type=radio],
+.<?php echo esc_html( $style_class ) ?> .frm_checkbox input[type=checkbox] {
+	font-size: <?php echo esc_html( $check_font_size . $important ) ?>;
+	position: static<?php echo esc_html( $important ) ?>;;
+}
+
 .<?php echo esc_html( $style_class ) ?> .frm_blank_field input[type=text],
 .<?php echo esc_html( $style_class ) ?> .frm_blank_field input[type=password],
 .<?php echo esc_html( $style_class ) ?> .frm_blank_field input[type=url],
@@ -656,6 +677,10 @@ if ( ! $submit_style ) { ?>
     border-color:#<?php echo esc_html( $border_color_error . $important ) ?>;
     border-width:<?php echo esc_html( $border_width_error . $important ) ?>;
     border-style:<?php echo esc_html( $border_style_error . $important ) ?>;
+}
+
+.<?php echo esc_html( $style_class ) ?> .frm_blank_field .sigWrapper{
+	border-color:#<?php echo esc_html( $border_color_error ) ?> !important;
 }
 
 .<?php echo esc_html( $style_class ) ?> .frm_error{
@@ -767,9 +792,15 @@ if ( ! $submit_style ) { ?>
 	padding:0<?php echo esc_html( $important ) ?>;
 }
 
-.<?php echo esc_html( $style_class ) ?> .frm_text_block input,
-.<?php echo esc_html( $style_class ) ?> .frm_text_block label.frm_primary_label{
-    margin-left:-20px;
+.<?php echo esc_html( $style_class ) ?> .frm_form_field.frm_text_block .frm_checkbox label,
+.<?php echo esc_html( $style_class ) ?> .frm_form_field.frm_text_block .frm_radio label{
+	padding-left:20px;
+	display:block;
+}
+
+.<?php echo esc_html( $style_class ) ?> .frm_form_field.frm_text_block .frm_checkbox input[type=checkbox],
+.<?php echo esc_html( $style_class ) ?> .frm_form_field.frm_text_block .frm_radio input[type=radio]{
+	margin-left:-20px;
 }
 
 .<?php echo esc_html( $style_class ) ?> .frm_button{
@@ -909,10 +940,19 @@ if ( ! $submit_style ) { ?>
 .<?php echo esc_html( $style_class ) ?> .frm_catlevel_5{
 	margin-right:18px;
 }
+
+.<?php echo esc_html( $style_class ) ?> div > .frm_time_select{
+	margin-right:5px;
+}
 <?php } ?>
 /* Start Chosen */
 .<?php echo esc_html( $style_class ) ?> .chosen-container{
     font-size:<?php echo esc_html( $field_font_size . $important ) ?>;
+}
+
+.<?php echo esc_html( $style_class ) ?> .chosen-container .chosen-results li,
+.<?php echo esc_html( $style_class ) ?> .chosen-container .chosen-results li span{
+	color:<?php echo esc_html( $text_color . $important ) ?>;
 }
 
 .<?php echo esc_html( $style_class ) ?> .chosen-container-single .chosen-single{

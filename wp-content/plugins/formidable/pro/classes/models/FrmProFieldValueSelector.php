@@ -33,7 +33,8 @@ class FrmProFieldValueSelector extends FrmFieldValueSelector {
 	protected function set_options() {
 		parent::set_options();
 
-		if ( $this->field_settings->get_post_field() === 'post_status' ) {
+		$post_field = $this->field_settings->get_post_field();
+		if ( $post_field === 'post_status' ) {
 			$this->options = FrmProFieldsHelper::get_post_status_options( $this->db_row->form_id, $this->options );
 		}
 
@@ -79,7 +80,11 @@ class FrmProFieldValueSelector extends FrmFieldValueSelector {
 	 * @since 2.03.05
 	 */
 	public function display() {
-		if ( $this->has_db_row() && $this->field_settings->get_post_field() === 'post_category' ) {
+		if ( $this->has_db_row() ) {
+			$post_field = $this->field_settings->get_post_field();
+		}
+
+		if ( isset( $post_field ) && $post_field === 'post_category' ) {
 			$this->display_post_category_value_selector();
 		} else {
 			parent::display();

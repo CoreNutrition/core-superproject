@@ -154,9 +154,8 @@ class FrmProXMLHelper{
             return $start_row;
         }
 
-		if ( ! ini_get( 'safe_mode' ) ) {
-            set_time_limit(0); //Remove time limit to execute this function
-        }
+		// Remove time limit to execute this function
+		set_time_limit( 0 );
 
 		$unmapped_fields = self::get_unmapped_fields( $field_ids );
 		$field_ids = array_filter( $field_ids );
@@ -284,34 +283,44 @@ class FrmProXMLHelper{
 	    switch ( $field->type ) {
             case 'user_id':
                 $metas[$field_id] = FrmAppHelper::get_user_id_param( trim($metas[$field_id]) );
-            break;
+                break;
             case 'file':
                 $metas[$field_id] = self::get_file_id($metas[$field_id]);
                 // If single file upload field, reset array
 				if ( ! FrmField::is_option_true( $field, 'multiple' ) ) {
                     $metas[$field_id] = reset( $metas[$field_id] );
                 }
-            break;
+                break;
             case 'date':
                 $metas[$field_id] = self::get_date($metas[$field_id]);
-            break;
+                break;
 			case 'time':
 				$metas[ $field_id ] = FrmProAppHelper::format_time( $metas[ $field_id ] );
-			break;
+				break;
             case 'data':
-                $metas[$field_id] = self::get_dfe_id($metas[$field_id], $field, $saved_entries);
-            break;
+				$metas[ $field_id ] = self::prepare_dynamic_field_value_from_xml( $metas[ $field_id ], $field, $saved_entries );
+                break;
+			case 'lookup':
+				if ( FrmField::get_option( $field, 'data_type' ) == 'checkbox' ) {
+					$metas[ $field_id ] = self::convert_imported_value_to_array( $metas[ $field_id ] );
+				}
+				break;
             case 'select':
             case 'checkbox':
                 $metas[$field_id] = self::get_multi_opts($metas[$field_id], $field);
-            break;
+                break;
 			case 'divider':
 			case 'form':
 				$metas[ $field_id ] = self::get_new_child_ids( $metas[ $field_id ], $field, $saved_entries );
-			break;
+				break;
 		    case 'address':
 		    	$metas[ $field_id ] = self::format_imported_address_field_values( $metas[ $field_id ] );
-			break;
+				break;
+			case 'number':
+				if ( is_numeric( $metas[ $field_id ] ) ) {
+					$metas[ $field_id ] = (string) $metas[ $field_id ];
+				}
+			    break;
 	    }
     }
 
@@ -418,6 +427,10 @@ class FrmProXMLHelper{
 		if ( isset( $values['is_draft'] ) ) {
             $values['is_draft'] = (int) $values['is_draft'];
         }
+
+		if ( isset( $values['ip'] ) ) {
+			$values['ip'] = sanitize_text_field( $values['ip'] );
+		}
     }
 
     /**
@@ -517,57 +530,97 @@ class FrmProXMLHelper{
         return $value;
     }
 
-    public static function get_dfe_id($value, $field, $ids = array() ) {
+	/**
+	 * @deprecated 2.03.08
+	 */
+	public static function get_dfe_id( $value, $field, $ids = array() ) {
+		_deprecated_function( __FUNCTION__, '2.03.08', 'custom code' );
 
+		return self::prepare_dynamic_field_value_from_xml( $value, $field, $ids );
+	}
+
+	/**
+	 * Get the entry IDs for a value imported in a Dynamic field
+	 *
+	 * @since 2.03.08
+	 *
+	 * @param array|string|int $value
+	 * @param stdClass $field
+	 * @param array $ids
+	 *
+	 * @return array|string|int
+	 */
+	private static function prepare_dynamic_field_value_from_xml( $value, $field, $ids = array() ) {
 		if ( ! $field || FrmProField::is_list_field( $field ) ) {
-            return $value;
-        }
+			return $value;
+		}
 
-        if ( ! empty($ids) && is_numeric($value) && isset($ids[$value]) ) {
-            // the entry was just imported, so we have the id
-            return $ids[$value];
-        }
+		$value = self::convert_imported_value_to_array( $value );
+		self::switch_dynamic_field_imported_entry_ids( $field, $ids, $value );
 
-        if ( ! is_array($value) ) {
-            $new_id = FrmDb::get_var( 'frm_item_metas', array( 'field_id' => $field->field_options['form_select'], 'meta_value' => $value), 'item_id' );
+		if ( count( $value ) <= 1 ) {
+			$value = reset( $value );
+		} else {
+			$value = array_map( 'trim', $value );
+		}
 
-            if ( $new_id && is_numeric($new_id) ) {
-                return $new_id;
-            }
+		return $value;
+	}
 
-            unset($new_id);
-        }
+	/**
+	 * Converted an imported XML value to an array
+	 *
+	 * @since 2.03.08
+	 *
+	 * @param $imported_value
+	 *
+	 * @return array|mixed|string
+	 */
+	private static function convert_imported_value_to_array( $imported_value ) {
+		if ( is_string( $imported_value ) && strpos( $imported_value, ',' ) !== false ) {
+			$imported_value = maybe_unserialize( $imported_value );
 
-        if ( ! is_array($value) && strpos($value, ',') ) {
-            $checked = maybe_unserialize($value);
+			if ( ! is_array( $imported_value ) ) {
+				$imported_value = explode( ',', $imported_value );
+			}
+		} else {
+			$imported_value = (array) $imported_value;
+		}
 
-            if ( ! is_array($checked) ) {
-                $checked = explode(',', $checked);
-            }
-        } else {
-            $checked = $value;
-        }
+		return $imported_value;
+	}
 
-        if ( ! $checked || ! is_array($checked) ) {
-            return $value;
-        }
+	/**
+	 * Switch the old entry IDs imported to new entry IDs for a Dynamic field
+	 *
+	 * @since 2.03.08
+	 *
+	 * @param stdClass $field
+	 * @param array $imported_values
+	 */
+	private static function switch_dynamic_field_imported_entry_ids( $field, $ids, &$imported_values ) {
+		if ( ! is_array( $imported_values ) ) {
+			return;
+		}
 
-        $value = array_map('trim', $checked);
+		foreach ( $imported_values as $key => $imported_value ) {
 
-        foreach ( $value as $dfe_k => $dfe_id ) {
-            $query = array( 'field_id' => $field->field_options['form_select'], 'meta_value' => $dfe_id);
-            $new_id = FrmDb::get_var( 'frm_item_metas', $query, 'item_id' );
+			// This entry was just imported, so we have the id
+			if ( is_numeric( $imported_value ) && isset( $ids[ $imported_value ] ) ) {
+				$imported_values[ $key ] = $ids[ $imported_value ];
+				continue;
+			}
 
-            if ( $new_id ) {
-                $value[$dfe_k] = $new_id;
-            }
-            unset($new_id);
-        }
+			// Look for the entry ID based on the imported value
+			// TODO: this may not be needed for XML imports. It appears to always be the entry ID that's exported
+			$where  = array( 'field_id' => $field->field_options['form_select'], 'meta_value' => $imported_value );
+			$new_id = FrmDb::get_var( 'frm_item_metas', $where, 'item_id' );
 
-        unset($checked);
-
-        return $value;
-    }
+			if ( $new_id && is_numeric( $new_id ) ) {
+				$imported_values[ $key ] = $new_id;
+			}
+		}
+	}
 
 	/**
 	* Get the new child IDs for a repeating field's or embedded form's meta_value

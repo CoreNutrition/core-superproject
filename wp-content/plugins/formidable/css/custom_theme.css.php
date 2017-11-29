@@ -18,12 +18,13 @@ $defaults = FrmStylesHelper::get_settings_for_output( $default_style );
 
 ?>
 
+.frm_form_field .grecaptcha-badge,
 .frm_hidden,
 .with_frm_style .frm_button.frm_hidden{
     display:none;
 }
 
-#frm_verify{
+form input.frm_verify{
 	display:none !important;
 }
 
@@ -109,6 +110,16 @@ legend.frm_hidden{
 .with_frm_style .frm_pos_hidden,
 .frm_hidden_container label.frm_primary_label{
     visibility:hidden;
+}
+
+.with_frm_style .frm_inside_container label.frm_primary_label{
+	opacity:0;
+	transition: opacity 0.1s linear;
+}
+
+.with_frm_style .frm_inside_container label.frm_visible,
+.frm_visible{
+	opacity:1;
 }
 
 .with_frm_style .frm_description{
@@ -525,6 +536,11 @@ select.frm_loading_lookup{
 	margin-right:10px;
 }
 
+.with_frm_style .frm_conf_field.frm_left_container label.frm_primary_label{
+	display:inline;
+	visibility:hidden;
+}
+
 .frm_form_field.frm_left_container input:not([type=radio]):not([type=checkbox]),
 .frm_form_field.frm_left_container:not(.frm_dynamic_select_container) select,
 .frm_form_field.frm_left_container textarea,
@@ -825,9 +841,11 @@ select.frm_loading_lookup{
 }
 
 .frm_form_field .frm_checkbox,
-.frm_form_field .frm_radio{
-    margin-top: 0;
-    margin-bottom: 0;
+.frm_form_field .frm_checkbox + .frm_checkbox,
+.frm_form_field .frm_radio,
+.frm_form_field .frm_radio + .frm_radio{
+	margin-top: 0;
+	margin-bottom: 0;
 }
 
 .frm_form_field.frm_three_col .frm_radio,
@@ -918,18 +936,8 @@ select.frm_loading_lookup{
     box-shadow:none;
 }
 
-.frm_text_block{
-    margin-left:20px;
-}
-
-.frm_text_block input,
-.frm_text_block label.frm_primary_label{
-    margin-left:-20px;
-}
-
-.frm_text_block .frm_checkbox input[type=checkbox],
-.frm_text_block .frm_radio input[type=radio]{
-    margin-right:4px;
+.frm_form_field.frm_label_justify label.frm_primary_label{
+	text-align:justify !important;
 }
 
 .frm_form_field.frm_capitalize input,

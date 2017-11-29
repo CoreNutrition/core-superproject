@@ -14,10 +14,12 @@
         <div class="contextual-help-tabs">
         <ul class="frm-category-tabs">
 			<?php $a = FrmAppHelper::simple_get( 't', 'sanitize_title', 'general_settings' ); ?>
-        	<li <?php echo ($a == 'general_settings') ? 'class="tabs active"' : '' ?>><a href="#general_settings" class="frm_cursor_pointer"><?php _e( 'General', 'formidable' ) ?></a></li>
+        	<li <?php echo ( $a == 'general_settings' ) ? 'class="tabs active"' : '' ?>>
+				<a href="#general_settings" class="frm_cursor_pointer"><?php _e( 'General', 'formidable' ) ?></a>
+			</li>
 			<?php foreach ( $sections as $sec_name => $section ) { ?>
-				<li <?php echo ( $a == $sec_name . '_settings' ) ? 'class="tabs active"' : '' ?>>
-					<a href="#<?php echo esc_attr( $sec_name ) ?>_settings">
+				<li <?php echo ( $a == $sec_name . '_settings' ) ? 'class="tabs active starttab"' : '' ?>>
+					<a href="#<?php echo esc_attr( $sec_name ) ?>_settings" data-frmajax="<?php echo esc_attr( isset( $section['ajax'] ) ? $section['ajax'] : '' ) ?>">
 						<?php echo isset( $section['name'] ) ? $section['name'] : ucfirst( $sec_name ) ?>
 					</a>
 				</li>
@@ -82,6 +84,16 @@
 
 			<p><label class="frm_left_label"><?php _e( 'Secret Key', 'formidable' ) ?></label>
 			<input type="text" name="frm_privkey" id="frm_privkey" size="42" value="<?php echo esc_attr($frm_settings->privkey) ?>" placeholder="<?php esc_attr_e( 'Optional', 'formidable' ) ?>" /></p>
+
+		    <p><label class="frm_left_label"><?php _e( 'reCAPTCHA Type', 'formidable' ) ?></label>
+			<select name="frm_re_type" id="frm_re_type">
+				<option value="" <?php selected( $frm_settings->re_type, '' ) ?>>
+					<?php esc_html_e( 'Checkbox (V2)', 'formidable' ); ?>
+				</option>
+				<option value="invisible" <?php selected( $frm_settings->re_type, 'invisible' ) ?>>
+					<?php esc_html_e( 'Invisible', 'formidable' ); ?>
+				</option>
+            </select></p>
 
 		    <p><label class="frm_left_label"><?php _e( 'reCAPTCHA Language', 'formidable' ) ?></label>
 			<select name="frm_re_lang" id="frm_re_lang">
@@ -161,6 +173,15 @@
         <?php FrmAppHelper::wp_pages_dropdown('frm-preview-page-id', $frm_settings->preview_page_id ) ?>
         </p>
 
+		<p>
+			<label class="frm_left_label"><?php _e( 'IP storage', 'formidable' ); ?></label>
+			<label for="frm_no_ips">
+				<input type="checkbox" name="frm_no_ips" id="frm_no_ips" value="1" <?php checked( $frm_settings->no_ips, 1 ) ?> />
+				<?php _e( 'Do not store IPs with form submissions. Check this box if you are in the UK.', 'formidable' ) ?>
+			</label>
+
+		</p>
+
     </div>
 
         <?php
@@ -168,10 +189,17 @@
 			if ( $a == $sec_name . '_settings' ) { ?>
 <style type="text/css">.<?php echo esc_attr( $sec_name ) ?>_settings{display:block;}</style><?php } ?>
 			<div id="<?php echo esc_attr( $sec_name ) ?>_settings" class="<?php echo esc_attr( $sec_name ) ?>_settings tabs-panel <?php echo ( $a == $sec_name . '_settings' ) ? 'frm_block' : 'frm_hidden'; ?>"><?php
-				if ( isset( $section['class'] ) ) {
-					call_user_func( array( $section['class'], $section['function'] ) );
+				if ( isset( $section['ajax'] ) ) {
+					?>
+					<div class="frm_ajax_settings_tab frm_<?php echo esc_attr( $sec_name ) ?>_settings_ajax">
+						<span class="spinner"></span>
+					</div><?php
 				} else {
-					call_user_func( ( isset( $section['function'] ) ? $section['function'] : $section ) );
+					if ( isset( $section['class'] ) ) {
+						call_user_func( array( $section['class'], $section['function'] ) );
+					} else {
+						call_user_func( ( isset( $section['function'] ) ? $section['function'] : $section ) );
+					}
                 } ?>
             </div>
         <?php

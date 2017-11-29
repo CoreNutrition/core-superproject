@@ -67,12 +67,16 @@ if ( $pos == 7 ) {
     $pos = 0;
 }
 if ( $pos != $week_begins ) {
-    if ( $pos > $week_begins ) {
-        $week_begins = $week_begins+7;
-    }
-    for ( $e=$pos; $e<$week_begins; $e++ ) {
-        echo "<td></td>\n";
-    }
+	if ( $pos > $week_begins ) {
+		$week_begins = $week_begins + 7;
+	}
+	for ( $e = $pos; $e < $week_begins; $e++ ) {
+		$day_class = '';
+		if ( $e == 6 || $e == 7 ) {
+			$day_class = ' class="frmcal-week-end"';
+		}
+		echo "<td" . $day_class . "></td>\n";
+	}
 }
 
 if ( ! $end_tr ) {

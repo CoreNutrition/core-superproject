@@ -49,7 +49,7 @@ class FrmHooksController {
         }
 
         add_action( 'plugins_loaded', 'FrmAppController::load_lang' );
-        add_filter( 'widget_text', 'FrmAppController::widget_text_filter', 8 );
+		add_filter( 'widget_text', 'do_shortcode' );
 
         // Entries controller
         add_action( 'wp_loaded', 'FrmEntriesController::process_entry', 10, 0 );
@@ -90,6 +90,7 @@ class FrmHooksController {
 
 		// Addons Controller
 		add_action( 'admin_menu', 'FrmAddonsController::menu', 100 );
+		add_filter( 'upgrader_pre_download', 'FrmAddonsController::add_shorten_edd_filename_filter', 10, 4 );
 
         // Entries Controller
         add_action( 'admin_menu', 'FrmEntriesController::menu', 12 );
@@ -121,6 +122,7 @@ class FrmHooksController {
         // Settings Controller
         add_action( 'admin_menu', 'FrmSettingsController::menu', 45 );
         add_action( 'frm_before_settings', 'FrmSettingsController::license_box' );
+		add_action( 'wp_ajax_frm_settings_tab', 'FrmSettingsController::load_settings_tab' );
 
         // Styles Controller
         add_action( 'admin_menu', 'FrmStylesController::menu', 14 );

@@ -2,10 +2,25 @@
 
 class FrmProEntryFormat {
 
+	/***********************************************************************
+	 * Deprecated Functions
+	 ************************************************************************/
+
 	/**
-	 * @since 2.3
+	 * @deprecated 2.04
+	 */
+	public static function default_email_shortcodes( $row ) {
+		_deprecated_function( __FUNCTION__, '2.04', 'custom code' );
+
+		return $row;
+	}
+
+	/**
+	 * @deprecated 2.04
 	 */
 	public static function prepare_entry_content( $entry, $atts ) {
+		_deprecated_function( __FUNCTION__, '2.04', 'custom code' );
+
 		$atts['include_blank'] = true;
 		FrmProEntryMeta::add_post_value_to_entry( $atts['field'], $entry );
 		self::add_sub_array_to_entry( $atts['field'], $entry, $atts );
@@ -14,9 +29,12 @@ class FrmProEntryFormat {
 
 	/**
 	 * Add each linked entry as an array
-	 * @since 2.3
+	 *
+	 * @deprecated 2.04
 	 */
 	public static function add_sub_array_to_entry( $field, &$entry, $atts = array() ) {
+		_deprecated_function( __FUNCTION__, '2.04', 'custom code' );
+
 		if ( $entry->form_id != $field->form_id ) {
 			if ( ! isset( $entry->sub_entries ) ) {
 				$entry->sub_entries = array();
@@ -47,9 +65,13 @@ class FrmProEntryFormat {
 
 	/**
 	 * Used for the frm-show-entry shortcode and default emails
-	 * @since 2.3
+	 * @since 2.03
+	 *
+	 * @deprecated 2.04
 	 */
 	public static function prepare_entry_array( $values, $atts ) {
+		_deprecated_function( __FUNCTION__, '2.04', 'instance of FrmEntryValues or FrmProEntryValues' );
+
 		$field = $atts['field'];
 		$in_child_form = $field->form_id != $atts['form_id'];
 
@@ -82,7 +104,12 @@ class FrmProEntryFormat {
 		return $values;
 	}
 
+	/**
+	 * @deprecated 2.04
+	 */
 	private static function get_field_value( $atts, &$val ) {
+		_deprecated_function( __FUNCTION__, '2.04', 'instance of FrmEntryValues or FrmProEntryValues' );
+
 		$field = $atts['field'];
 		if ( $atts['entry'] ) {
 			$meta = array(
@@ -90,9 +117,8 @@ class FrmProEntryFormat {
 				'meta_value' => $val, 'field_type' => $field->type,
 			);
 
-			if ( isset( $atts['filter'] ) && $atts['filter'] == false ) {
-				$val = $prev_val;
-			} else {
+			$filter_value = ( ! isset( $atts['filter'] ) || $atts['filter'] !== false );
+			if ( $filter_value ) {
 				$val = apply_filters( 'frm_email_value', $val, (object) $meta, $atts['entry'], compact( 'field' ) );
 			}
 
@@ -101,96 +127,21 @@ class FrmProEntryFormat {
 	}
 
 	/**
-	 * Set the Dynamic List field shortcodes for the default HTML email
-	 *
-	 * @since 2.0.23
-	 * @param array $field_shortcodes
-	 * @param object $f
-	 * @return array
+	 * @deprecated 2.04
 	 */
-	public static function default_email_shortcodes( $field_shortcodes, $f ) {
-		if ( $f->type == 'data' && $f->field_options['data_type'] == 'data' ) {
-			if ( ! empty( $f->field_options['hide_field'] ) && ! empty( $f->field_options['form_select'] ) ) {
-				$field_id_string = reset( $f->field_options[ 'hide_field' ] ) . ' show=' . $f->field_options[ 'form_select' ];
-				$field_shortcodes['val'] = '[' . $field_id_string . ']';
-			}
-		} elseif ( $f->type == 'divider' ) {
-			$field_shortcodes['val'] = '[' . $f->id . ' show=description]';
-			if ( FrmField::is_option_true( $f, 'repeat' ) ) {
-				$option_setting = 'in_section";s:' . strlen( $f->id ) . ':"' . $f->id . '"';
-				$sub_fields = FrmDb::get_col( 'frm_fields', array( 'field_options like' => $option_setting ) );
-
-				$field_shortcodes['entries'] = array( 0 => array() );
-				foreach ( $sub_fields as $sub_field_id ) {
-					$sub_field = FrmField::getOne( $sub_field_id );
-					FrmEntryFormat::get_field_shortcodes_for_default_email( $sub_field, $field_shortcodes['entries'][0] );
-				}
-			}
-		}
-
-		return $field_shortcodes;
-	}
-
-	public static function single_plain_text_row( $row, $atts ) {
-		if ( $atts['value']['type'] == 'break' ) {
-			$row[] = "\r\n\r\n";
-		} elseif ( $atts['value']['type'] == 'divider' ) {
-			$row = array();
-			if ( $atts['value']['label'] != '' ) {
-				$row[] = "\r\n" . $atts['value']['label'] . "\r\n";
-			}
-			$atts['function'] = __FUNCTION__;
-			self::add_sub_entries( $atts, $row );
-		} elseif ( $atts['value']['type'] == 'html' ) {
-			$row[] = $atts['value']['val'] . "\r\n";
-		}
-		return $row;
-	}
-
-	public static function single_html_row( $row, $atts ) {
-		if ( ! isset( $atts['value']['type'] ) ) {
-			return $row;
-		}
-
-		if ( $atts['value']['type'] == 'break' ) {
-			$atts['value']['val'] = '<br/><br/>';
-		} elseif ( $atts['value']['type'] == 'divider' ) {
-			$row = array();
-			if ( $atts['value']['label'] != '' ) {
-				$atts['value']['val'] = '<h3>' . $atts['value']['label'] . '</h3> ';
-				FrmEntryFormat::html_field_row( $atts, $row );
-			}
-			$atts['function'] = __FUNCTION__;
-			self::add_sub_entries( $atts, $row );
-		}
-
-		if ( in_array( $atts['value']['type'], array( 'break', 'html' ) ) ) {
-			$row = array();
-			FrmEntryFormat::html_field_row( $atts, $row );
-		}
+	public static function single_plain_text_row( $row ) {
+		_deprecated_function( __FUNCTION__, '2.04', 'custom code' );
 
 		return $row;
 	}
 
-	private static function add_sub_entries( $atts, &$content ) {
-		$value = $atts['value'];
-		if ( isset( $value['entries'] ) ) {
-			$section_id = $atts['id'];
-			foreach ( $value['entries'] as $entry ) {
-				if ( $atts['default_email'] ) {
-					$content[] = '[foreach ' . $section_id . ']' . "\r\n";
-				}
-				foreach ( $entry as $id => $field ) {
-					$atts['id'] = $id;
-					$atts['value'] = $field;
-					$function = $atts['function'];
-					FrmEntryFormat::$function( $atts, $content );
-				}
-				if ( $atts['default_email'] ) {
-					$content[] = '[/foreach ' . $section_id . ']' . "\r\n";
-				}
-				$content[] = "\r\n";
-			}
-		}
+	/**
+	 * @deprecated 2.04
+	 */
+	public static function single_html_row( $row ) {
+		_deprecated_function( __FUNCTION__, '2.04', 'custom code' );
+
+		return $row;
 	}
+
 }

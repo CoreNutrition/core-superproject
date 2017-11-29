@@ -153,16 +153,10 @@ class FrmProFieldsController{
 		return $filename;
 	}
 
-    public static function &label_position($position, $field, $form) {
-        if ( $position && $position != '' ) {
-            return $position;
-        }
-
-		$style_pos = FrmStylesController::get_style_val('position', $form);
-		$position = ( $style_pos == 'none' ? 'top' : ( $style_pos == 'no_label' ? 'none' : $style_pos ) );
-
-        return $position;
-    }
+	public static function &label_position( $position ) {
+		_deprecated_function( __METHOD__, '2.05', 'FrmFieldsHelper::label_position' );
+		return $position;
+	}
 
     public static function build_field_class($classes, $field) {
         if ( 'end_divider' == $field['type'] ) {
@@ -464,7 +458,9 @@ class FrmProFieldsController{
 	 * @param string $add_html
 	 */
 	private static function add_pattern_attribute( $field, &$add_html ) {
-		if ( $field['type'] == 'phone' || ( $field['type'] == 'text' && FrmField::is_option_true_in_array( $field, 'format' ) ) ) {
+		$has_format = FrmField::is_option_true_in_array( $field, 'format' );
+		$format_field = $field['type'] == 'text' || ( $field['type'] == 'lookup' &&  $field['data_type'] == 'text' );
+		if ( $field['type'] == 'phone' || ( $has_format && $format_field ) ) {
 			$format = FrmEntryValidate::phone_format( $field );
 			$format = substr( $format, 2, -1 );
 			$add_html .= ' pattern="' . esc_attr( $format ) . '"';
@@ -745,7 +741,7 @@ class FrmProFieldsController{
 		    $selector_args['html_name'] = 'field_options[hide_opt_' . absint( $_POST['current_field'] ) . '][]';
 	    }
 
-	    if ( FrmAppHelper::get_param( 'form_action' ) == 'update_settings' ) {
+	    if ( FrmAppHelper::get_param( 'form_action', '', 'get', 'sanitize_text_field' ) == 'update_settings' ) {
 	    	$selector_args['source'] = 'form_actions';
 	    } else {
 		    $field_type = sanitize_text_field( $_POST['t'] );
@@ -885,13 +881,9 @@ class FrmProFieldsController{
     public static function ajax_get_data(){
         //check_ajax_referer( 'frm_ajax', 'nonce' );
 
-        $entry_id = FrmAppHelper::get_param('entry_id');
-        if ( is_array($entry_id) ){
-            $entry_id = implode(',', $entry_id);
-        }
-        $entry_id = trim($entry_id, ',');
+		$entry_id = self::get_posted_entry_ids();
 		$current_field = FrmAppHelper::get_param( 'current_field', '', 'get', 'absint' );
-		$hidden_field_id = FrmAppHelper::get_param( 'hide_id' );
+		$hidden_field_id = FrmAppHelper::get_param( 'hide_id', '', 'get', 'sanitize_text_field' );
 
 		$current = FrmField::getOne($current_field);
 		$data_field = FrmField::getOne( $current->field_options['form_select'] );
@@ -956,6 +948,17 @@ class FrmProFieldsController{
     }
 
 	/**
+	 * @since 2.05.04
+	 */
+	private static function get_posted_entry_ids() {
+		$entry_id = FrmAppHelper::get_param( 'entry_id', '', 'get', 'sanitize_text_field' );
+		if ( is_array($entry_id) ){
+			$entry_id = implode(',', $entry_id);
+		}
+		return trim( $entry_id, ',' );
+	}
+
+	/**
 	* Get the HTML for a dependent Dynamic field when the parent changes
 	*/
 	public static function ajax_data_options(){
@@ -963,7 +966,7 @@ class FrmProFieldsController{
 
 		$args = array(
 			'trigger_field_id' => FrmAppHelper::get_param( 'trigger_field_id', '', 'post', 'absint' ),
-			'entry_id' => FrmAppHelper::get_param( 'entry_id' ),
+			'entry_id' => FrmAppHelper::get_param( 'entry_id', '', 'post', 'sanitize_text_field' ),
 			'field_id' => FrmAppHelper::get_param( 'field_id', '', 'post', 'absint' ),
 			'container_id' => FrmAppHelper::get_param( 'container_id', '', 'post', 'sanitize_title' ),
 			'default_value' => FrmAppHelper::get_param( 'default_value', '', 'post', 'sanitize_title' ),
@@ -1142,22 +1145,8 @@ class FrmProFieldsController{
 	}
 
 	public static function ajax_time_options(){
-		_deprecated_function( __FUNCTION__, '2.03' );
-
-		$values = array(
-			'time_field' => FrmAppHelper::get_post_param( 'time_field', '', 'sanitize_text_field' ),
-			'date_field' => FrmAppHelper::get_post_param( 'date_field', '', 'sanitize_text_field' ),
-			'date'       => FrmAppHelper::get_post_param( 'date', '', 'sanitize_text_field' ),
-			'entry_id'   => FrmAppHelper::get_post_param( 'entry_id', 0, 'absint' ),
-		);
-		$values['time_key'] = str_replace( 'field_', '', $values['time_field'] );
-		$values['date_key'] = str_replace( 'field_', '', $values['date_field'] );
-
-		$remove = array();
-		FrmProTimeField::get_disallowed_times( $values, $remove );
-
-		echo json_encode($remove);
-		wp_die();
+		_deprecated_function( __FUNCTION__, '2.03', 'FrmProTimeFieldsController::ajax_time_options' );
+		FrmProTimeFieldsController::ajax_time_options();
 	}
 
 	/**
@@ -1204,12 +1193,13 @@ class FrmProFieldsController{
 	public static function delete_temp_files() {
 		remove_action( 'pre_get_posts', 'FrmProFileField::filter_media_library', 99 );
 
+		$timestamp_cutoff = date( 'Y-m-d H:i:s', strtotime( '-3 hours' ) );
 		$old_uploads = get_posts( array(
 			'post_type' => 'attachment',
 			'posts_per_page' => 50,
 			'date_query' => array(
 				'column' => 'post_date_gmt',
-				'before' => '3 hours ago',
+				'before' => $timestamp_cutoff,
 			),
 			'meta_query' => array(
 				array(
@@ -1353,7 +1343,7 @@ class FrmProFieldsController{
 		$field_options = unserialize( $field_options );
 
 		// Update the in_section value
-		if ( $field_options['in_section'] != $section_id ) {
+		if ( ! isset( $field_options['in_section'] ) || $field_options['in_section'] != $section_id ) {
 			$field_options['in_section'] = $section_id;
 			$update_values['field_options'] = $field_options;
 		}
@@ -1382,7 +1372,10 @@ class FrmProFieldsController{
 		}
 		array_unshift( $fields, $section_field );
 
-		$field_count = FrmDb::get_count( $wpdb->prefix .'frm_fields fi LEFT JOIN '. $wpdb->prefix .'frm_forms fr ON (fi.form_id = fr.id)', array( 'or' => 1, 'fr.id' => $form_id, 'fr.parent_form_id' => $form_id ) );
+		$order_query = array( 'field_order >' => $section_field->field_order, 'form_id' => $form_id, 'type' => 'end_divider' );
+		$end_section_order = FrmDb::get_var( 'frm_fields', $order_query, 'field_order', array( 'order_by' => 'field_order ASC') );
+		$field_order = max( $section_field->field_order, $end_section_order );
+
         $ended = false;
 
         if ( isset($section_field->field_options['repeat']) && $section_field->field_options['repeat'] ) {
@@ -1403,8 +1396,8 @@ class FrmProFieldsController{
                 $values['field_options']['form_select'] = $new_form_id;
             }
 
-            $field_count++;
-            $values['field_order'] = $field_count;
+			$values['field_order'] = $field_order;
+			$field_order++;
 
 	        $values = apply_filters( 'frm_duplicated_field', $values );
 	        $field_id = FrmField::create( $values );
@@ -1432,20 +1425,6 @@ class FrmProFieldsController{
         // Prevent the function in the free version from completing
         wp_die();
     }
-
-	/**
-	 * Prepare a single field for duplication
-	 * Note: This should ONLY be used when the "Duplicate" button is clicked on a single field
-	 *
-	 * @since 2.0.25
-	 * @param array $field_values
-	 * @return array $field_values
-	 */
-	public static function prepare_single_field_for_duplication( $field_values ){
-		$field_values['field_options']['in_section'] = 0;
-
-		return $field_values;
-	}
 
 	/**
 	*
@@ -1576,5 +1555,14 @@ class FrmProFieldsController{
 			'truncate' => false,
 		);
 		return FrmProEntryMetaHelper::get_post_or_meta_value( $entry, $field, $pass_args );
+	}
+
+	/**
+	 * @deprecated 2.03.10
+	 */
+	public static function prepare_single_field_for_duplication( $field_values ){
+		_deprecated_function( __FUNCTION__, '2.03.10', 'custom code' );
+
+		return $field_values;
 	}
 }

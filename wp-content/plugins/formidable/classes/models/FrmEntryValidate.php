@@ -21,28 +21,16 @@ class FrmEntryValidate {
 		// Pass exclude value to validate_field function so it can be used for repeating sections
 		$args = array( 'exclude' => $exclude );
 
-		$check_later = array();
 		foreach ( $posted_fields as $posted_field ) {
-			if ( $posted_field->type == 'file' ) {
-				$check_later[] = $posted_field;
-			} else {
-				self::validate_field( $posted_field, $errors, $values, $args );
-			}
-			unset( $posted_field );
-		}
-
-		// check for spam
-		self::spam_check( $exclude, $values, $errors );
-		if ( ! empty( $errors ) ) {
-			return $errors;
-		}
-
-		foreach ( $check_later as $posted_field ) {
 			self::validate_field( $posted_field, $errors, $values, $args );
 			unset( $posted_field );
 		}
 
-		$errors = apply_filters( 'frm_validate_entry', $errors, $values, compact('exclude') );
+		if ( empty( $errors ) ) {
+			self::spam_check( $exclude, $values, $errors );
+		}
+
+		$errors = apply_filters( 'frm_validate_entry', $errors, $values, compact( 'exclude' ) );
 
 		return $errors;
 	}
@@ -117,7 +105,19 @@ class FrmEntryValidate {
     }
 
 	private static function maybe_clear_value_for_default_blank_setting( $field, &$value ) {
-		if ( FrmField::is_option_true_in_object( $field, 'default_blank' ) && $value == $field->default_value ) {
+		$is_default = ( FrmField::is_option_true_in_object( $field, 'default_blank' ) && $value == $field->default_value );
+		$is_label = false;
+
+		if ( ! $is_default ) {
+			$position = FrmField::get_option( $field, 'label' );
+			if ( empty( $position ) ) {
+				$position = FrmStylesController::get_style_val( 'position', $field->form_id );
+			}
+
+			$is_label = ( $position == 'inside' && FrmFieldsHelper::is_placeholder_field_type( $field->type ) && $value == $field->name );
+		}
+
+		if ( $is_label || $is_default ) {
 			$value = '';
 		}
 	}
@@ -151,10 +151,14 @@ class FrmEntryValidate {
         }
     }
 
-	public static function validate_number_field( &$errors, $field, $value, $args ) {
+	public static function validate_number_field( &$errors, $field, &$value, $args ) {
 		//validate the number format
 		if ( $field->type != 'number' ) {
 			return;
+		}
+
+		if ( strpos( $value, ',' ) ) {
+			$value = str_replace( ',', '', $value );
 		}
 
 		if ( ! is_numeric( $value) ) {

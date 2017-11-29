@@ -28,7 +28,27 @@ class FrmAddonsController {
 			return;
 		}
 
+		ksort( $plugins );
+		$allow_autofill = self::allow_autofill();
+
 		include( FrmAppHelper::plugin_path() . '/classes/views/addons/settings.php' );
+	}
+
+	/**
+	 * Don't allow subsite addon licenses to be fetched
+	 * unless the current user has super admin permissions
+	 *
+	 * @since 2.03.10
+	 */
+	private static function allow_autofill() {
+		$allow_autofill = FrmAppHelper::pro_is_installed();
+		if ( $allow_autofill && is_multisite() ) {
+			$sitewide_activated = get_site_option( 'frmpro-wpmu-sitewide' );
+			if ( $sitewide_activated ) {
+				$allow_autofill = current_user_can( 'setup_network' );
+			}
+		}
+		return $allow_autofill;
 	}
 
 	private static function get_api_addons() {
@@ -120,10 +140,6 @@ class FrmAddonsController {
 				'title'   => 'Polylang',
 				'excerpt' => 'Create bilingual or multilingual forms with help from Polylang.',
 			),
-			'math-captcha' => array(
-				'title'   => 'Math Captcha',
-				'excerpt' => 'Require users to perform a simple calculation before submitting a form to prevent spam. This add-on extends BestWebSoft\'s Captcha plugin.',
-			),
 			'locations' => array(
 				'title'   => 'Locations',
 				'excerpt' => 'Populate fields with Countries, States/Provinces, U.S. Counties, and U.S. Cities. This data can then be used in dependent Data from Entries fields.',
@@ -180,10 +196,17 @@ class FrmAddonsController {
 	}
 
 	public static function get_licenses() {
-		FrmAppHelper::permission_check('frm_change_settings');
+		$allow_autofill = self::allow_autofill();
+		$required_role = $allow_autofill ? 'setup_network' : 'frm_change_settings';
+		FrmAppHelper::permission_check( $required_role );
 		check_ajax_referer( 'frm_ajax', 'nonce' );
 
-		$license = get_option('frmpro-credentials');
+		if ( is_multisite() && get_site_option( 'frmpro-wpmu-sitewide' ) ) {
+			$license = get_site_option( 'frmpro-credentials' );
+		} else {
+			$license = get_option( 'frmpro-credentials' );
+		}
+
 		if ( $license && is_array( $license ) && isset( $license['license'] ) ) {
 			$url = 'https://formidableforms.com/frm-edd-api/licenses?l=' . urlencode( base64_encode( $license['license'] ) );
 			$licenses = self::send_api_request( $url, array( 'name' => 'frm_api_licence', 'expires' => 60 * 60 * 5 ) );
@@ -226,13 +249,47 @@ class FrmAddonsController {
 	}
 
 	private static function prepare_pro_info() {
-		$pro_pricing = array(
-			'personal'      => array( 'id' => 5, 'price' => '49.00', 'name' => 'Personal' ),
-			'professional'  => array( 'id' => 6, 'price' => '99.00', 'name' => 'Professional' ),
-			'smallbusiness' => array( 'id' => 3, 'price' => '199.00', 'name' => 'Small Business' ),
-			'enterprise'    => array( 'id' => 4, 'price' => '399.00', 'name' => 'Enterprise' ),
+		return array(
+			'personal'      => array( 'id' => 2, 'download' => 19367654, 'price' => '49.00', 'name' => 'Personal' ),
+			'professional'  => array( 'id' => 0, 'download' => 19367001, 'price' => '99.00', 'name' => 'Professional' ),
+			'smallbusiness' => array( 'id' => 0, 'download' => 19366995, 'price' => '199.00', 'name' => 'Small Business' ),
+			'enterprise'    => array( 'id' => 0, 'download' => 19366992, 'price' => '399.00', 'name' => 'Enterprise' ),
 		);
+	}
 
-		return $pro_pricing;
+	/**
+	 * Add a filter to shorten the EDD filename for Formidable plugin, and add-on, updates
+	 *
+	 * @since 2.03.08
+	 *
+	 * @param boolean $return
+	 * @param string $package
+	 *
+	 * @return boolean
+	 */
+	public static function add_shorten_edd_filename_filter( $return, $package ) {
+		if ( strpos( $package, '/edd-sl/package_download/' ) !== false && strpos( $package, 'formidableforms.com' ) !== false ) {
+			add_filter( 'wp_unique_filename', 'FrmAddonsController::shorten_edd_filename', 10, 2 );
+		}
+
+		return $return;
+	}
+
+	/**
+	 * Shorten the EDD filename for automatic updates
+	 * Decreases size of file path so file path limit is not hit on Windows servers
+	 *
+	 * @since 2.03.08
+	 *
+	 * @param string $filename
+	 * @param string $ext
+	 *
+	 * @return string
+	 */
+	public static function shorten_edd_filename( $filename, $ext ) {
+		$filename = substr( $filename, 0, 50 ) . $ext;
+		remove_filter( 'wp_unique_filename', 'FrmAddonsController::shorten_edd_filename', 10 );
+
+		return $filename;
 	}
 }

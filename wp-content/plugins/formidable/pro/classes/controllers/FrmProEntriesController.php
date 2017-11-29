@@ -88,7 +88,7 @@ class FrmProEntriesController{
 			$keep_scripts = apply_filters( 'frm_ajax_load_scripts', $keep_scripts );
 			$registered_scripts = (array) $wp_scripts->registered;
 			$registered_scripts = array_diff( array_keys( $registered_scripts ), $keep_scripts );
-			$wp_scripts->done = array_merge( $wp_scripts->done, $registered_scripts );
+			self::mark_scripts_as_loaded( $registered_scripts );
 
 			$keep_styles = apply_filters( 'frm_ajax_load_styles', $keep_styles );
 			$registered_styles = (array) $wp_styles->registered;
@@ -99,6 +99,25 @@ class FrmProEntriesController{
 		}
 
 		wp_print_footer_scripts();
+	}
+
+	/**
+	 * Used during ajax when we know jQuery has already been loaded
+	 * Used when a form is loaded for edit-in-place
+	 *
+	 * @since 2.05
+	 */
+	private static function mark_jquery_as_loaded() {
+		$mark_complete = array( 'jquery-core', 'jquery-migrate', 'jquery' );
+		self::mark_scripts_as_loaded( $mark_complete );
+	}
+
+	/**
+	 * @since 2.05
+	 */
+	private static function mark_scripts_as_loaded( $scripts ) {
+		global $wp_scripts;
+		$wp_scripts->done = array_merge( $wp_scripts->done, $scripts );
 	}
 
     /**
@@ -387,7 +406,7 @@ class FrmProEntriesController{
             $bulkaction = str_replace('bulk_', '', $action);
         }
 
-        $items = FrmAppHelper::get_param('item-action', '');
+		$items = FrmAppHelper::get_param( 'item-action', '', 'get', 'sanitize_text_field' );
         if (empty($items)){
             $errors[] = __( 'No entries were specified', 'formidable' );
         }else{
@@ -430,7 +449,9 @@ class FrmProEntriesController{
 
     /* Front End CRUD */
 
-    //Determine if this is a new entry or if we're editing an old one
+	/*
+	 * Determine if this is a new entry or if we're editing an old one
+	 */
 	public static function maybe_editing( $continue, $form_id, $action = 'new' ) {
 		$form_submitted = FrmAppHelper::get_param( 'form_id', '', 'get', 'absint' );
         if ( $action == 'new' || $action == 'preview' ) {
@@ -443,15 +464,10 @@ class FrmProEntriesController{
     }
 
 	public static function check_draft_status( $values, $id ) {
-        if ( FrmProEntriesHelper::get_field('is_draft', $id) || $values['is_draft'] ) {
-            //remove update hooks if submitting for the first time or is still draft
-
-        }
-
-        //if entry was not previously draft or continues to be draft
-        if ( !FrmProEntriesHelper::get_field('is_draft', $id) || $values['is_draft'] ) {
-            return $values;
-        }
+		if ( ! FrmProEntriesHelper::get_field( 'is_draft', $id ) || $values['is_draft'] ) {
+			// if entry draft status is unchanged
+			return $values;
+		}
 
         //add the create hooks since the entry is switching draft status
         add_action('frm_after_update_entry', 'FrmProEntriesController::add_published_hooks', 2, 2);
@@ -477,6 +493,9 @@ class FrmProEntriesController{
         remove_action('frm_after_create_entry', 'FrmProEntriesController::set_cookie', 20);
         remove_action('frm_after_create_entry', 'FrmFormActionsController::trigger_create_actions', 20);
 		add_action( 'frm_after_create_entry', 'FrmProFormActionsController::trigger_draft_actions', 10, 2 );
+
+		// trigger after draft save hook
+		do_action( 'frm_after_draft_entry_processed', array( 'entry_id' => $entry_id, 'form' => $entry->form_id ) );
     }
 
     //add the create hooks since the entry is switching draft status
@@ -484,6 +503,7 @@ class FrmProEntriesController{
         do_action('frm_after_create_entry', $entry_id, $form_id);
         do_action('frm_after_create_entry_'. $form_id, $entry_id);
         remove_action('frm_after_update_entry', 'FrmProEntriesController::add_published_hooks', 2);
+		remove_action( 'frm_after_update_entry', 'FrmProFormActionsController::trigger_update_actions', 10, 2 );
     }
 
 	public static function process_update_entry( $params, $errors, $form, $args ) {
@@ -505,6 +525,7 @@ class FrmProEntriesController{
             //update, but don't check for confirmation if saving draft
             if ( FrmProFormsHelper::saving_draft() ) {
                 FrmEntry::update( $params['id'], $_POST );
+				do_action( 'frm_after_draft_entry_processed', array( 'entry_id' => $params['id'], 'form' => $form ) );
                 return;
             }
 
@@ -774,8 +795,12 @@ class FrmProEntriesController{
 
 		if ( self::update_button_was_clicked( $args ) ) {
 			// If Update/Submit was clicked
-			self::do_on_update_settings( $entry, $args );
-
+			if ( FrmProEntriesHelper::user_can_edit( $entry_id, $args['form'] ) ) {
+				self::do_on_update_settings( $entry, $args );
+			} else {
+				// entry is no longer editable after draft is saved
+				self::do_on_create_settings( $entry, $args );
+			}
 		} else {
 			// If Save Draft, Next, or Previous was clicked
 			$args['show_form'] = true;
@@ -1095,7 +1120,6 @@ class FrmProEntriesController{
 			self::show_front_end_form_with_entry( $entry, $args );
 		} else {
 			do_action('frm_success_action', $conf_method, $args['form'], $args['form']->options, $entry->id, $success_args );
-			add_filter('frm_continue_to_new', '__return_false', 16);// Not sure if this is needed
 		}
 	}
 
@@ -1120,14 +1144,33 @@ class FrmProEntriesController{
 		$description = $args['show_description'];
 		$id = $entry->id;
 		$errors = $args['errors'];
-		$message = isset( $args['conf_message'] ) ? $args['conf_message'] : false;
 		$form = $args['form'];
 		$submit = $args['submit_text'];
 		$show_form = $args['show_form'];
 		$jump_to_form = isset( $args['jump_to_form'] ) ? $args['jump_to_form'] : false;
 
+		$message = isset( $args['conf_message'] ) ? $args['conf_message'] : false;
+		if ( $message ) {
+			$message = apply_filters( 'frm_main_feedback', $message, $form, $id );
+		}
+
 		require(FrmAppHelper::plugin_path() .'/pro/classes/views/frmpro-entries/edit-front.php');
 		add_filter('frm_continue_to_new', 'FrmProEntriesController::maybe_editing', 10, 3);
+	}
+
+	private static function do_on_create_settings( $entry, $args ) {
+		$conf_method = apply_filters( 'frm_success_filter', 'message', $args['form'], 'create' );
+
+		$args['entry_id'] = $entry->id;
+		$args['title'] = $args['show_title'];
+		$args['description'] = $args['show_description'];
+
+		if ( $conf_method == 'message' ) {
+			FrmFormsController::show_message_after_save( $args );
+		} else {
+			$args['conf_method'] = $conf_method;
+			FrmFormsController::run_success_action( $args );
+		}
 	}
 
     public static function ajax_submit_button() {
@@ -1218,6 +1261,12 @@ class FrmProEntriesController{
     }
 
 	public static function delete_entry( $post_id ) {
+		// Check that installation has occurred
+		$db_version = get_option('frm_db_version');
+		if ( ! $db_version ) {
+			return;
+		}
+
         $entry = FrmDb::get_row( 'frm_items', array( 'post_id' => $post_id), 'id');
         self::maybe_delete_entry($entry);
     }
@@ -1299,11 +1348,11 @@ class FrmProEntriesController{
         }
 
         if ( ! $id ) {
-            $id = (int) $_POST['id'];
+			$id = absint( $_POST['id'] );
         }
 
         if ( ! $post_id ) {
-            $post_id = (int) $_POST['post_id'];
+			$post_id = absint( $_POST['post_id'] );
         }
 
         if ( ! is_numeric($id) || ! is_numeric($post_id) ) {
@@ -1421,50 +1470,28 @@ class FrmProEntriesController{
     }
 
 	public static function filter_shortcode_value( $value, $tag, $atts, $field ) {
-        if ( isset($atts['striphtml']) && $atts['striphtml'] ) {
-            $allowed_tags = apply_filters('frm_striphtml_allowed_tags', array(), $atts);
-            $value = wp_kses($value, $allowed_tags);
-        }
+		if ( isset( $atts['striphtml'] ) && $atts['striphtml'] ) {
+			self::kses_deep( $atts, $value );
+		} elseif ( ! isset( $atts['keepjs'] ) || ! $atts['keepjs'] ) {
+			FrmAppHelper::sanitize_value( 'wp_kses_post', $value );
+		}
 
-        if ( ! isset($atts['keepjs']) || ! $atts['keepjs'] ) {
-            if ( is_array($value) ) {
-                foreach ( $value as $k => $v ) {
-                    $value[$k] = wp_kses_post($v);
-                    unset($k, $v);
-                }
-            } else {
-                $value = wp_kses_post($value);
-            }
-        }
-
-		$value = self::get_option_label_for_saved_value( $value, $field, $atts );
-
-        return $value;
-    }
+		return self::get_option_label_for_saved_value( $value, $field, $atts );
+	}
 
 	/**
-	 * Filter field value displayed with the default-message or frm-show-entry shortcodes
-	 *
-	 * @since 2.02.14
-	 *
-	 * @param mixed $value
-	 * @param object $meta
-	 *
-	 * @return array|mixed
+	 * @since 2.05.03
 	 */
-	public static function filter_value_in_single_entry_table( $value, $meta, $entry, $atts = array() ) {
-		if ( isset( $atts['field'] ) ) {
-			$field = $atts['field'];
+	private static function kses_deep( $atts, &$value ) {
+		$allowed_tags = apply_filters( 'frm_striphtml_allowed_tags', array(), $atts );
+		if ( is_array( $value ) ) {
+			foreach ( $value as $k => $v ) {
+				$value[ $k ] = wp_kses( $v, $allowed_tags );
+				unset( $k, $v );
+			}
 		} else {
-			$field = FrmField::getOne( $meta->field_id );
+			$value = wp_kses( $value, $allowed_tags );
 		}
-		if ( ! $field ) {
-			return $value;
-		}
-
-		$value = self::get_option_label_for_saved_value( $value, $field, $atts );
-
-		return $value;
 	}
 
 	/**
@@ -1478,7 +1505,7 @@ class FrmProEntriesController{
 	 *
 	 * @return array|mixed
 	 */
-	private static function get_option_label_for_saved_value( $value, $field, $atts = array() ) {
+	public static function get_option_label_for_saved_value( $value, $field, $atts = array() ) {
 		$show_value =  ( isset( $atts['show'] ) && $atts['show'] == 'value' );
 		$saved_value = ( isset( $atts['saved_value'] ) && $atts['saved_value'] );
 		$has_separate_option = in_array( $field->type, array( 'radio', 'checkbox', 'select' ) ) && FrmField::is_option_true( $field, 'separate_value' );
@@ -1656,6 +1683,7 @@ class FrmProEntriesController{
 		$columns = $cb_item + (array) $columns;
         $columns[$form_id .'_post_id'] = __( 'Post', 'formidable' );
         $columns[$form_id .'_is_draft'] = __( 'Draft', 'formidable' );
+		$columns[$form_id .'_parent_item_id'] = __( 'Parent Entry ID', 'formidable' );
 
         $frm_vars['cols'] = $columns;
 
@@ -2402,7 +2430,7 @@ class FrmProEntriesController{
         ), $atts);
 
         $link = '';
-        $entry_id = ( $atts['id'] && is_numeric($atts['id']) ) ? $atts['id'] : FrmAppHelper::get_param('entry', false);
+		$entry_id = ( $atts['id'] && is_numeric($atts['id']) ) ? $atts['id'] : FrmAppHelper::get_param( 'entry', false, 'get', 'sanitize_text_field' );
 
         if ( empty($entry_id) && $atts['id'] == 'current' ) {
             if ( isset($frm_vars['editing_entry']) && $frm_vars['editing_entry'] && is_numeric($frm_vars['editing_entry']) ) {
@@ -2486,60 +2514,61 @@ class FrmProEntriesController{
     }
 
 	public static function entry_update_field( $atts ) {
-        global $frm_vars, $post, $frm_update_link, $wpdb;
+		global $frm_vars, $frm_update_link_count;
 
-        $atts = shortcode_atts( array(
-            'id' => (isset($frm_vars['editing_entry']) ? $frm_vars['editing_entry'] : false),
-            'field_id' => false, 'form_id' => false,
-            'label' => __( 'Update', 'formidable' ), 'class' => '', 'value' => '',
-            'message' => '', 'title' => '', 'allow' => '',
-        ), $atts);
+		$atts = shortcode_atts( array(
+			'id'       => ( isset( $frm_vars['editing_entry'] ) ? $frm_vars['editing_entry'] : false ),
+			'field_id' => false,
+			'label'    => __( 'Update', 'formidable' ),
+			'class'    => '',
+			'value'    => '',
+			'message'  => '',
+			'title'    => '',
+		), $atts );
+
+		if ( ! $atts['field_id'] ) {
+			return __( 'You are missing options in your shortcode. A field_id is required.', 'formidable' );
+		}
 
 		$entry_id = ( $atts['id'] && is_numeric( $atts['id'] ) ) ? absint( $atts['id'] ) : FrmAppHelper::get_param( 'entry', false, 'get', 'absint' );
+		if ( ! $entry_id || empty( $entry_id ) ) {
+			return '';
+		}
 
-        if ( ! $entry_id || empty($entry_id) ) {
-            return;
-        }
+		$field = FrmField::getOne( $atts['field_id'] );
+		if ( ! $field || ! FrmProEntriesHelper::user_can_edit( $entry_id, $field->form_id ) ) {
+			return '';
+		}
 
-        if ( ! $atts['form_id'] ) {
-            $atts['form_id'] = (int) FrmDb::get_var($wpdb->prefix .'frm_items', array( 'id' => $entry_id), 'form_id');
-        }
+		// Check if current value is equal to new value
+		$current_val = FrmProEntryMetaHelper::get_post_or_meta_value( $entry_id, $field );
+		if ( $current_val == $atts['value'] ) {
+			return '';
+		}
 
-		if ( $atts['allow'] != 'everyone' && ! FrmProEntriesHelper::user_can_edit( $entry_id, $atts['form_id'] ) ) {
-            return;
-        }
 
-        $field = FrmField::getOne($atts['field_id']);
-        if ( ! $field ) {
-            return;
-        }
+		if ( ! $frm_update_link_count ) {
+			$frm_update_link_count = 0;
+		}
 
-        if ( ! is_numeric($atts['field_id']) ) {
-            $atts['field_id'] = $field->id;
-        }
+		$frm_update_link_count++;
 
-        //check if current value is equal to new value
-        $current_val = FrmProEntryMetaHelper::get_post_or_meta_value($entry_id, $field);
-        if ( $current_val == $atts['value'] ) {
-            return;
-        }
+		if ( empty( $atts['title'] ) ) {
+			$atts['title'] = $atts['label'];
+		}
 
-        if ( ! $frm_update_link ) {
-            $frm_update_link = array();
-        }
+		$value   = htmlspecialchars( addslashes( $atts['value'] ) );
+		$message = htmlspecialchars( addslashes( $atts['message'] ) );
+		$onclick = "frmUpdateField({$entry_id},{$field->id},'{$value}','{$message}',{$frm_update_link_count});return false;";
 
-        $num = isset($frm_update_link[$entry_id .'-'. $atts['field_id']]) ? $frm_update_link[$entry_id .'-'. $atts['field_id']] : 0;
-        $num = (int) $num + 1;
-        $frm_update_link[$entry_id .'-'. $atts['field_id']] = $num;
+		$html_id = "frm_update_field_{$entry_id}_{$field->id}_{$frm_update_link_count}";
+		$class   = esc_attr( 'frm_update_field_link ' . $atts['class'] );
+		$title   = esc_attr( $atts['title'] );
 
-        if ( empty($atts['title']) ) {
-            $atts['title'] = $atts['label'];
-        }
+		$link = "<a href=\"#\" onclick=\"{$onclick}\" id=\"{$html_id}\" class=\"{$class}\" title=\"{$title}\">{$atts['label']}</a>";
 
-        $link = '<a href="#" onclick="frmUpdateField('. $entry_id .','. $atts['field_id'] .',\''. $atts['value'] .'\',\''. htmlspecialchars(str_replace("'", '\"', $atts['message'])) .'\','. $num .');return false;" id="frm_update_field_'. $entry_id .'_'. $atts['field_id'] .'_'. $num .'" class="frm_update_field_link '. $atts['class'] .'" title="'. esc_attr($atts['title']) .'">'. $atts['label'] .'</a>';
-
-        return $link;
-    }
+		return $link;
+	}
 
 	public static function entry_delete_link( $atts ) {
         global $post, $frm_vars;
@@ -2741,7 +2770,7 @@ class FrmProEntriesController{
 	}
 
 	public static function show_entry_shortcode( $atts ) {
-		return FrmEntryFormat::show_entry( $atts );
+		return FrmEntriesController::show_entry_shortcode( $atts );
 	}
 
 	/**
@@ -2765,7 +2794,7 @@ class FrmProEntriesController{
 	}
 
 	public static function maybe_set_cookie( $entry_id, $form_id ) {
-        if ( defined('WP_IMPORTING') || defined('DOING_AJAX') ) {
+        if ( defined('WP_IMPORTING') || defined('DOING_AJAX') || defined('REST_REQUEST') ) {
             return;
         }
 
@@ -2804,7 +2833,7 @@ class FrmProEntriesController{
         $form = FrmForm::getOne($form_id);
         $expiration = isset($form->options['cookie_expiration']) ? ( (float) $form->options['cookie_expiration'] *60*60 ) : 30000000;
         $expiration = apply_filters('frm_cookie_expiration', $expiration, $form_id, $entry_id);
-        setcookie('frm_form'.$form_id.'_' . COOKIEHASH, current_time('mysql', 1), time() + $expiration, COOKIEPATH, COOKIE_DOMAIN);
+        setcookie( 'frm_form' . $form_id . '_' . COOKIEHASH, current_time('mysql', 1), time() + $expiration, COOKIEPATH, COOKIE_DOMAIN, is_ssl() );
     }
 
 	public static function ajax_create() {
@@ -2952,9 +2981,9 @@ class FrmProEntriesController{
 
         if ( $ajax && $echo ) {
 			$message = 'success';
-			echo esc_attr( $message );
+			echo 'success';
         } else if ( ! $ajax ) {
-			$message = apply_filters('frm_delete_message', __( 'Your entry was successfully deleted', 'formidable' ), $entry);
+			$message = apply_filters( 'frm_delete_message', esc_html__( 'Your entry was successfully deleted', 'formidable' ), $entry );
 
             if ( $echo ) {
                 echo '<div class="frm_message">'. $message .'</div>';
@@ -2970,12 +2999,10 @@ class FrmProEntriesController{
 		FrmEntry::maybe_get_entry( $entry );
 
         if ( ! $entry || ! FrmProEntriesHelper::user_can_delete($entry) ) {
-            $message = __( 'There was an error deleting that entry', 'formidable' );
-            return $message;
+			return __( 'There was an error deleting that entry', 'formidable' );
         }
 
-        $result = FrmEntry::destroy( $entry->id );
-        return $result;
+		return FrmEntry::destroy( $entry->id );
     }
 
     public static function edit_entry_ajax(){
@@ -3001,6 +3028,8 @@ class FrmProEntriesController{
             }
         }
 
+		self::mark_jquery_as_loaded();
+
         echo FrmFormsController::get_form_shortcode( compact( 'id', 'entry_id', 'fields', 'exclude_fields' ) );
 
 		self::print_ajax_scripts( 'all' );
@@ -3013,12 +3042,11 @@ class FrmProEntriesController{
 
 		$entry_id = FrmAppHelper::get_param( 'entry_id', 0, 'post', 'absint' );
 		$field_id = FrmAppHelper::get_param( 'field_id', 0, 'post', 'sanitize_title' );
-        $value = FrmAppHelper::get_param('value');
+		$value = FrmAppHelper::get_param( 'value', '', 'post', 'wp_kses_post' );
 
 		FrmField::maybe_get_field( $field_id );
 		if ( $field_id && FrmProEntriesHelper::user_can_edit( $entry_id, $field_id->form_id ) ) {
-			$updated = FrmProEntryMeta::update_single_field( compact( 'entry_id', 'field_id', 'value' ) );
-			echo $updated;
+			echo FrmProEntryMeta::update_single_field( compact( 'entry_id', 'field_id', 'value' ) );
 		}
 
         wp_die();
@@ -3085,5 +3113,23 @@ class FrmProEntriesController{
 			'errors' => $errors,
 		);
 		self::show_form_after_first_save_draft_click( $id, $args );
+	}
+
+	/**
+	 * @deprecated 2.04
+	 */
+	public static function filter_value_in_single_entry_table( $value, $meta, $entry, $atts = array() ) {
+		_deprecated_function( __FUNCTION__, '2.04', 'FrmProEntriesController::get_option_label_for_saved_value');
+
+		if ( isset( $atts['field'] ) ) {
+			$field = $atts['field'];
+		} else {
+			$field = FrmField::getOne( $meta->field_id );
+		}
+		if ( ! $field ) {
+			return $value;
+		}
+
+		return self::get_option_label_for_saved_value( $value, $field, $atts );
 	}
 }

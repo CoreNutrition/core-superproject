@@ -12,7 +12,6 @@ class FrmProField {
         $defaults = array(
             'number' => array( 'maxnum'    => 9999999 ),
             'date'  => array( 'max'   => '10' ),
-            'phone' => array( 'size'  => '115px' ),
             'rte'   => array( 'max'   => 7 ),
             'end_divider' => array( 'format' => 'both' ), // set icon format
         );

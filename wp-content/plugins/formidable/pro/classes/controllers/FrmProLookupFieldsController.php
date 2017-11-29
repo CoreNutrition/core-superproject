@@ -183,6 +183,7 @@ class FrmProLookupFieldsController{
 			// Filter options
 			require( FrmAppHelper::plugin_path() . '/pro/classes/views/lookup-fields/back-end/filter.php' );
 
+			FrmProFieldsController::show_format_option( $field );
 		} else {
 
 			if ( $field['data_type'] == 'select' ) {
@@ -526,7 +527,7 @@ class FrmProLookupFieldsController{
 
 		$args = array();
 
-		if ( self::need_to_filter_values_for_current_user( $values ) ) {
+		if ( self::need_to_filter_values_for_current_user( $values['id'], $values ) ) {
 			$current_user = get_current_user_id();
 
 			// If user isn't logged in, don't display any options
@@ -560,7 +561,7 @@ class FrmProLookupFieldsController{
 	private static function get_initial_dependent_lookup_field_options( $values ) {
 		if ( isset( $values['value'] ) && $values['value'] ) {
 			// If editing an entry or switching between pages, add an option for the saved value
-			$options = (array) $values['value'];
+			$options = (array) self::decode_html_entities( $values['value'] );
 		} else {
 			$options = array();
 		}
@@ -573,6 +574,29 @@ class FrmProLookupFieldsController{
 		}
 
 		return $options;
+	}
+
+	/**
+	 * Decode HTML entities recursively
+	 *
+	 * @since 2.04
+	 *
+	 * @param mixed $value
+	 *
+	 * @return array|string
+	 */
+	private static function decode_html_entities( $value ) {
+		// TODO: add single, centralized function to decode entities
+
+		if ( is_array( $value ) ) {
+			foreach ( $value as $key => $single_value ) {
+				$value[ $key ] = self::decode_html_entities( $single_value );
+			}
+		} else {
+			$value = html_entity_decode( $value );
+		}
+
+		return $value;
 	}
 
 	/**
@@ -657,17 +681,15 @@ class FrmProLookupFieldsController{
 		// TODO: don't reload for ajax
 		if ( isset( $frm_vars['lookup_fields'] ) && ! empty( $frm_vars['lookup_fields'] ) ) {
 			$lookup_field_ids = array();
-			$checked_forms = array();
+
 			foreach ( $frm_vars['lookup_fields'] as $l_id => $lookup_field ) {
 				if ( isset( $lookup_field['parents'] ) && $lookup_field['parents'] ) {
 					if ( $lookup_field['fieldType'] == 'lookup' ) {
 						// Update all dependent Lookup fields
 						$lookup_field_ids[] = $l_id;
 					} else {
-						self::get_form_action( $lookup_field['formId'], $checked_forms, $form_action );
-
 						// Only update non-lookup fields if this is the initial form load
-						if ( 'new' === $form_action ) {
+						if ( 'new' === self::get_form_action() ) {
 							$lookup_field_ids[] = $l_id;
 						}
 					}
@@ -678,22 +700,15 @@ class FrmProLookupFieldsController{
 	}
 
 	/**
-	 * Get a specific form's action (new, create, edit, update)
+	 * Get the current action from the URL (new, create, edit, update)
 	 *
 	 * @since 2.02
-	 * @param int $form_id
-	 * @param array $checked_forms
-	 * @param string $form_action
+	 * @return string $form_action
 	 */
-	private static function get_form_action( $form_id, &$checked_forms, &$form_action ) {
-		if ( isset( $checked_forms[ $form_id ] ) ) {
-			$form_params = $checked_forms[ $form_id ];
-		} else {
-			$form_params = FrmForm::get_params( $form_id );
-			$checked_forms[ $form_id ] = $form_params;
-		}
+	private static function get_form_action() {
+		$action_var = isset( $_REQUEST['frm_action'] ) ? 'frm_action' : 'action';
 
-		$form_action = $form_params['action'];
+		return FrmAppHelper::get_param( $action_var, 'new', 'get', 'sanitize_title' );
 	}
 
 	/**
@@ -873,7 +888,7 @@ class FrmProLookupFieldsController{
 		$args = array();
 
 		// TODO: Maybe add current user filter here, or maybe add it in final call
-		if ( self::need_to_filter_values_for_current_user( $child_field->field_options ) ) {
+		if ( self::need_to_filter_values_for_current_user( $child_field->id, $child_field->field_options ) ) {
 			$args['user_id'] = get_current_user_id();
 		}
 
@@ -884,6 +899,8 @@ class FrmProLookupFieldsController{
 			$parent_val = $selected_values[ $i ];
 
 			$args['comparison_type'] = apply_filters( 'frm_set_comparison_type_for_lookup', 'equals', $parent_field, $child_field );
+			$args['and_or'] = apply_filters( 'frm_set_and_or_for_lookup', 'and', $parent_field, $child_field );
+			self::apply_current_user_filter_for_non_lookup( $child_field, $parent_field, $args );
 
 			$entry_ids = self::get_entry_ids_for_parent_field_and_value( $linked_field, $parent_val, $args );
 
@@ -901,6 +918,18 @@ class FrmProLookupFieldsController{
 	}
 
 	/**
+	 *
+	 * @param stdClass $child_field
+	 * @param stdClass $parent_field
+	 * @param array $args
+	 */
+	private static function apply_current_user_filter_for_non_lookup( $child_field, $parent_field, &$args ) {
+		if ( $child_field->type !== 'lookup' && self::need_to_filter_values_for_current_user( $parent_field->id, $parent_field->field_options ) ) {
+			$args['user_id'] = get_current_user_id();
+		}
+	}
+
+	/**
 	 * Get the entry IDs for a given field and value
 	 *
 	 * @since 2.01.01
@@ -911,13 +940,39 @@ class FrmProLookupFieldsController{
 	 */
 	private static function get_entry_ids_for_parent_field_and_value( $linked_field, $parent_val, $args ) {
 		if ( is_array( $parent_val ) ) {
-			$entry_ids = array();
+			$entry_ids = array( 'first' => true );
 			foreach ( $parent_val as $p_val ) {
 				$new_entry_ids = FrmProEntryMeta::get_entry_ids_for_field_and_value( $linked_field, $p_val, $args );
-				$entry_ids = array_merge( $entry_ids, $new_entry_ids );
+				$entry_ids = self::filter_or_merge_entry_ids( $entry_ids, $new_entry_ids, $args['and_or'] );
 			}
 		} else {
 			$entry_ids = FrmProEntryMeta::get_entry_ids_for_field_and_value( $linked_field, $parent_val, $args );
+		}
+
+		return $entry_ids;
+	}
+
+	/**
+	 * Either combine the results, or get only those in common.
+	 * and/or depends on the frm_set_and_or_for_lookup filter
+	 *
+	 * @since 2.03.08
+	 *
+	 * @param array $entry_ids
+	 * @param array $new_entry_ids
+	 * @param string $and_or
+	 *
+	 * @return array
+	 */
+	private static function filter_or_merge_entry_ids( $entry_ids, $new_entry_ids, $and_or ) {
+		if ( isset( $entry_ids['first'] ) ) {
+			return $new_entry_ids;
+		}
+
+		if ( $and_or == 'or' ) {
+			$entry_ids = array_intersect( $entry_ids, $new_entry_ids );
+		} else {
+			$entry_ids = array_merge( $entry_ids, $new_entry_ids );
 		}
 
 		return $entry_ids;
@@ -975,11 +1030,16 @@ class FrmProLookupFieldsController{
 	 * Check if the values need to be filtered for the current user
 	 *
 	 * @since 2.01.0
+	 *
+	 * @param int|string $field_id
 	 * @param array $field_options
+	 *
 	 * @return bool
 	 */
-	private static function need_to_filter_values_for_current_user( $field_options ) {
-		return FrmField::is_option_true_in_array( $field_options, 'lookup_filter_current_user' ) && ! current_user_can( 'administrator' ) && ! FrmAppHelper::is_admin();
+	private static function need_to_filter_values_for_current_user( $field_id, $field_options ) {
+		$is_filter_needed = FrmField::is_option_true_in_array( $field_options, 'lookup_filter_current_user' ) && ! current_user_can( 'administrator' ) && ! FrmAppHelper::is_admin();
+
+		return apply_filters( 'frm_lookup_is_current_user_filter_needed', $is_filter_needed, $field_id, $field_options );
 	}
 
 	/**
@@ -992,11 +1052,12 @@ class FrmProLookupFieldsController{
 	private static function flatten_and_unserialize_meta_values( $meta_values ) {
 		$final_values = array();
 		foreach ( $meta_values as $meta_val ) {
-			$meta_val = str_replace( '&amp;', '&', $meta_val );
+
 			$meta_val = maybe_unserialize( $meta_val );
 			if ( is_array( $meta_val ) ) {
 				$final_values = array_merge( $final_values, $meta_val );
 			} else {
+				$meta_val = self::decode_html_entities( $meta_val );
 				$final_values[] = $meta_val;
 			}
 		}
@@ -1048,6 +1109,7 @@ class FrmProLookupFieldsController{
 	public static function get_front_end_lookup_field_html( $field, $field_name, $html_id ) {
 		$disabled = self::get_disabled_input_string( $field );
 		$saved_value_array = (array) $field['value'];
+		$saved_value_array = self::decode_html_entities( $saved_value_array );
 
 		if ( 'checkbox' == $field['data_type'] ) {
 			$field_name .= '[]';

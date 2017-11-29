@@ -2238,5 +2238,4 @@ class FrmProGraphsController {
 			_deprecated_function( 'The frm_final_graph_values filter', '2.02.05', 'the frm_graph_data filter' );
 		}
 	}
-
 }

@@ -141,4 +141,3 @@ class FrmProStylesController extends FrmStylesController{
 		return FrmAppHelper::plugin_path() . '/pro/classes/views/styles';
 	}
 }
-
