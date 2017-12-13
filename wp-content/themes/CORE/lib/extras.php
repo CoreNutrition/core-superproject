@@ -329,11 +329,19 @@ function check_entry_count($params, $fields, $form) {
 	$now = time();
 	$UTC_offset = date('Z');
 	//get the form's desired cutoff time
+	$start = strtotime(get_field('special_contest_start',$post->ID));
 	$cutoff = strtotime(get_field('special_contest_close',$post->ID));
+	if ($start) {
+		if(($now+$UTC_offset) < $start){ //form should not yet be available
+			echo 'To enter this contest, please come back on:';
+			echo '<h2 style="padding-top:1rem;">'.__(date('F d',$start-$UTC_offset). ' at '.date('g:i A',$start-$UTC_offset),'sage').'</h2>';
+			add_filter('frm_continue_to_new', '__return_false', 50);
+		}
+	}
 	if ($cutoff) {
 		//echo $now+$UTC_offset ." : " .$cutoff ;
 		if(($now+$UTC_offset) > $cutoff){ //close the form
-			echo '<h2 style="text-align:center;">'.__('This contest has concluded','sage').'</h2>';
+			echo '<h2 style="padding:3rem 0;">'.__('This contest has concluded','sage').'</h2>';
 			add_filter('frm_continue_to_new', '__return_false', 50);
 		}
 	}
