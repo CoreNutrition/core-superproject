@@ -1,3 +1,7 @@
+<!-- Google Tag Manager (noscript) -->
+<noscript><iframe src="https://www.googletagmanager.com/ns.html?id=GTM-WVKNLJJ"
+height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
+
 <script>
   //set var for fb pixel code, if not reset with another trigger, use this default
   var fb_trigger = "PageView";
