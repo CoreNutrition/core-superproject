@@ -30,13 +30,13 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
         <!--<a href="#menu" class="menu-link">&#9776;</a>-->
         <a id="nav-toggle" class="hamburger" href="#menu"><span></span></a>
         <div class="social-channels">
-          <a href="https://www.facebook.com/CoreHydration" target="_blank" onclick="return trackOutboundLink('https://www.facebook.com/CoreHydration', true)">
+          <a href="https://www.facebook.com/CoreHydration" target="_blank">
             <i class="fa fa-facebook" aria-hidden="true"></i></a>
              &nbsp; &nbsp;
-          <a href="https://twitter.com/COREdrinks" target="_blank" onclick="return trackOutboundLink('https://twitter.com/COREdrinks', true)">
+          <a href="https://twitter.com/COREdrinks" target="_blank">
             <i class="fa fa-twitter" aria-hidden="true"></i></a>
             &nbsp; &nbsp;
-          <a href="https://www.instagram.com/CORE/" target="_blank" onclick="return trackOutboundLink('https://www.instagram.com/CORE/', true)">
+          <a href="https://www.instagram.com/CORE/" target="_blank">
             <i class="fa fa-instagram" aria-hidden="true"></i></a>
         </div>
     	</div>
