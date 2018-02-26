@@ -221,22 +221,22 @@ with human emotion, body parts, physicality.”
           <div class="col-sm-10 offset-sm-1 text-center">
             <ul>
               <li>
-                <a href="https://www.facebook.com/elliegoulding/" target="_blank" onclick="return trackOutboundLink('https://www.facebook.com/elliegoulding', true)"><i class="fa fa-facebook" aria-hidden="true"></i></a>
+                <a href="https://www.facebook.com/elliegoulding/" target="_blank"><i class="fa fa-facebook" aria-hidden="true"></i></a>
               </li>
               <li>
-                <a href="https://twitter.com/elliegoulding" target="_blank" onclick="return trackOutboundLink('https://twitter.com/elliegoulding', true)"><i class="fa fa-twitter" aria-hidden="true"></i></a>
+                <a href="https://twitter.com/elliegoulding" target="_blank"><i class="fa fa-twitter" aria-hidden="true"></i></a>
               </li>
               <li>
-                <a href="https://www.instagram.com/elliegoulding/" target="_blank" onclick="return trackOutboundLink('https://www.instagram.com/elliegoulding/', true)"><i class="fa fa-instagram" aria-hidden="true"></i></a>
+                <a href="https://www.instagram.com/elliegoulding/" target="_blank"><i class="fa fa-instagram" aria-hidden="true"></i></a>
               </li>
               <li>
-                <a href="https://www.youtube.com/user/EllieGouldingVEVO" target="_blank" onclick="return trackOutboundLink('https://www.youtube.com/user/EllieGouldingVEVO', true)"><i class="fa fa-youtube-play" aria-hidden="true"></i></a>
+                <a href="https://www.youtube.com/user/EllieGouldingVEVO" target="_blank"><i class="fa fa-youtube-play" aria-hidden="true"></i></a>
               </li>
               <li>
-                <a href="https://open.spotify.com/artist/0X2BH1fck6amBIoJhDVmmJ" target="_blank" onclick="return trackOutboundLink('https://open.spotify.com/artist/0X2BH1fck6amBIoJhDVmmJ', true)"><i class="fa fa-spotify" aria-hidden="true"></i></a>
+                <a href="https://open.spotify.com/artist/0X2BH1fck6amBIoJhDVmmJ" target="_blank"><i class="fa fa-spotify" aria-hidden="true"></i></a>
               </li>
               <li>
-                <a href="https://soundcloud.com/elliegoulding" target="_blank" onclick="return trackOutboundLink('https://soundcloud.com/elliegoulding', true)"><i class="fa fa-soundcloud" aria-hidden="true"></i></a>
+                <a href="https://soundcloud.com/elliegoulding" target="_blank"><i class="fa fa-soundcloud" aria-hidden="true"></i></a>
               </li>
             </ul>
       
